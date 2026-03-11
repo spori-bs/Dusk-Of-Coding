@@ -153,7 +153,8 @@ Minimum persisted data:
 - **Phase 7**: Persistence (EFCore) [PENDING]
 - **Phase 8**: Health Checks [PENDING]
 - **Phase 9**: Code Playground UI [PENDING]
-- **Phase 10**: AI extension point [PENDING]
+- **Phase 10**: Language Selector & Roslyn Integration [PENDING]
+- **Phase 11**: AI extension point [PENDING]
 
 ---
 
