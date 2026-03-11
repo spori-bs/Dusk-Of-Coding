@@ -21,22 +21,19 @@ public static class Extensions
 
     public static TBuilder AddServiceDefaults<TBuilder>(this TBuilder builder) where TBuilder : IHostApplicationBuilder
     {
-        Log.Logger = new LoggerConfiguration()
+        // Configure Serilog to output to Console. 
+        // We do NOT use Serilog.Sinks.OpenTelemetry because builder.ConfigureOpenTelemetry() 
+        // below registers the native OpenTelemetryLoggerProvider, which automatically inherits 
+        // all Aspire dashboard authentication headers and translates ILogger structured data flawlessly.
+        var logger = new LoggerConfiguration()
             .ReadFrom.Configuration(builder.Configuration)
             .Enrich.FromLogContext()
             .WriteTo.Console()
-            .WriteTo.OpenTelemetry(opts =>
-            {
-                var otlpEndpoint = builder.Configuration["OTEL_EXPORTER_OTLP_ENDPOINT"];
-                if (!string.IsNullOrWhiteSpace(otlpEndpoint))
-                {
-                    opts.Endpoint = otlpEndpoint;
-                }
-            })
             .CreateLogger();
 
         builder.Logging.ClearProviders();
-        builder.Logging.AddSerilog(Log.Logger);
+        builder.Logging.AddSerilog(logger, dispose: true);
+        
         builder.ConfigureOpenTelemetry();
 
         builder.AddDefaultHealthChecks();
