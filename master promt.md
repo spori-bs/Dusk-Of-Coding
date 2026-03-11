@@ -143,7 +143,7 @@ Return structured results (include execution/feedback fields, not only pass/fail
 #### PHASE 9 — Health Checks
 
 - Add health checks everywhere they are needed (Web API, Execution API, Web UI, DB connectivity)
-- Ensure the Aspire Dashboard reflects health status for all components
+- Ensure the Aspire Dashboard properly visualizes health endpoints for all services and is integrated natively through ServiceDefaults
 
 #### PHASE 10 — Code Playground UI
 
