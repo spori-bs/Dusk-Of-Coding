@@ -140,7 +140,32 @@ Minimum persisted data:
 
 ---
 
-### Next prompt (copy/paste for Phase 2 continuation)
+---
 
-“Implement Phase 2: generate the `.sln` and project structure for the PracticePlatform POC using .NET Aspire to orchestrate MainApp, Execution API, and DB. Keep a modular monolith with Clean Architecture for the main app. Execution is a separate HTTP/JSON API with shared request/response contracts (if appropriate).”
+### Phase tracking and Roadmap
+
+- **Phase 1**: Architecture [DONE]
+- **Phase 2**: Solution structure [DONE]
+- **Phase 3**: Domain model [DONE]
+- **Phase 4**: Execution engine boundary [DONE]
+- **Phase 5**: API layer (MainApp) [PENDING]
+- **Phase 6**: Aspire Integration (UI/API/DB routing) [PENDING]
+- **Phase 7**: Persistence (EFCore) [PENDING]
+- **Phase 8**: AI extension point [PENDING]
+
+---
+
+### Phase 5 – what to build next (API layer)
+
+Goal of Phase 5: Build out the Minimal API endpoints in `PracticePlatform.WebApi` to handle Task and Submission routing using Domain models and the established Execution Engine. Use Scalar for testing.
+
+Minimal endpoints:
+- `GET /tasks`
+- `GET /tasks/{id}`
+- `POST /submissions`
+- `GET /submissions/{id}`
+
+### Next prompt (copy/paste for Phase 5 continuation)
+
+“Implement Phase 5: build the Minimal API endpoints in PracticePlatform.WebApi for taking submissions and querying tasks/submissions according to the structured result constraints.”
 
