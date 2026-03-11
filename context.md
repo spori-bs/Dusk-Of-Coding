@@ -150,7 +150,7 @@ Minimum persisted data:
 - **Phase 4**: Execution engine boundary [DONE]
 - **Phase 5**: API layer (MainApp) [DONE]
 - **Phase 6**: Aspire Integration (UI/API/DB routing) [DONE]
-- **Phase 7**: Persistence (EFCore) [PENDING]
+- **Phase 7**: Persistence (EFCore) [DONE]
 - **Phase 8**: Health Checks [PENDING]
 - **Phase 9**: Code Playground UI [PENDING]
 - **Phase 10**: Language Selector & Roslyn Integration [PENDING]
@@ -158,17 +158,16 @@ Minimum persisted data:
 
 ---
 
-### Phase 7 – what to build next (Persistence / EFCore)
+### Phase 8 – what to build next (Health Checks)
 
-Goal of Phase 7: Introduce Entity Framework Core for database handling using SQLite or MariaDB. Replace the in-memory repositories with actual DB-backed repositories for Tasks and Submissions.
+Goal of Phase 8: Add health checks to all services. Ensure the Aspire Dashboard reflects health status.
 
 Requirements:
-- Add EF Core packages and configure `AppDbContext`.
-- Run initial migration to create the schema.
-- Replace `InMemoryTaskRepository` and `InMemorySubmissionRepository` with EF Core implementations.
-- Wire the DB connection through the Aspire AppHost.
+- Add health check endpoints to `WebApi`, `ExecutionApi`, and `WebUi`.
+- Add DB connectivity health check to `WebApi`.
+- Aspire Dashboard must show health status for all components.
 
-### Next prompt (copy/paste for Phase 7 continuation)
+### Next prompt (copy/paste for Phase 8 continuation)
 
-“Implement Phase 7: introduce Entity Framework Core with SQLite/MariaDB provider, create the AppDbContext, run the initial migration, and replace in-memory repositories with EF Core backed implementations.”
+“Implement Phase 8: add health checks to Web API, Execution API, Web UI, and DB connectivity. Ensure all are visible on the Aspire Dashboard.”
 

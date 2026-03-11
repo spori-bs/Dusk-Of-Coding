@@ -1,5 +1,7 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using PracticePlatform.Domain.Interfaces;
+using PracticePlatform.Infrastructure.Persistence;
 using PracticePlatform.Infrastructure.Repositories;
 using PracticePlatform.Infrastructure.Services;
 
@@ -7,10 +9,15 @@ namespace PracticePlatform.Infrastructure;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
+    public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, string? connectionString = null)
     {
-        services.AddSingleton<ITaskRepository, InMemoryTaskRepository>();
-        services.AddSingleton<ISubmissionRepository, InMemorySubmissionRepository>();
+        // Register EF Core with SQLite
+        services.AddDbContext<AppDbContext>(options =>
+            options.UseSqlite(connectionString ?? "Data Source=practiceplatform.db"));
+
+        // Register EF Core repositories
+        services.AddScoped<ITaskRepository, EfTaskRepository>();
+        services.AddScoped<ISubmissionRepository, EfSubmissionRepository>();
         services.AddSingleton<IAIReviewService, NoOpAIReviewService>();
 
         // Register the Execution Engine with a typed HttpClient
@@ -23,3 +30,4 @@ public static class DependencyInjection
         return services;
     }
 }
+

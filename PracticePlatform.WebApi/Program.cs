@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using PracticePlatform.Application;
 using PracticePlatform.Application.Services;
 using PracticePlatform.Infrastructure;
+using PracticePlatform.Infrastructure.Persistence;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +18,13 @@ builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices();
 
 var app = builder.Build();
+
+// Auto-migrate SQLite database on startup (POC only)
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.Migrate();
+}
 
 app.MapDefaultEndpoints();
 
