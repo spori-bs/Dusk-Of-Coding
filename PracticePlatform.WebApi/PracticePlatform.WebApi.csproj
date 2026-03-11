@@ -13,6 +13,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PracticePlatform.ServiceDefaults\PracticePlatform.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\PracticePlatform.Application\PracticePlatform.Application.csproj" />
+    <ProjectReference Include="..\PracticePlatform.Infrastructure\PracticePlatform.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
