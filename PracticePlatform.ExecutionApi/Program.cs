@@ -18,8 +18,10 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
     app.MapScalarApiReference();
 }
-
-app.UseHttpsRedirection();
+else
+{
+    app.UseHttpsRedirection();
+}
 
 // Execution API boundary
 app.MapPost("/api/executions", (ExecutionRequest request) =>
