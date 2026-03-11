@@ -75,7 +75,7 @@ tasksGroup.MapDelete("/{id:guid}", async (Guid id, ITaskService taskService, Can
 
 var submissionsGroup = app.MapGroup("/submissions").WithTags("Submissions");
 
-submissionsGroup.MapPost("/", async ([FromBody] SubmitCodeRequest request, ISubmissionService submissionService, CancellationToken ct) =>
+submissionsGroup.MapPost("/", async ([FromBody] PracticePlatform.Application.DTOs.SubmitCodeDto request, ISubmissionService submissionService, CancellationToken ct) =>
 {
     var result = await submissionService.SubmitCodeAsync(request.TaskId, request.SourceCode, request.UserId, ct);
     return Results.Created($"/submissions/{result.Submission.Id}", result);
@@ -88,7 +88,4 @@ submissionsGroup.MapGet("/{id:guid}", async (Guid id, ISubmissionService submiss
 });
 
 app.Run();
-
-// DTOs for endpoints
-public record SubmitCodeRequest(Guid TaskId, string SourceCode, Guid? UserId = null);
 

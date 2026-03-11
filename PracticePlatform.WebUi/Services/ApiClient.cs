@@ -100,7 +100,7 @@ public class SubmissionDto
     public Guid TaskId { get; set; }
     public string SourceCode { get; set; } = "";
     public string Status { get; set; } = "";
-    public DateTime SubmittedAt { get; set; }
+    public DateTime CreatedAt { get; set; }
     public DateTime? CompletedAt { get; set; }
 }
 

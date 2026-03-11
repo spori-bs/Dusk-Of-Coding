@@ -15,3 +15,9 @@ public record UpdateTaskDto(
     List<string> Tags,
     string TestBundleReference
 );
+
+public record SubmitCodeDto(
+    Guid TaskId,
+    string SourceCode,
+    Guid? UserId = null
+);

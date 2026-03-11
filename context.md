@@ -152,23 +152,25 @@ Minimum persisted data:
 - **Phase 6**: Aspire Integration (UI/API/DB routing) [DONE]
 - **Phase 7**: Persistence (EFCore) [DONE]
 - **Phase 8**: Task Management UI [DONE]
-- **Phase 9**: Health Checks [PENDING]
+- **Phase 9**: Health Checks [DONE]
 - **Phase 10**: Code Playground UI [PENDING]
 - **Phase 11**: Language Selector & Roslyn Integration [PENDING]
 - **Phase 12**: AI extension point [PENDING]
 
 ---
 
-### Phase 9 – what to build next (Health Checks)
+### Phase 10 – what to build next (Code Playground UI)
 
-Goal of Phase 9: Add health checks to all services. Ensure the Aspire Dashboard reflects health status.
+Goal of Phase 10: Create a UI page where users can write and try their code against tasks. The UI will use the API to execute the code and present structured feedback.
 
 Requirements:
-- Add health check endpoints to `WebApi`, `ExecutionApi`, and `WebUi`.
-- Add DB connectivity health check to `WebApi`.
-- Aspire Dashboard must show health status for all components.
+- Create a Code Playground page (`/practice` or similar).
+- Allow users to select an available task.
+- Provide a text area to submit C# code for the selected task.
+- Call the execution API to compile and run tests.
+- Display structured feedback (compilation messages, test outcomes, AI review if present) in real-time.
 
-### Next prompt (copy/paste for Phase 9 continuation)
+### Next prompt (copy/paste for Phase 10 continuation)
 
-“Implement Phase 9: Add health checks to Web API, Execution API, Web UI, and DB connectivity. Ensure all are visible on the Aspire Dashboard.”
+“Implement Phase 10: Create the Code Playground UI that allows users to write code, submit it to the API, and receive structured execution feedback.”
 
