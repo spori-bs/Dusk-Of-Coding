@@ -21,7 +21,7 @@ public static class Extensions
 
     public static TBuilder AddServiceDefaults<TBuilder>(this TBuilder builder) where TBuilder : IHostApplicationBuilder
     {
-        builder.Services.AddSerilog((services, loggerConfiguration) => loggerConfiguration
+        Log.Logger = new LoggerConfiguration()
             .ReadFrom.Configuration(builder.Configuration)
             .Enrich.FromLogContext()
             .WriteTo.Console()
@@ -32,8 +32,11 @@ public static class Extensions
                 {
                     opts.Endpoint = otlpEndpoint;
                 }
-            }));
+            })
+            .CreateLogger();
 
+        builder.Logging.ClearProviders();
+        builder.Logging.AddSerilog(Log.Logger);
         builder.ConfigureOpenTelemetry();
 
         builder.AddDefaultHealthChecks();
