@@ -8,10 +8,12 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.4" />
+    <PackageReference Include="Scalar.AspNetCore" Version="2.13.6" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\PracticePlatform.ServiceDefaults\PracticePlatform.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\PracticePlatform.Execution.Contracts\PracticePlatform.Execution.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

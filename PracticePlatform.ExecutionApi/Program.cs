@@ -1,41 +1,43 @@
+using PracticePlatform.Execution.Contracts.DTOs;
+using Scalar.AspNetCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
+builder.AddServiceDefaults();
+
 // Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
+
+app.MapDefaultEndpoints();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.MapScalarApiReference();
 }
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
+// Execution API boundary
+app.MapPost("/api/executions", (ExecutionRequest request) =>
 {
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
+    // For POC scaffolding, just return a simulated successful response
+    return Results.Ok(new ExecutionResponse
+    {
+        SubmissionId = request.SubmissionId,
+        Status = "Completed",
+        Compilation = new CompilationResultDto { Succeeded = true, Errors = Array.Empty<string>() },
+        Tests = new[]
+        {
+            new TestResultDto { Name = "SimulatedTest", Passed = true, DurationMs = 15 }
+        },
+        Runtime = new RuntimeMetricsDto { TotalDurationMs = 120 },
+        Errors = Array.Empty<string>()
+    });
 })
-.WithName("GetWeatherForecast");
+.WithName("ExecuteCode");
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
