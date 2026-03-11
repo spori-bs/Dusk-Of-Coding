@@ -124,7 +124,18 @@ Minimal endpoints:
 
 Return structured results (include execution/feedback fields, not only pass/fail).
 
-#### PHASE 6 — AI extension point
+#### PHASE 6 — Aspire Integration (UI/API/DB)
+
+- Setup the orchestrated connections between Web UI, Web API, Execution API, and Database inside Aspire AppHost
+- Ensure service discovery works for all cross-service HTTP calls
+
+#### PHASE 7 — Persistence (EFCore)
+
+- Introduce Entity Framework Core for database handling
+- Configure SQLite or MariaDB provider
+- Implement actual DB-backed repositories for Tasks and Submissions instead of in-memory lists
+
+#### PHASE 8 — AI extension point
 
 - Define interface for AI review (`IAIReviewService`)
 - Show where in the pipeline it should run (after ExecutionResult is available)
