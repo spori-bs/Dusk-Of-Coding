@@ -53,6 +53,24 @@ tasksGroup.MapGet("/{id:guid}", async (Guid id, ITaskService taskService, Cancel
     return task is not null ? Results.Ok(task) : Results.NotFound();
 });
 
+tasksGroup.MapPost("/", async ([FromBody] PracticePlatform.Application.DTOs.CreateTaskDto dto, ITaskService taskService, CancellationToken ct) =>
+{
+    var task = await taskService.CreateTaskAsync(dto, ct);
+    return Results.Created($"/tasks/{task.Id}", task);
+});
+
+tasksGroup.MapPut("/{id:guid}", async (Guid id, [FromBody] PracticePlatform.Application.DTOs.UpdateTaskDto dto, ITaskService taskService, CancellationToken ct) =>
+{
+    var task = await taskService.UpdateTaskAsync(id, dto, ct);
+    return task is not null ? Results.Ok(task) : Results.NotFound();
+});
+
+tasksGroup.MapDelete("/{id:guid}", async (Guid id, ITaskService taskService, CancellationToken ct) =>
+{
+    var success = await taskService.DeleteTaskAsync(id, ct);
+    return success ? Results.NoContent() : Results.NotFound();
+});
+
 var submissionsGroup = app.MapGroup("/submissions").WithTags("Submissions");
 
 submissionsGroup.MapPost("/", async ([FromBody] SubmitCodeRequest request, ISubmissionService submissionService, CancellationToken ct) =>

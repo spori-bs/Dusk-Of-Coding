@@ -1,0 +1,105 @@
+@page "/tasks/create"
+@page "/tasks/edit/{Id:guid}"
+@using PracticePlatform.WebUi.Services
+@inject ApiClient Api
+@inject NavigationManager Nav
+
+<PageTitle>@Title</PageTitle>
+
+<h1>@Title</h1>
+
+@if (_isLoading)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <EditForm Model="@_model" OnValidSubmit="HandleValidSubmit" FormName="TaskEditorForm">
+        <DataAnnotationsValidator />
+        <ValidationSummary class="text-danger" />
+
+        <div class="mb-3">
+            <label for="title" class="form-label">Title</label>
+            <InputText id="title" class="form-control" @bind-Value="_model.Title" />
+        </div>
+
+        <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <InputTextArea id="description" class="form-control" @bind-Value="_model.Description" rows="3" />
+        </div>
+
+        <div class="mb-3">
+            <label for="difficulty" class="form-label">Difficulty Level</label>
+            <InputText id="difficulty" class="form-control" @bind-Value="_model.DifficultyLevel" />
+        </div>
+
+        <div class="mb-3">
+            <label for="tags" class="form-label">Tags (comma-separated)</label>
+            <InputText id="tags" class="form-control" @bind-Value="_tagsInput" />
+        </div>
+
+        <div class="mb-3">
+            <label for="testBundle" class="form-label">Test Bundle Reference</label>
+            <InputText id="testBundle" class="form-control" @bind-Value="_model.TestBundleReference" />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a href="/tasks" class="btn btn-secondary">Cancel</a>
+    </EditForm>
+}
+
+@code {
+    [Parameter]
+    public Guid? Id { get; set; }
+
+    private bool IsEditMode => Id.HasValue;
+    private string Title => IsEditMode ? "Edit Task" : "Create Task";
+    
+    private CreateTaskDto _model = new();
+    private string _tagsInput = "";
+    private bool _isLoading = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (IsEditMode)
+        {
+            _isLoading = true;
+            var task = await Api.GetTaskByIdAsync(Id!.Value);
+            if (task != null)
+            {
+                _model.Title = task.Title;
+                _model.Description = task.Description;
+                _model.DifficultyLevel = task.DifficultyLevel;
+                _model.TestBundleReference = task.TestBundleReference;
+                _tagsInput = string.Join(", ", task.Tags);
+            }
+            _isLoading = false;
+        }
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        _model.Tags = _tagsInput.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                                .Select(t => t.Trim())
+                                .ToList();
+
+        if (IsEditMode)
+        {
+            var updateDto = new UpdateTaskDto
+            {
+                Title = _model.Title,
+                Description = _model.Description,
+                DifficultyLevel = _model.DifficultyLevel,
+                Tags = _model.Tags,
+                TestBundleReference = _model.TestBundleReference
+            };
+            await Api.UpdateTaskAsync(Id!.Value, updateDto);
+        }
+        else
+        {
+            await Api.CreateTaskAsync(_model);
+        }
+
+        Nav.NavigateTo("/tasks");
+    }
+}

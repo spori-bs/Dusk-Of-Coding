@@ -23,6 +23,26 @@ public class ApiClient
         return await _http.GetFromJsonAsync<TaskDto>($"/tasks/{id}");
     }
 
+    public async Task<TaskDto?> CreateTaskAsync(CreateTaskDto dto)
+    {
+        var response = await _http.PostAsJsonAsync("/tasks", dto);
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<TaskDto>();
+    }
+
+    public async Task<TaskDto?> UpdateTaskAsync(Guid id, UpdateTaskDto dto)
+    {
+        var response = await _http.PutAsJsonAsync($"/tasks/{id}", dto);
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<TaskDto>();
+    }
+
+    public async Task DeleteTaskAsync(Guid id)
+    {
+        var response = await _http.DeleteAsync($"/tasks/{id}");
+        response.EnsureSuccessStatusCode();
+    }
+
     // ---- Submissions ----
 
     public async Task<SubmissionResultDto?> SubmitCodeAsync(Guid taskId, string sourceCode)
@@ -47,6 +67,25 @@ public class TaskDto
     public string Description { get; set; } = "";
     public string DifficultyLevel { get; set; } = "";
     public List<string> Tags { get; set; } = new();
+    public string TestBundleReference { get; set; } = "";
+}
+
+public class CreateTaskDto
+{
+    public string Title { get; set; } = "";
+    public string Description { get; set; } = "";
+    public string DifficultyLevel { get; set; } = "";
+    public List<string> Tags { get; set; } = new();
+    public string TestBundleReference { get; set; } = "";
+}
+
+public class UpdateTaskDto
+{
+    public string Title { get; set; } = "";
+    public string Description { get; set; } = "";
+    public string DifficultyLevel { get; set; } = "";
+    public List<string> Tags { get; set; } = new();
+    public string TestBundleReference { get; set; } = "";
 }
 
 public class SubmissionResultDto

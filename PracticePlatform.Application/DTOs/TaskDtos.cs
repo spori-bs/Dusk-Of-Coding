@@ -1,0 +1,17 @@
+namespace PracticePlatform.Application.DTOs;
+
+public record CreateTaskDto(
+    string Title,
+    string Description,
+    string DifficultyLevel,
+    List<string> Tags,
+    string TestBundleReference
+);
+
+public record UpdateTaskDto(
+    string Title,
+    string Description,
+    string DifficultyLevel,
+    List<string> Tags,
+    string TestBundleReference
+);
