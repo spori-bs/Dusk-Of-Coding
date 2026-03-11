@@ -43,6 +43,8 @@ Design for clarity and extensibility, not premature scalability.
   - Main onboarding app
   - Execution API
   - Database
+- **Observability**: Add **OpenTelemetry** integration where needed (handled via Aspire ServiceDefaults).
+- **API Testing**: Add **Scalar** for testing and documenting the API endpoints.
 - **Deployment assumption**: single-node POC (Aspire local composition)
 
 ---
@@ -117,6 +119,8 @@ Minimal endpoints:
 - `GET /tasks/{id}`
 - `POST /submissions`
 - `GET /submissions/{id}`
+
+- Use **Scalar** to expose and test these API endpoints.
 
 Return structured results (include execution/feedback fields, not only pass/fail).
 

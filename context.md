@@ -31,6 +31,7 @@ This file is the **single source of truth for the current POC state** so work ca
     - Main onboarding app
     - Execution API
     - Database
+  - **OpenTelemetry** is integrated via Aspire ServiceDefaults across all components.
 - **AI review**:
   - Optional and replaceable, behind `IAIReviewService`
   - POC uses a no-op/stub implementation
@@ -91,7 +92,7 @@ Recommended (simple, clean boundaries):
 - `PracticePlatform.Domain`
 - `PracticePlatform.Application`
 - `PracticePlatform.Infrastructure`
-- `PracticePlatform.WebApi` (Minimal API)
+- `PracticePlatform.WebApi` (Minimal API, featuring **Scalar** for OpenAPI testing)
 
 Execution boundary in main app:
 - `ICodeExecutionEngine` implemented as `HttpCodeExecutionEngine` in `Infrastructure`.
@@ -99,7 +100,7 @@ Execution boundary in main app:
 #### Execution API projects
 
 Recommended:
-- `PracticePlatform.ExecutionApi` (Minimal API)
+- `PracticePlatform.ExecutionApi` (Minimal API, featuring **Scalar** for OpenAPI testing)
 - (Optional) `PracticePlatform.Execution.Contracts` shared DTOs for request/response JSON
   - If used: referenced by both main app and execution API to keep the wire contract aligned.
 
