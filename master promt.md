@@ -135,25 +135,30 @@ Return structured results (include execution/feedback fields, not only pass/fail
 - Configure SQLite or MariaDB provider
 - Implement actual DB-backed repositories for Tasks and Submissions instead of in-memory lists
 
-#### PHASE 8 — Health Checks
+#### PHASE 8 — Task Management UI
+
+- Create pages in the Web UI where administrators can maintain (create, edit, delete) practice task examples
+- These pages must use the API to persist changes to the database
+
+#### PHASE 9 — Health Checks
 
 - Add health checks everywhere they are needed (Web API, Execution API, Web UI, DB connectivity)
 - Ensure the Aspire Dashboard reflects health status for all components
 
-#### PHASE 9 — Code Playground UI
+#### PHASE 10 — Code Playground UI
 
 - Create a UI page where users can write and try their code
 - This page will use the API as the code quality gate
 - Display structured feedback (compilation, tests, AI review) in real-time
 
-#### PHASE 10 — Language Selector & Roslyn Integration
+#### PHASE 11 — Language Selector & Roslyn Integration
 
 - Introduce a programming language selector in the UI, starting with **C#** as the only available language
 - When C# is selected, use the integrated **Roslyn** compiler platform to assist the app and the user (e.g. syntax highlighting hints, compilation diagnostics)
 - The selected language must be forwarded to the API in all submission requests
 - The API must have **language-aware behaviour**: use **named/keyed services** for the parser/execution engine and dynamically load the correct service implementation based on the submitted language
 
-#### PHASE 11 — AI extension point
+#### PHASE 12 — AI extension point
 
 - Define interface for AI review (`IAIReviewService`)
 - Show where in the pipeline it should run (after ExecutionResult is available)

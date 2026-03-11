@@ -151,10 +151,11 @@ Minimum persisted data:
 - **Phase 5**: API layer (MainApp) [DONE]
 - **Phase 6**: Aspire Integration (UI/API/DB routing) [DONE]
 - **Phase 7**: Persistence (EFCore) [DONE]
-- **Phase 8**: Health Checks [PENDING]
-- **Phase 9**: Code Playground UI [PENDING]
-- **Phase 10**: Language Selector & Roslyn Integration [PENDING]
-- **Phase 11**: AI extension point [PENDING]
+- **Phase 8**: Task Management UI [PENDING]
+- **Phase 9**: Health Checks [PENDING]
+- **Phase 10**: Code Playground UI [PENDING]
+- **Phase 11**: Language Selector & Roslyn Integration [PENDING]
+- **Phase 12**: AI extension point [PENDING]
 
 ---
 
