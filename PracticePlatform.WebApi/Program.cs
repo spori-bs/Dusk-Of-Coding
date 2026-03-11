@@ -12,6 +12,8 @@ builder.AddServiceDefaults();
 
 // Add services to the container.
 builder.Services.AddOpenApi();
+builder.Services.AddHealthChecks()
+    .AddDbContextCheck<AppDbContext>();
 
 // Register Clean Architecture layers
 builder.Services.AddApplicationServices();
