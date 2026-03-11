@@ -39,6 +39,7 @@ Design for clarity and extensibility, not premature scalability.
 - **Tasks**: must be data-driven (stored in DB or structured files)
 - **Feedback**: must be structured (not just pass/fail)
 - **Orchestration/config as code**: Use **.NET Aspire** to compose:
+  - Web UI (Blazor Server)
   - Main onboarding app
   - Execution API
   - Database
@@ -86,6 +87,7 @@ Design for clarity and extensibility, not premature scalability.
 - Include .NET Aspire AppHost + ServiceDefaults
 - Include MainApp (Clean Architecture projects)
 - Include Execution API project
+- Include Web UI project (Blazor Server-side)
 - (Optional) include shared contracts project for Execution API DTOs
 
 #### PHASE 3 — Domain model

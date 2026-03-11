@@ -27,6 +27,7 @@ This file is the **single source of truth for the current POC state** so work ca
   - The main app calls it via an HTTP client behind `ICodeExecutionEngine` (conceptually).
 - **Orchestration / config-as-code**: **.NET Aspire**
   - Aspire coordinates:
+    - Web UI (Blazor Server)
     - Main onboarding app
     - Execution API
     - Database
@@ -73,6 +74,7 @@ Goal of Phase 2: create the **.sln layout + project breakdown**, wire with Aspir
 
 - **Aspire AppHost project**
   - Defines resources for:
+    - Web UI (Blazor Server)
     - Main App (Web API)
     - Execution API (Web API)
     - Database (likely Postgres/SQL Server container, or SQLite for simplest POC)
