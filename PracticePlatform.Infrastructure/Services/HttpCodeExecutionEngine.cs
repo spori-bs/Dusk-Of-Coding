@@ -2,6 +2,7 @@ using System.Net.Http.Json;
 using PracticePlatform.Domain.Entities;
 using PracticePlatform.Domain.Interfaces;
 using PracticePlatform.Domain.Models;
+using PracticePlatform.Domain.Enums;
 using PracticePlatform.Execution.Contracts.DTOs;
 
 namespace PracticePlatform.Infrastructure.Services;
@@ -25,7 +26,7 @@ public class HttpCodeExecutionEngine : ICodeExecutionEngine
             TaskId = task.Id,
             SubmissionId = submission.Id,
             SourceCode = submission.SourceCode,
-            Language = "csharp",
+            Language = nameof(ProgrammingLanguage.CSharp).ToLowerInvariant(), // Send to execution API as lower string
             TestBundle = new TestBundleDto
             {
                 Framework = "xunit",

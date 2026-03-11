@@ -1,4 +1,5 @@
 using System.Net.Http.Json;
+using PracticePlatform.Domain.Enums;
 
 namespace PracticePlatform.WebUi.Services;
 
@@ -9,6 +10,13 @@ public class ApiClient
     public ApiClient(HttpClient http)
     {
         _http = http;
+    }
+
+    public class SubmitCodeDto
+    {
+        public Guid TaskId { get; set; }
+        public string SourceCode { get; set; } = string.Empty;
+        public string Language { get; set; } = "C#"; 
     }
 
     // ---- Tasks ----
@@ -45,9 +53,15 @@ public class ApiClient
 
     // ---- Submissions ----
 
-    public async Task<SubmissionResultDto?> SubmitCodeAsync(Guid taskId, string sourceCode)
+    public async Task<SubmissionResultDto?> SubmitCodeAsync(Guid taskId, string sourceCode, string language = nameof(ProgrammingLanguage.CSharp), CancellationToken ct = default)
     {
-        var response = await _http.PostAsJsonAsync("/submissions", new { TaskId = taskId, SourceCode = sourceCode });
+        var payload = new SubmitCodeDto 
+        { 
+            TaskId = taskId, 
+            SourceCode = sourceCode,
+            Language = language
+        };
+        var response = await _http.PostAsJsonAsync("/submissions", payload, ct);
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadFromJsonAsync<SubmissionResultDto>();
     }

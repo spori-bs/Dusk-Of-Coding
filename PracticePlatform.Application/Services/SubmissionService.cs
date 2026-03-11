@@ -2,6 +2,8 @@ using System.Collections.Concurrent;
 using PracticePlatform.Domain.Entities;
 using PracticePlatform.Domain.Interfaces;
 using PracticePlatform.Domain.Models;
+using Microsoft.Extensions.DependencyInjection; // For GetRequiredKeyedService
+using Microsoft.Extensions.Logging; // For ILogger
 
 namespace PracticePlatform.Application.Services;
 
@@ -9,8 +11,9 @@ public class SubmissionService : ISubmissionService
 {
     private readonly ITaskRepository _taskRepository;
     private readonly ISubmissionRepository _submissionRepository;
-    private readonly ICodeExecutionEngine _executionEngine;
     private readonly IAIReviewService _aiReviewService;
+    private readonly IServiceProvider _serviceProvider;
+    private readonly ILogger<SubmissionService> _logger;
 
     // Temporary storage for Feedback since our POC domain models didn't link Feedback directly 
     // to Submission in the DB. In Phase 7 (EFCore) we'll persist this properly.
@@ -19,13 +22,15 @@ public class SubmissionService : ISubmissionService
     public SubmissionService(
         ITaskRepository taskRepository,
         ISubmissionRepository submissionRepository,
-        ICodeExecutionEngine executionEngine,
-        IAIReviewService aiReviewService)
+        IAIReviewService aiReviewService,
+        IServiceProvider serviceProvider,
+        ILogger<SubmissionService> logger)
     {
         _taskRepository = taskRepository;
         _submissionRepository = submissionRepository;
-        _executionEngine = executionEngine;
         _aiReviewService = aiReviewService;
+        _serviceProvider = serviceProvider;
+        _logger = logger;
     }
 
     public async Task<SubmissionResult> SubmitCodeAsync(Guid taskId, string sourceCode, Guid? userId = null, CancellationToken ct = default)
@@ -48,7 +53,16 @@ public class SubmissionService : ISubmissionService
             submission.Status = "Executing";
             await _submissionRepository.UpdateAsync(submission, ct);
 
-            var executionResult = await _executionEngine.ExecuteAsync(task, submission, ct);
+            // For Phase 12, we map incoming requests to the C# execution engine unconditionally for now,
+            // but the architecture natively supports looking this up via the language enum mapped from the DTO.
+            var targetLanguage = nameof(PracticePlatform.Domain.Enums.ProgrammingLanguage.CSharp);
+
+            _logger.LogInformation("Resolving execution engine for language {Language}", targetLanguage);
+            var executionEngine = _serviceProvider.GetRequiredKeyedService<ICodeExecutionEngine>(targetLanguage);
+
+            // 3. Execute code safely using the resolved language-specific engine
+            _logger.LogInformation("Sending submission {SubmissionId} to execution engine", submission.Id);
+            var executionResult = await executionEngine.ExecuteAsync(task, submission, ct);
 
             var feedback = await _aiReviewService.EnrichFeedbackAsync(task, submission, executionResult, ct);
 

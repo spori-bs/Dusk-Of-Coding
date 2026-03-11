@@ -4,6 +4,7 @@ using PracticePlatform.Domain.Interfaces;
 using PracticePlatform.Infrastructure.Persistence;
 using PracticePlatform.Infrastructure.Repositories;
 using PracticePlatform.Infrastructure.Services;
+using PracticePlatform.Domain.Enums;
 
 namespace PracticePlatform.Infrastructure;
 
@@ -22,9 +23,15 @@ public static class DependencyInjection
 
         // Register the Execution Engine with a typed HttpClient
         // Uses the Aspire service discovery name "executionapi" configured in AppHost.
-        services.AddHttpClient<ICodeExecutionEngine, HttpCodeExecutionEngine>(client => 
+        services.AddHttpClient("executionapi", client => 
         {
             client.BaseAddress = new Uri("http://executionapi");
+        });
+
+        services.AddKeyedScoped<ICodeExecutionEngine, HttpCodeExecutionEngine>(nameof(ProgrammingLanguage.CSharp), (sp, key) => 
+        {
+            var factory = sp.GetRequiredService<IHttpClientFactory>();
+            return new HttpCodeExecutionEngine(factory.CreateClient("executionapi"));
         });
 
         return services;

@@ -160,6 +160,19 @@ Minimum persisted data:
 
 ---
 
+### Phase 12 – what to build next (Language Selector & Roslyn Integration)
+
+Goal of Phase 12: Introduce a language selector, implement Roslyn-based syntax checking in the UI, and restructure the backend Execution Engine to use Keyed Services for language-aware behavior.
+
+Requirements:
+- Add a language dropdown in `Practice.razor`.
+- Import `Microsoft.CodeAnalysis.CSharp` in `WebUi` to parse syntax and provide real-time compilation diagnostics on the UI.
+- Forward the selected language via the `SubmitCodeDto`.
+- In `PracticePlatform.Application`, refactor `SubmissionService` to use Keyed Services to dynamically load `ICodeExecutionEngine` instances based on the requested language ("csharp").
+- In `PracticePlatform.Infrastructure`, refactor the DI container to register the `HttpCodeExecutionEngine` as a keyed service.
+
+---
+
 ### Phase 10 – what to build next (Code Playground UI)
 
 Goal of Phase 10: Create a UI page where users can write and try their code against tasks. The UI will use the API to execute the code and present structured feedback.
