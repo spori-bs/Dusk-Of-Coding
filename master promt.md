@@ -43,7 +43,7 @@ Design for clarity and extensibility, not premature scalability.
   - Main onboarding app
   - Execution API
   - Database
-- **Observability**: Add **OpenTelemetry** integration where needed (handled via Aspire ServiceDefaults). Use **structured logging (Serilog)**. The **Aspire Dashboard must contain all info from telemetry and logging**.
+- **Observability**: Add **OpenTelemetry** integration where needed (handled via Aspire ServiceDefaults). Use **structured logging (Serilog)**. The **Aspire Dashboard must contain all info from telemetry, logging, and all infrastructure components (UI, APIs, DB)**.
 - **API Testing**: Add **Scalar** for testing and documenting the API endpoints.
 - **Deployment assumption**: single-node POC (Aspire local composition)
 
