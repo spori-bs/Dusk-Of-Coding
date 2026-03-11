@@ -1,0 +1,67 @@
+@page "/tasks"
+@using PracticePlatform.WebUi.Services
+@inject ApiClient Api
+
+<PageTitle>Tasks</PageTitle>
+
+<h1>Task Management</h1>
+
+<div class="mb-3">
+    <a href="/tasks/create" class="btn btn-primary">Create New Task</a>
+</div>
+
+@if (_tasks == null)
+{
+    <p><em>Loading...</em></p>
+}
+else if (!_tasks.Any())
+{
+    <p>No tasks found.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Difficulty</th>
+                <th>Tags</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var task in _tasks)
+            {
+                <tr>
+                    <td>@task.Title</td>
+                    <td>@task.DifficultyLevel</td>
+                    <td>@(string.Join(", ", task.Tags))</td>
+                    <td>
+                        <a href="/tasks/edit/@task.Id" class="btn btn-sm btn-outline-secondary">Edit</a>
+                        <button class="btn btn-sm btn-outline-danger" @onclick="() => DeleteTask(task.Id)">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<TaskDto>? _tasks;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadTasks();
+    }
+
+    private async Task LoadTasks()
+    {
+        _tasks = await Api.GetTasksAsync();
+    }
+
+    private async Task DeleteTask(Guid id)
+    {
+        await Api.DeleteTaskAsync(id);
+        await LoadTasks();
+    }
+}

@@ -159,16 +159,16 @@ Minimum persisted data:
 
 ---
 
-### Phase 8 – what to build next (Health Checks)
+### Phase 8 – what to build next (Task Management UI)
 
-Goal of Phase 8: Add health checks to all services. Ensure the Aspire Dashboard reflects health status.
+Goal of Phase 8: Create pages in the Web UI where administrators can maintain (create, edit, delete) practice task examples. These pages must use the API to persist changes to the database.
 
 Requirements:
-- Add health check endpoints to `WebApi`, `ExecutionApi`, and `WebUi`.
-- Add DB connectivity health check to `WebApi`.
-- Aspire Dashboard must show health status for all components.
+- Ensure the API has the necessary CRUD endpoints for `Tasks`.
+- Add `ApiClient` methods in the Web UI to interact with these endpoints.
+- Build Web UI pages for managing tasks.
 
 ### Next prompt (copy/paste for Phase 8 continuation)
 
-“Implement Phase 8: add health checks to Web API, Execution API, Web UI, and DB connectivity. Ensure all are visible on the Aspire Dashboard.”
+“Implement Phase 8: Create the Task Management UI. Add necessary CRUD operations for tasks to the API, and build pages in the Web UI to list, create, edit, and delete them.”
 

@@ -33,4 +33,25 @@ public class InMemoryTaskRepository : ITaskRepository
         _tasks.TryGetValue(id, out var task);
         return Task.FromResult(task);
     }
+
+    public Task AddAsync(TaskDefinition task, CancellationToken ct = default)
+    {
+        _tasks.TryAdd(task.Id, task);
+        return Task.CompletedTask;
+    }
+
+    public Task UpdateAsync(TaskDefinition task, CancellationToken ct = default)
+    {
+        if (_tasks.ContainsKey(task.Id))
+        {
+            _tasks[task.Id] = task;
+        }
+        return Task.CompletedTask;
+    }
+
+    public Task DeleteAsync(Guid id, CancellationToken ct = default)
+    {
+        _tasks.TryRemove(id, out _);
+        return Task.CompletedTask;
+    }
 }
