@@ -1,0 +1,129 @@
+@page "/practice"
+@using PracticePlatform.WebUi.Services
+@inject ApiClient Api
+@rendermode InteractiveServer
+
+<PageTitle>Practice Tasks</PageTitle>
+
+<h1>📝 Practice Tasks</h1>
+
+@if (tasks == null)
+{
+    <p><em>Loading tasks...</em></p>
+}
+else if (tasks.Count == 0)
+{
+    <p>No tasks available.</p>
+}
+else
+{
+    <div class="task-list">
+        @foreach (var task in tasks)
+        {
+            <div class="card mb-3 @(selectedTask?.Id == task.Id ? "border-primary" : "")" @onclick="() => SelectTask(task)">
+                <div class="card-body">
+                    <h5 class="card-title">@task.Title</h5>
+                    <p class="card-text">@task.Description</p>
+                    <span class="badge bg-info">@task.DifficultyLevel</span>
+                    @foreach (var tag in task.Tags)
+                    {
+                        <span class="badge bg-secondary ms-1">@tag</span>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@if (selectedTask != null)
+{
+    <hr />
+    <h3>Submit Solution for: @selectedTask.Title</h3>
+    <div class="mb-3">
+        <label class="form-label">Your C# Code:</label>
+        <textarea class="form-control font-monospace" rows="10" @bind="sourceCode" placeholder="public class Solution { ... }"></textarea>
+    </div>
+    <button class="btn btn-primary" @onclick="SubmitCode" disabled="@isSubmitting">
+        @(isSubmitting ? "Submitting..." : "Submit")
+    </button>
+
+    @if (submissionResult != null)
+    {
+        <hr />
+        <h4>Result</h4>
+        <div class="alert @(submissionResult.Feedback?.IsSuccess == true ? "alert-success" : "alert-danger")">
+            <strong>Status:</strong> @submissionResult.Submission?.Status<br />
+            <strong>Summary:</strong> @submissionResult.Feedback?.Summary
+        </div>
+
+        @if (submissionResult.Feedback?.CompilationMessages?.Any() == true)
+        {
+            <h5>Compilation</h5>
+            <ul>
+                @foreach (var msg in submissionResult.Feedback.CompilationMessages)
+                {
+                    <li>@msg</li>
+                }
+            </ul>
+        }
+
+        @if (submissionResult.Feedback?.TestMessages?.Any() == true)
+        {
+            <h5>Tests</h5>
+            <ul>
+                @foreach (var msg in submissionResult.Feedback.TestMessages)
+                {
+                    <li>@msg</li>
+                }
+            </ul>
+        }
+
+        @if (!string.IsNullOrEmpty(submissionResult.Feedback?.AiReviewRemarks))
+        {
+            <h5>AI Review</h5>
+            <p>@submissionResult.Feedback.AiReviewRemarks</p>
+        }
+    }
+}
+
+@code {
+    private List<TaskDto>? tasks;
+    private TaskDto? selectedTask;
+    private string sourceCode = "";
+    private bool isSubmitting;
+    private SubmissionResultDto? submissionResult;
+
+    protected override async Task OnInitializedAsync()
+    {
+        tasks = await Api.GetTasksAsync();
+    }
+
+    private void SelectTask(TaskDto task)
+    {
+        selectedTask = task;
+        submissionResult = null;
+        sourceCode = "";
+    }
+
+    private async Task SubmitCode()
+    {
+        if (selectedTask == null || string.IsNullOrWhiteSpace(sourceCode)) return;
+
+        isSubmitting = true;
+        try
+        {
+            submissionResult = await Api.SubmitCodeAsync(selectedTask.Id, sourceCode);
+        }
+        catch (Exception ex)
+        {
+            submissionResult = new SubmissionResultDto
+            {
+                Feedback = new FeedbackDto { IsSuccess = false, Summary = $"Error: {ex.Message}" }
+            };
+        }
+        finally
+        {
+            isSubmitting = false;
+        }
+    }
+}

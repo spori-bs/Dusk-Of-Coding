@@ -148,24 +148,24 @@ Minimum persisted data:
 - **Phase 2**: Solution structure [DONE]
 - **Phase 3**: Domain model [DONE]
 - **Phase 4**: Execution engine boundary [DONE]
-- **Phase 5**: API layer (MainApp) [PENDING]
-- **Phase 6**: Aspire Integration (UI/API/DB routing) [PENDING]
+- **Phase 5**: API layer (MainApp) [DONE]
+- **Phase 6**: Aspire Integration (UI/API/DB routing) [DONE]
 - **Phase 7**: Persistence (EFCore) [PENDING]
 - **Phase 8**: AI extension point [PENDING]
 
 ---
 
-### Phase 5 – what to build next (API layer)
+### Phase 7 – what to build next (Persistence / EFCore)
 
-Goal of Phase 5: Build out the Minimal API endpoints in `PracticePlatform.WebApi` to handle Task and Submission routing using Domain models and the established Execution Engine. Use Scalar for testing.
+Goal of Phase 7: Introduce Entity Framework Core for database handling using SQLite or MariaDB. Replace the in-memory repositories with actual DB-backed repositories for Tasks and Submissions.
 
-Minimal endpoints:
-- `GET /tasks`
-- `GET /tasks/{id}`
-- `POST /submissions`
-- `GET /submissions/{id}`
+Requirements:
+- Add EF Core packages and configure `AppDbContext`.
+- Run initial migration to create the schema.
+- Replace `InMemoryTaskRepository` and `InMemorySubmissionRepository` with EF Core implementations.
+- Wire the DB connection through the Aspire AppHost.
 
-### Next prompt (copy/paste for Phase 5 continuation)
+### Next prompt (copy/paste for Phase 7 continuation)
 
-“Implement Phase 5: build the Minimal API endpoints in PracticePlatform.WebApi for taking submissions and querying tasks/submissions according to the structured result constraints.”
+“Implement Phase 7: introduce Entity Framework Core with SQLite/MariaDB provider, create the AppDbContext, run the initial migration, and replace in-memory repositories with EF Core backed implementations.”
 

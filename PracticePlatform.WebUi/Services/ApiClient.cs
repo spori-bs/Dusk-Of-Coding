@@ -1,0 +1,75 @@
+using System.Net.Http.Json;
+
+namespace PracticePlatform.WebUi.Services;
+
+public class ApiClient
+{
+    private readonly HttpClient _http;
+
+    public ApiClient(HttpClient http)
+    {
+        _http = http;
+    }
+
+    // ---- Tasks ----
+
+    public async Task<List<TaskDto>> GetTasksAsync()
+    {
+        return await _http.GetFromJsonAsync<List<TaskDto>>("/tasks") ?? new();
+    }
+
+    public async Task<TaskDto?> GetTaskByIdAsync(Guid id)
+    {
+        return await _http.GetFromJsonAsync<TaskDto>($"/tasks/{id}");
+    }
+
+    // ---- Submissions ----
+
+    public async Task<SubmissionResultDto?> SubmitCodeAsync(Guid taskId, string sourceCode)
+    {
+        var response = await _http.PostAsJsonAsync("/submissions", new { TaskId = taskId, SourceCode = sourceCode });
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<SubmissionResultDto>();
+    }
+
+    public async Task<SubmissionResultDto?> GetSubmissionByIdAsync(Guid id)
+    {
+        return await _http.GetFromJsonAsync<SubmissionResultDto>($"/submissions/{id}");
+    }
+}
+
+// ---- DTOs (mirrors WebApi responses) ----
+
+public class TaskDto
+{
+    public Guid Id { get; set; }
+    public string Title { get; set; } = "";
+    public string Description { get; set; } = "";
+    public string DifficultyLevel { get; set; } = "";
+    public List<string> Tags { get; set; } = new();
+}
+
+public class SubmissionResultDto
+{
+    public SubmissionDto? Submission { get; set; }
+    public FeedbackDto? Feedback { get; set; }
+}
+
+public class SubmissionDto
+{
+    public Guid Id { get; set; }
+    public Guid TaskId { get; set; }
+    public string SourceCode { get; set; } = "";
+    public string Status { get; set; } = "";
+    public DateTime SubmittedAt { get; set; }
+    public DateTime? CompletedAt { get; set; }
+}
+
+public class FeedbackDto
+{
+    public bool IsSuccess { get; set; }
+    public string Summary { get; set; } = "";
+    public List<string>? CompilationMessages { get; set; }
+    public List<string>? TestMessages { get; set; }
+    public string? AiReviewRemarks { get; set; }
+}
