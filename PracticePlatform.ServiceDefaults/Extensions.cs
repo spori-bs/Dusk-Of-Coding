@@ -21,20 +21,23 @@ public static class Extensions
 
     public static TBuilder AddServiceDefaults<TBuilder>(this TBuilder builder) where TBuilder : IHostApplicationBuilder
     {
-        // Configure Serilog to output to Console. 
-        // We do NOT use Serilog.Sinks.OpenTelemetry because builder.ConfigureOpenTelemetry() 
-        // below registers the native OpenTelemetryLoggerProvider, which automatically inherits 
-        // all Aspire dashboard authentication headers and translates ILogger structured data flawlessly.
-        var logger = new LoggerConfiguration()
+        // 1. Configure OpenTelemetry FIRST — this registers the native OpenTelemetryLoggerProvider
+        //    which feeds the Aspire Dashboard "Structured Logs" tab via OTLP.
+        builder.ConfigureOpenTelemetry();
+
+        // 2. Add Serilog as an ADDITIONAL logging provider (not a replacement).
+        //    IMPORTANT: We use builder.Logging.AddSerilog(), NOT builder.Services.AddSerilog().
+        //    - builder.Services.AddSerilog() REPLACES the entire ILoggerFactory, which kills 
+        //      the native OpenTelemetryLoggerProvider registered above.
+        //    - builder.Logging.AddSerilog() ADDS Serilog alongside existing providers,
+        //      so both Serilog (Console) and the native OTLP provider (Structured Logs) work.
+        var serilogLogger = new LoggerConfiguration()
             .ReadFrom.Configuration(builder.Configuration)
             .Enrich.FromLogContext()
             .WriteTo.Console()
             .CreateLogger();
 
-        builder.Logging.ClearProviders();
-        builder.Logging.AddSerilog(logger, dispose: true);
-        
-        builder.ConfigureOpenTelemetry();
+        builder.Logging.AddSerilog(serilogLogger, dispose: true);
 
         builder.AddDefaultHealthChecks();
 
