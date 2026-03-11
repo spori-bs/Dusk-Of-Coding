@@ -135,7 +135,18 @@ Return structured results (include execution/feedback fields, not only pass/fail
 - Configure SQLite or MariaDB provider
 - Implement actual DB-backed repositories for Tasks and Submissions instead of in-memory lists
 
-#### PHASE 8 — AI extension point
+#### PHASE 8 — Health Checks
+
+- Add health checks everywhere they are needed (Web API, Execution API, Web UI, DB connectivity)
+- Ensure the Aspire Dashboard reflects health status for all components
+
+#### PHASE 9 — Code Playground UI
+
+- Create a UI page where users can write and try their code
+- This page will use the API as the code quality gate
+- Display structured feedback (compilation, tests, AI review) in real-time
+
+#### PHASE 10 — AI extension point
 
 - Define interface for AI review (`IAIReviewService`)
 - Show where in the pipeline it should run (after ExecutionResult is available)
