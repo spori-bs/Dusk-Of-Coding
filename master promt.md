@@ -151,14 +151,22 @@ Return structured results (include execution/feedback fields, not only pass/fail
 - This page will use the API as the code quality gate
 - Display structured feedback (compilation, tests, AI review) in real-time
 
-#### PHASE 11 — Language Selector & Roslyn Integration
+#### PHASE 11 — Validation & Verification
+
+- Validate the previous phases and additionally ensure the following:
+- UI pages are working and we can create new tasks and retrieve them.
+- Structured logging and telemetry is working fine and can be visible at the AppHost.
+- In development mode, we can use HTTP instead of HTTPS (use environment variables and ensure strict HTTPS communication only in prod).
+- In development mode, we can forward the exception on the Blazor circuit (`CircuitOptions.DetailedErrors`).
+
+#### PHASE 12 — Language Selector & Roslyn Integration
 
 - Introduce a programming language selector in the UI, starting with **C#** as the only available language
 - When C# is selected, use the integrated **Roslyn** compiler platform to assist the app and the user (e.g. syntax highlighting hints, compilation diagnostics)
 - The selected language must be forwarded to the API in all submission requests
 - The API must have **language-aware behaviour**: use **named/keyed services** for the parser/execution engine and dynamically load the correct service implementation based on the submitted language
 
-#### PHASE 12 — AI extension point
+#### PHASE 13 — AI extension point
 
 - Define interface for AI review (`IAIReviewService`)
 - Show where in the pipeline it should run (after ExecutionResult is available)
