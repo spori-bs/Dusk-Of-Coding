@@ -32,6 +32,8 @@ This file is the **single source of truth for the current POC state** so work ca
     - Execution API
     - Database
   - **OpenTelemetry** is integrated via Aspire ServiceDefaults across all components.
+  - **Structured logging** using **Serilog**.
+  - The **Aspire Dashboard must contain all info from telemetry and logging**.
 - **AI review**:
   - Optional and replaceable, behind `IAIReviewService`
   - POC uses a no-op/stub implementation
