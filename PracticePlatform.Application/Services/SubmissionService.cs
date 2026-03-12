@@ -4,6 +4,8 @@ using PracticePlatform.Domain.Interfaces;
 using PracticePlatform.Domain.Models;
 using Microsoft.Extensions.DependencyInjection; // For GetRequiredKeyedService
 using Microsoft.Extensions.Logging; // For ILogger
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 
 namespace PracticePlatform.Application.Services;
 
@@ -56,6 +58,35 @@ public class SubmissionService : ISubmissionService
             // For Phase 12, we map incoming requests to the C# execution engine unconditionally for now,
             // but the architecture natively supports looking this up via the language enum mapped from the DTO.
             var targetLanguage = nameof(PracticePlatform.Domain.Enums.ProgrammingLanguage.CSharp);
+
+            // -- Roslyn Pre-Execution Syntax Check --
+            if (targetLanguage == nameof(PracticePlatform.Domain.Enums.ProgrammingLanguage.CSharp))
+            {
+                var syntaxTree = CSharpSyntaxTree.ParseText(sourceCode);
+                var diagnostics = syntaxTree.GetDiagnostics()
+                    .Where(d => d.Severity == DiagnosticSeverity.Error)
+                    .Select(d => $"Line {d.Location.GetLineSpan().StartLinePosition.Line + 1}: {d.GetMessage()}")
+                    .ToList();
+
+                if (diagnostics.Any())
+                {
+                    _logger.LogWarning("Syntax errors detected for submission {SubmissionId}", submission.Id);
+                    submission.Status = "Failed";
+                    submission.CompletedAt = DateTime.UtcNow;
+                    await _submissionRepository.UpdateAsync(submission, ct);
+
+                    var syntaxFeedback = new Feedback
+                    {
+                        IsSuccess = false,
+                        Summary = "Compilation Failed",
+                        CompilationMessages = diagnostics,
+                        AiReviewRemarks = "The submission contains syntax errors. Please fix them before attempting execution."
+                    };
+                    _feedbacks[submission.Id] = syntaxFeedback;
+                    return new SubmissionResult(submission, syntaxFeedback);
+                }
+            }
+            // ----------------------------------------
 
             _logger.LogInformation("Resolving execution engine for language {Language}", targetLanguage);
             var executionEngine = _serviceProvider.GetRequiredKeyedService<ICodeExecutionEngine>(targetLanguage);
