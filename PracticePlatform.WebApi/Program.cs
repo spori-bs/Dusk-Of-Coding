@@ -19,6 +19,10 @@ builder.Services.AddHealthChecks()
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices();
 
+// Register RabbitMQ via Aspire client integration + messaging services
+builder.AddRabbitMQClient("messaging");
+builder.Services.AddMessagingServices();
+
 var app = builder.Build();
 
 // Auto-migrate SQLite database on startup (POC only)
