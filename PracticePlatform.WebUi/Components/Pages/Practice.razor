@@ -71,6 +71,9 @@ else
     <button class="btn btn-secondary me-2" @onclick="CheckSyntax" disabled="@(string.IsNullOrWhiteSpace(sourceCode))">
         Check Syntax locally
     </button>
+    <button class="btn btn-outline-secondary me-2" @onclick="AutoFormat" disabled="@(string.IsNullOrWhiteSpace(sourceCode) || selectedLanguage != nameof(ProgrammingLanguage.CSharp))">
+        ✨ Auto-Format
+    </button>
     <button class="btn btn-primary" @onclick="SubmitCode" disabled="@(isSubmitting || string.IsNullOrWhiteSpace(sourceCode))">
         @(isSubmitting ? "Submitting..." : "Submit")
     </button>
@@ -163,6 +166,15 @@ else
                 showSuccessBlink = false;
             }
         }
+    }
+
+    private void AutoFormat()
+    {
+        if (string.IsNullOrWhiteSpace(sourceCode) || selectedLanguage != nameof(ProgrammingLanguage.CSharp)) return;
+
+        var syntaxTree = CSharpSyntaxTree.ParseText(sourceCode);
+        var formattedNode = syntaxTree.GetRoot().NormalizeWhitespace();
+        sourceCode = formattedNode.ToFullString();
     }
 
     private async Task SubmitCode()
