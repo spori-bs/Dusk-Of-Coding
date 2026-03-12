@@ -52,7 +52,9 @@ else
         </select>
 
         <label class="form-label">Your Solution:</label>
-        <textarea class="form-control font-monospace @(showSuccessBlink ? "border-success-blink" : "")" rows="10" @bind="sourceCode" placeholder="public class Solution { ... }"></textarea>
+        <div class="border rounded @(showSuccessBlink ? "border-success-blink" : "")" style="height: 400px;">
+            <StandaloneCodeEditor @ref="_editor" ConstructionOptions="EditorConstructionOptions" />
+        </div>
     </div>
     
     @if (syntaxErrors?.Any() == true)
@@ -68,13 +70,13 @@ else
         </div>
     }
 
-    <button class="btn btn-secondary me-2" @onclick="CheckSyntax" disabled="@(string.IsNullOrWhiteSpace(sourceCode))">
+    <button class="btn btn-secondary me-2" @onclick="CheckSyntax">
         Check Syntax locally
     </button>
-    <button class="btn btn-outline-secondary me-2" @onclick="AutoFormat" disabled="@(string.IsNullOrWhiteSpace(sourceCode) || selectedLanguage != nameof(ProgrammingLanguage.CSharp))">
+    <button class="btn btn-outline-secondary me-2" @onclick="AutoFormat" disabled="@(selectedLanguage != nameof(ProgrammingLanguage.CSharp))">
         ✨ Auto-Format
     </button>
-    <button class="btn btn-primary" @onclick="SubmitCode" disabled="@(isSubmitting || string.IsNullOrWhiteSpace(sourceCode))">
+    <button class="btn btn-primary" @onclick="SubmitCode" disabled="@(isSubmitting)">
         @(isSubmitting ? "Submitting..." : "Submit")
     </button>
 
@@ -120,7 +122,7 @@ else
 @code {
     private List<TaskDto>? tasks;
     private TaskDto? selectedTask;
-    private string sourceCode = "";
+    private StandaloneCodeEditor? _editor;
     private string selectedLanguage = nameof(ProgrammingLanguage.CSharp);
     private bool isSubmitting;
     private SubmissionResultDto? submissionResult;
@@ -132,15 +134,32 @@ else
         tasks = await Api.GetTasksAsync();
     }
 
-    private void SelectTask(TaskDto task)
+    private async Task SelectTask(TaskDto task)
     {
         selectedTask = task;
         submissionResult = null;
-        sourceCode = "";
+        if (_editor != null)
+        {
+            await _editor.SetValue("");
+        }
+    }
+
+    private StandaloneEditorConstructionOptions EditorConstructionOptions(StandaloneCodeEditor editor)
+    {
+        return new StandaloneEditorConstructionOptions
+        {
+            Language = "csharp",
+            Value = "public class Solution\n{\n    // Write your code here\n}",
+            Theme = "vs",
+            AutomaticLayout = true,
+            Minimap = new EditorMinimapOptions { Enabled = false }
+        };
     }
 
     private async Task CheckSyntax()
     {
+        if (_editor == null) return;
+        var sourceCode = await _editor.GetValue();
         if (string.IsNullOrWhiteSpace(sourceCode)) return;
 
         syntaxErrors = new List<string>();
@@ -168,18 +187,22 @@ else
         }
     }
 
-    private void AutoFormat()
+    private async Task AutoFormat()
     {
-        if (string.IsNullOrWhiteSpace(sourceCode) || selectedLanguage != nameof(ProgrammingLanguage.CSharp)) return;
+        if (_editor == null || selectedLanguage != nameof(ProgrammingLanguage.CSharp)) return;
+        var sourceCode = await _editor.GetValue();
+        if (string.IsNullOrWhiteSpace(sourceCode)) return;
 
         var syntaxTree = CSharpSyntaxTree.ParseText(sourceCode);
         var formattedNode = syntaxTree.GetRoot().NormalizeWhitespace();
-        sourceCode = formattedNode.ToFullString();
+        await _editor.SetValue(formattedNode.ToFullString());
     }
 
     private async Task SubmitCode()
     {
-        if (selectedTask == null || string.IsNullOrWhiteSpace(sourceCode)) return;
+        if (selectedTask == null || _editor == null) return;
+        var sourceCode = await _editor.GetValue();
+        if (string.IsNullOrWhiteSpace(sourceCode)) return;
 
         isSubmitting = true;
         submissionResult = null;
