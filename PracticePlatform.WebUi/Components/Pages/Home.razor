@@ -1,7 +1,12 @@
-﻿@page "/"
+@page "/"
+@layout PracticePlatform.WebUi.Components.Layout.LandingLayout
+@using PracticePlatform.WebUi.Components.Landing
+@rendermode InteractiveServer
 
-<PageTitle>Home</PageTitle>
+<PageTitle>AntiGravity - Revolutionize Your Coding</PageTitle>
 
-<h1>Hello, world!</h1>
-
-Welcome to your new app.
+<HeroComponent />
+<FeaturesComponent />
+<MediaDemoComponent />
+<SocialProofComponent />
+<LeadFormComponent />

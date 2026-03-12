@@ -1,0 +1,61 @@
+@inherits LayoutComponentBase
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AntiGravity - Revolutionize Your Coding</title>
+    <!-- Add any specific landing page styles here -->
+    <style>
+        .landing-header {
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #ffffff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .landing-logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2b3a42;
+            text-decoration: none;
+        }
+        .landing-main {
+            min-height: calc(100vh - 140px);
+        }
+        .landing-footer {
+            padding: 2rem;
+            text-align: center;
+            background: #f8f9fa;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <header class="landing-header">
+        <a href="" class="landing-logo">🚀 AntiGravity</a>
+        <!-- Distraction-free: No complex navigation links -->
+        <div>
+            <a href="#demo" class="btn btn-outline-primary btn-sm me-2">Watch Demo</a>
+            <a href="#get-started" class="btn btn-primary btn-sm">Get Started</a>
+        </div>
+    </header>
+
+    <main class="landing-main">
+        @Body
+    </main>
+
+    <footer class="landing-footer">
+        &copy; @DateTime.Now.Year AntiGravity Inc. All rights reserved.
+        <!-- Distraction-free: No exit links -->
+    </footer>
+
+    <!-- Optional: LiveChat script placeholder -->
+    <script>
+        // window.LiveChatWidget = ...
+    </script>
+</body>
+</html>
