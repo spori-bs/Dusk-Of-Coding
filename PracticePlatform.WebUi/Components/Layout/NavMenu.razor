@@ -1,31 +1,19 @@
-<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">PracticePlatform.WebUi</a>
+<nav class="d-flex align-items-center">
+    <div class="nav-item me-3">
+        <NavLink class="nav-link text-dark fw-semibold" href="" Match="NavLinkMatch.All">
+            <i class="bi bi-house-door me-1"></i> Home
+        </NavLink>
     </div>
-</div>
 
-<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
+    <div class="nav-item me-3">
+        <NavLink class="nav-link text-dark fw-semibold" href="practice">
+            <i class="bi bi-code-slash me-1"></i> Practice
+        </NavLink>
+    </div>
 
-<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
-    <nav class="nav flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
-
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="practice">
-                <span class="bi bi-pencil-fill-nav-menu" aria-hidden="true"></span> Practice
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="tasks">
-                <span class="bi bi-list-task-nav-menu" aria-hidden="true"></span> Tasks
-            </NavLink>
-        </div>
-    </nav>
-</div>
-
+    <div class="nav-item me-3">
+        <NavLink class="nav-link text-dark fw-semibold" href="tasks">
+            <i class="bi bi-list-task me-1"></i> Manage Tasks
+        </NavLink>
+    </div>
+</nav>

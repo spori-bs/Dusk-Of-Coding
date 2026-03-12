@@ -1,19 +1,25 @@
-﻿@inherits LayoutComponentBase
+@inherits LayoutComponentBase
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
-
-    <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+<div class="app-page-wrapper">
+    <header class="app-header">
+        <div class="d-flex align-items-center">
+            <a href="/" class="app-logo me-4">🚀 PracticePlatform</a>
+            <NavMenu />
         </div>
+        <div>
+            <!-- Header actions (e.g., Profile, Logout) can go here later -->
+        </div>
+    </header>
 
-        <article class="content px-4">
+    <main class="app-main">
+        <div class="container py-4 border-start border-end bg-white" style="min-height: calc(100vh - 140px);">
             @Body
-        </article>
+        </div>
     </main>
+
+    <footer class="app-footer">
+        &copy; @DateTime.Now.Year PracticePlatform. All rights reserved.
+    </footer>
 </div>
 
 <div id="blazor-error-ui" data-nosnippet>
@@ -21,3 +27,40 @@
     <a href="." class="reload">Reload</a>
     <span class="dismiss">🗙</span>
 </div>
+
+<style>
+    .app-page-wrapper {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f8f9fa; /* Slight off-white background to frame the white container */
+    }
+    .app-header {
+        padding: 0 2rem;
+        height: 70px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #ffffff;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+    }
+    .app-logo {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #2b3a42;
+        text-decoration: none;
+    }
+    .app-main {
+        min-height: calc(100vh - 140px);
+    }
+    .app-footer {
+        height: 70px;
+        padding: 2rem;
+        text-align: center;
+        background: #ffffff;
+        border-top: 1px solid #eaeaea;
+        color: #6c757d;
+        font-size: 0.9rem;
+    }
+</style>
