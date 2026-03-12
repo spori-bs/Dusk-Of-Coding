@@ -35,3 +35,27 @@ This project is built using modern .NET technologies and architectural patterns 
 
 The platform follows a **Modular Monolith** structure applying **Clean Architecture** principles.
 It separates the main onboarding app from a dedicated **Execution API service**, which acts as a hard boundary for sandboxed code compilation and execution.
+
+### High-Level Component Flow
+
+```mermaid
+C4Context
+    title Architecture Overview for PracticePlatform
+
+    Person(candidate, "Junior Developer", "Uses the platform to read tasks and submit code")
+    
+    System_Boundary(platform, "PracticePlatform Application") {
+        System(webui, "Blazor Web UI", "Provides interactive Code Playground & Task Management")
+        System(webapi, "Core Web API", "Handles business logic, persistence, and task orchestration")
+        SystemDb(database, "Application Database", "Stores Tasks, Submissions, and Feedback")
+    }
+
+    System_Ext(execution_api, "Execution API (Sandbox)", "Isolated Docker container that safely compiles and runs unit tests on submitted code")
+    System_Ext(ai_reviewer, "AI Review Service", "Optional extension point providing LLM-based feedback on code quality")
+
+    Rel(candidate, webui, "Practices coding tasks", "HTTPS")
+    Rel(webui, webapi, "Submits C# code & retrieves tasks", "REST")
+    Rel(webapi, database, "Reads/Writes data", "EF Core")
+    Rel(webapi, execution_api, "Delegates unsafe execution", "HTTP/JSON")
+    Rel(webapi, ai_reviewer, "Requests code review", "API")
+```
