@@ -155,14 +155,24 @@ Minimum persisted data:
 - **Phase 9**: Health Checks [DONE]
 - **Phase 10**: Code Playground UI [DONE]
 - **Phase 11**: Validation & Verification [DONE]
-- **Phase 12**: Language Selector & Roslyn Integration [PENDING]
-- **Phase 13**: AI extension point [PENDING]
+- **Phase 12**: Language Selector & Roslyn Integration [DONE]
+- **Phase 13**: AI extension point [DONE]
 
 ---
 
-### Phase 12 – what to build next (Language Selector & Roslyn Integration)
+### Phase 13 – what to build next (AI extension point)
 
-Goal of Phase 12: Introduce a language selector, implement Roslyn-based syntax checking in the UI, and restructure the backend Execution Engine to use Keyed Services for language-aware behavior.
+Goal of Phase 13: Add an optional AI review step that processes the user's code after standard tests pass. The AI review provides feedback on code quality, best practices, and readability.
+
+Requirements:
+- Define `IAIReviewService` in the `PracticePlatform.Domain` or `Application` layer.
+- Integrate it into the `SubmissionService` pipeline to be executed after `ICodeExecutionEngine`.
+- Update the mock `NoOpAIReviewService` to return a static comment for now, to ensure the pipeline is complete.
+- (Optional) Use a real AI service (like OpenAI or Semantic Kernel) if requested, or leave it as a clear extension point.
+
+### Next prompt (copy/paste for Phase 13 continuation)
+
+“Implement Phase 13: introduce the AI extension point. Define the `IAIReviewService`, insert it into the `SubmissionService` pipeline, and implement a mock feedback generator so the UI displays AI reviews.”
 
 Requirements:
 - Add a language dropdown in `Practice.razor`.

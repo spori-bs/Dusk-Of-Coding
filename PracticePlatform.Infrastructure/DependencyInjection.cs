@@ -19,7 +19,7 @@ public static class DependencyInjection
         // Register EF Core repositories
         services.AddScoped<ITaskRepository, EfTaskRepository>();
         services.AddScoped<ISubmissionRepository, EfSubmissionRepository>();
-        services.AddSingleton<IAIReviewService, NoOpAIReviewService>();
+        services.AddSingleton<IAIReviewService, MockAIReviewService>();
 
         // Register the Execution Engine with a typed HttpClient
         // Uses the Aspire service discovery name "executionapi" configured in AppHost.
