@@ -52,8 +52,8 @@ else
         </select>
 
         <label class="form-label">Your Solution:</label>
-        <div class="border rounded @(showSuccessBlink ? "border-success-blink" : "")" style="height: 400px;">
-            <StandaloneCodeEditor @ref="_editor" ConstructionOptions="EditorConstructionOptions" />
+        <div class="border rounded @(showSuccessBlink ? "border-success-blink" : "")" style="height: 400px; width: 100%; position: relative;">
+            <StandaloneCodeEditor @ref="_editor" ConstructionOptions="EditorConstructionOptions" CssClass="w-100 h-100 placeholder-glow" />
         </div>
     </div>
     
@@ -234,5 +234,12 @@ else
     .border-success-blink {
         animation: blink-green 1s ease-out;
         border-color: #198754 !important;
+    }
+    .placeholder-glow {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
     }
 </style>
