@@ -4,6 +4,8 @@ using PracticePlatform.Application;
 using PracticePlatform.Application.Services;
 using PracticePlatform.Infrastructure;
 using PracticePlatform.Infrastructure.Persistence;
+using PracticePlatform.WebApi.Hubs;
+using PracticePlatform.WebApi.Services;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,6 +24,12 @@ builder.Services.AddInfrastructureServices();
 // Register RabbitMQ via Aspire client integration + messaging services
 builder.AddRabbitMQClient("messaging");
 builder.Services.AddMessagingServices();
+
+// SignalR for real-time tutor feedback
+builder.Services.AddSignalR();
+
+// RabbitMQ → SignalR bridge
+builder.Services.AddHostedService<TutorResponseBridge>();
 
 var app = builder.Build();
 
@@ -92,6 +100,9 @@ submissionsGroup.MapGet("/{id:guid}", async (Guid id, ISubmissionService submiss
     var submission = await submissionService.GetSubmissionByIdAsync(id, ct);
     return submission is not null ? Results.Ok(submission) : Results.NotFound();
 });
+
+// SignalR hub for real-time tutor responses
+app.MapHub<TutorHub>("/hubs/tutor");
 
 app.Run();
 
