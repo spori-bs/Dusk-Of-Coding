@@ -109,3 +109,29 @@ flowchart LR
 | 2026-03-12 | Phase 2 done: ModelContextProtocol 1.1.0, TutorWorker BackgroundService with MCP tools |
 | 2026-03-12 | Phase 3 done: IChatClient with switchable OpenAI/AzureOpenAI, Polly retry+timeout, Socratic Tutor prompt |
 | 2026-03-12 | Phase 4 done: SignalR TutorHub, RabbitMQ→SignalR bridge, TutorTerminal Blazor component |
+
+---
+
+## Resumption Point (2026-03-12 18:41)
+
+**Next up: Phase 5 — Sandboxing & Safety**, then Phase 6 — End-to-End Verification.
+
+### Phase 5 scope
+- Add 5s execution timeouts to MCP tools
+- HTML sanitize tutor responses before rendering
+- Add input length limits
+- Validate SourceCode is not empty/too long
+
+### Phase 6 scope
+- Full end-to-end flow test via Aspire Dashboard
+- Verify: Submit code → RabbitMQ → TutorWorker (LLM) → RabbitMQ → SignalR → TutorTerminal
+
+### Git state
+- **Branch**: `feature/ai-tutor-platform`
+- **Last commit**: `60fa6ad` — Phase 4 (Blazor WebUI & SignalR Bridge)
+- **Build**: ✅ 0 errors, 0 warnings (all 10 projects)
+
+### LLM provider config needed
+- Set `LlmProvider:OpenAIApiKey` or switch to `AzureOpenAI` in `TutorWorker/appsettings.json`
+- No API key is configured yet — LLM calls will hit the Polly fallback path
+
