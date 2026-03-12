@@ -52,7 +52,7 @@ else
         </select>
 
         <label class="form-label">Your Solution:</label>
-        <textarea class="form-control font-monospace" rows="10" @bind="sourceCode" placeholder="public class Solution { ... }"></textarea>
+        <textarea class="form-control font-monospace @(showSuccessBlink ? "border-success-blink" : "")" rows="10" @bind="sourceCode" placeholder="public class Solution { ... }"></textarea>
     </div>
     
     @if (syntaxErrors?.Any() == true)
@@ -122,6 +122,7 @@ else
     private bool isSubmitting;
     private SubmissionResultDto? submissionResult;
     private List<string>? syntaxErrors;
+    private bool showSuccessBlink;
 
     protected override async Task OnInitializedAsync()
     {
@@ -135,7 +136,7 @@ else
         sourceCode = "";
     }
 
-    private void CheckSyntax()
+    private async Task CheckSyntax()
     {
         if (string.IsNullOrWhiteSpace(sourceCode)) return;
 
@@ -153,6 +154,13 @@ else
             if (diagnostics.Any())
             {
                 syntaxErrors.AddRange(diagnostics);
+            }
+            else
+            {
+                showSuccessBlink = true;
+                StateHasChanged();
+                await Task.Delay(1000);
+                showSuccessBlink = false;
             }
         }
     }
@@ -181,3 +189,15 @@ else
         }
     }
 }
+
+<style>
+    @@keyframes blink-green {
+        0% { border-color: #198754; box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25); }
+        50% { border-color: #198754; box-shadow: 0 0 0 0.5rem rgba(25, 135, 84, 0.5); }
+        100% { border-color: #dee2e6; box-shadow: none; }
+    }
+    .border-success-blink {
+        animation: blink-green 1s ease-out;
+        border-color: #198754 !important;
+    }
+</style>
