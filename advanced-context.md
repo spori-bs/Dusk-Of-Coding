@@ -64,7 +64,7 @@ flowchart LR
 | 0 | Branch & Tracking Setup | ✅ Done |
 | 1 | Native RabbitMQ & Polly Connection Strategy | ✅ Done |
 | 2 | MCP-Enabled Worker with Fallback | ✅ Done |
-| 3 | Resilient LLM Loop | 🔲 Not started |
+| 3 | Resilient LLM Loop | ✅ Done |
 | 4 | Blazor WebUI & SignalR Bridge | 🔲 Not started |
 | 5 | Sandboxing & Safety | 🔲 Not started |
 | 6 | End-to-End Verification | 🔲 Not started |
@@ -107,3 +107,4 @@ flowchart LR
 | 2026-03-12 | Phase 1 before Phase 2 (dependency order) |
 | 2026-03-12 | Phase 1 done: RabbitMQ.Client 7.2.1, Polly 10.4.0, Aspire.RabbitMQ.Client 13.1.2 |
 | 2026-03-12 | Phase 2 done: ModelContextProtocol 1.1.0, TutorWorker BackgroundService with MCP tools |
+| 2026-03-12 | Phase 3 done: IChatClient with switchable OpenAI/AzureOpenAI, Polly retry+timeout, Socratic Tutor prompt |

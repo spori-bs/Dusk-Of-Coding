@@ -1,20 +1,38 @@
+using Microsoft.Extensions.AI;
+using Microsoft.Extensions.Options;
+using Polly;
+using Polly.Registry;
 using PracticePlatform.Infrastructure.Messaging;
+using PracticePlatform.TutorWorker.Configuration;
+using PracticePlatform.TutorWorker.Prompts;
+using PracticePlatform.TutorWorker.Resilience;
 
 namespace PracticePlatform.TutorWorker;
 
 /// <summary>
 /// Background service that consumes submissions from RabbitMQ,
-/// processes them through MCP tools (Roslyn analysis, code execution),
+/// processes them through the Socratic Tutor LLM with MCP tools,
 /// and publishes tutor responses back to the response exchange.
 /// </summary>
 public sealed class TutorWorkerService : BackgroundService
 {
     private readonly RabbitMQService _rabbitMqService;
+    private readonly IChatClient _chatClient;
+    private readonly ResiliencePipelineProvider<string> _resilienceProvider;
+    private readonly LlmProviderOptions _options;
     private readonly ILogger<TutorWorkerService> _logger;
 
-    public TutorWorkerService(RabbitMQService rabbitMqService, ILogger<TutorWorkerService> logger)
+    public TutorWorkerService(
+        RabbitMQService rabbitMqService,
+        IChatClient chatClient,
+        ResiliencePipelineProvider<string> resilienceProvider,
+        IOptions<LlmProviderOptions> options,
+        ILogger<TutorWorkerService> logger)
     {
         _rabbitMqService = rabbitMqService;
+        _chatClient = chatClient;
+        _resilienceProvider = resilienceProvider;
+        _options = options.Value;
         _logger = logger;
     }
 
@@ -22,15 +40,14 @@ public sealed class TutorWorkerService : BackgroundService
     {
         _logger.LogInformation("TutorWorker starting, subscribing to {Queue}...", RabbitMQTopology.TutorInteractionsQueue);
 
-        // Consume from the TutorInteractionsQueue
         var channel = await _rabbitMqService.ConsumeAsync<SubmissionMessage>(
             RabbitMQTopology.TutorInteractionsQueue,
             HandleSubmissionAsync,
             stoppingToken);
 
-        _logger.LogInformation("TutorWorker is now consuming messages");
+        _logger.LogInformation("TutorWorker is now consuming messages (LLM provider: {Provider}, model: {Model})",
+            _options.Provider, _options.ModelId);
 
-        // Keep the service alive until cancellation
         try
         {
             await Task.Delay(Timeout.Infinite, stoppingToken);
@@ -51,35 +68,22 @@ public sealed class TutorWorkerService : BackgroundService
             "Processing submission {SubmissionId} with CorrelationId {CorrelationId}",
             message.SubmissionId, correlationId);
 
+        var pipeline = _resilienceProvider.GetPipeline(LlmResilienceRegistration.PipelineName);
+
         try
         {
-            // Phase 2: Basic flow — analyze code with Roslyn, then respond
-            // Phase 3 will add the LLM Socratic Tutor loop here
-            var analysisResult = McpTools.AnalyzeCodeTool.AnalyzeCode(message.SourceCode, ct);
-
-            string responseType;
-            string content;
-
-            if (analysisResult.StartsWith("✅"))
+            // Try the LLM with Polly resilience
+            var tutorResponse = await pipeline.ExecuteAsync(async token =>
             {
-                responseType = "feedback";
-                content = $"Your code passes syntax analysis.\n\n{analysisResult}\n\n" +
-                          "The Socratic Tutor will provide deeper guidance once the LLM integration is complete (Phase 3).";
-            }
-            else
-            {
-                responseType = "hint";
-                content = $"I found some issues in your code. Let's work through them:\n\n{analysisResult}\n\n" +
-                          "Try fixing these syntax errors first, then resubmit.";
-            }
+                return await InvokeSocraticTutorAsync(message, token);
+            }, ct);
 
             var response = new TutorResponseMessage
             {
                 CorrelationId = correlationId,
                 SubmissionId = message.SubmissionId,
-                ResponseType = responseType,
-                Content = content,
-                RawDiagnostics = analysisResult
+                ResponseType = "feedback",
+                Content = tutorResponse
             };
 
             await _rabbitMqService.PublishAsync(
@@ -89,29 +93,56 @@ public sealed class TutorWorkerService : BackgroundService
                 correlationId,
                 ct);
 
-            _logger.LogInformation(
-                "Published tutor response for submission {SubmissionId} (type: {ResponseType})",
-                message.SubmissionId, responseType);
+            _logger.LogInformation("Published tutor response for submission {SubmissionId}", message.SubmissionId);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error processing submission {SubmissionId}", message.SubmissionId);
+            // Fallback: LLM completely failed — send safety message + raw diagnostics
+            _logger.LogError(ex, "LLM failed for submission {SubmissionId}, executing fallback", message.SubmissionId);
 
-            // Always respond — no stuck requests
-            var errorResponse = new TutorResponseMessage
+            var rawDiagnostics = McpTools.AnalyzeCodeTool.AnalyzeCode(message.SourceCode, ct);
+
+            var fallbackResponse = new TutorResponseMessage
             {
                 CorrelationId = correlationId,
                 SubmissionId = message.SubmissionId,
-                ResponseType = "error",
-                Content = "An unexpected error occurred while processing your submission. Please try again later."
+                ResponseType = "safety",
+                Content = _options.FallbackMessage,
+                RawDiagnostics = rawDiagnostics
             };
 
             await _rabbitMqService.PublishAsync(
                 RabbitMQTopology.ResponseExchange,
                 RabbitMQTopology.ResponseRoutingKey,
-                errorResponse,
+                fallbackResponse,
                 correlationId,
                 ct);
         }
+    }
+
+    private async Task<string> InvokeSocraticTutorAsync(SubmissionMessage message, CancellationToken ct)
+    {
+        var chatMessages = new List<ChatMessage>
+        {
+            new(ChatRole.System, SocraticTutorPrompt.SystemPrompt),
+            new(ChatRole.User, $"""
+                Please review my code submission for the practice exercise.
+
+                ```csharp
+                {message.SourceCode}
+                ```
+
+                Language: {message.Language}
+                """)
+        };
+
+        var chatOptions = new ChatOptions
+        {
+            Tools = [.. _chatClient.GetService<IList<AITool>>() ?? []]
+        };
+
+        var response = await _chatClient.GetResponseAsync(chatMessages, chatOptions, ct);
+
+        return response.Text ?? "I wasn't able to generate feedback for your submission. Please try again.";
     }
 }
