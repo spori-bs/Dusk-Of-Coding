@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using PracticePlatform.Domain.Interfaces;
+using PracticePlatform.Infrastructure.Messaging;
 using PracticePlatform.Infrastructure.Persistence;
 using PracticePlatform.Infrastructure.Repositories;
 using PracticePlatform.Infrastructure.Services;
@@ -36,5 +38,21 @@ public static class DependencyInjection
 
         return services;
     }
+
+    /// <summary>
+    /// Registers RabbitMQ messaging infrastructure.
+    /// Call this in addition to <see cref="AddInfrastructureServices"/> when RabbitMQ is available.
+    /// </summary>
+    public static IServiceCollection AddMessagingServices(this IServiceCollection services)
+    {
+        // RabbitMQService wraps the IConnection provided by Aspire's AddRabbitMQClient
+        services.AddSingleton<RabbitMQService>();
+
+        // Declare topology (exchanges, queues, bindings) on startup
+        services.AddHostedService<TopologyInitializer>();
+
+        return services;
+    }
 }
+
 

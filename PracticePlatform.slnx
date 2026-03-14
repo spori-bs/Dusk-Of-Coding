@@ -6,6 +6,7 @@
   <Project Path="PracticePlatform.ExecutionApi/PracticePlatform.ExecutionApi.csproj" />
   <Project Path="PracticePlatform.Infrastructure/PracticePlatform.Infrastructure.csproj" />
   <Project Path="PracticePlatform.ServiceDefaults/PracticePlatform.ServiceDefaults.csproj" />
+  <Project Path="PracticePlatform.TutorWorker/PracticePlatform.TutorWorker.csproj" />
   <Project Path="PracticePlatform.WebApi/PracticePlatform.WebApi.csproj" />
   <Project Path="PracticePlatform.WebUi/PracticePlatform.WebUi.csproj" />
 </Solution>

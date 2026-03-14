@@ -119,10 +119,13 @@ else
     }
 }
 
+<TutorTerminal @ref="tutorTerminal" />
+
 @code {
     private List<TaskDto>? tasks;
     private TaskDto? selectedTask;
     private StandaloneCodeEditor? _editor;
+    private TutorTerminal? tutorTerminal;
     private string selectedLanguage = nameof(ProgrammingLanguage.CSharp);
     private bool isSubmitting;
     private SubmissionResultDto? submissionResult;
@@ -206,10 +209,16 @@ else
 
         isSubmitting = true;
         submissionResult = null;
-        syntaxErrors = null; // Clear local syntax errors before remote execution
+        syntaxErrors = null;
         try
         {
             submissionResult = await Api.SubmitCodeAsync(selectedTask.Id, sourceCode, selectedLanguage);
+
+            // Subscribe TutorTerminal to receive real-time tutor feedback
+            if (submissionResult?.Submission?.Id is Guid subId && tutorTerminal is not null)
+            {
+                await tutorTerminal.SubscribeToSubmission(subId);
+            }
         }
         catch (Exception ex)
         {
