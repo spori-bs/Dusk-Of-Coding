@@ -1,8 +1,10 @@
 @page "/tasks/create"
 @page "/tasks/edit/{Id:guid}"
 @using PracticePlatform.WebUi.Services
+@using PracticePlatform.WebUi.Resources
 @inject ApiClient Api
 @inject NavigationManager Nav
+@inject IStringLocalizer<SharedResource> L
 @rendermode InteractiveServer
 
 <PageTitle>@Title</PageTitle>
@@ -11,7 +13,7 @@
 
 @if (_isLoading)
 {
-    <p><em>Loading...</em></p>
+    <p><em>@L["Loading"]</em></p>
 }
 else
 {
@@ -20,32 +22,32 @@ else
         <ValidationSummary class="text-danger" />
 
         <div class="mb-3">
-            <label for="title" class="form-label">Title</label>
+            <label for="title" class="form-label">@L["TaskEditor_FieldTitle"]</label>
             <InputText id="title" class="form-control" @bind-Value="_model.Title" />
         </div>
 
         <div class="mb-3">
-            <label for="description" class="form-label">Description</label>
+            <label for="description" class="form-label">@L["TaskEditor_FieldDescription"]</label>
             <InputTextArea id="description" class="form-control" @bind-Value="_model.Description" rows="3" />
         </div>
 
         <div class="mb-3">
-            <label for="difficulty" class="form-label">Difficulty Level</label>
+            <label for="difficulty" class="form-label">@L["TaskEditor_FieldDifficulty"]</label>
             <InputText id="difficulty" class="form-control" @bind-Value="_model.DifficultyLevel" />
         </div>
 
         <div class="mb-3">
-            <label for="tags" class="form-label">Tags (comma-separated)</label>
+            <label for="tags" class="form-label">@L["TaskEditor_FieldTags"]</label>
             <InputText id="tags" class="form-control" @bind-Value="_tagsInput" />
         </div>
 
         <div class="mb-3">
-            <label for="testBundle" class="form-label">Test Bundle Reference</label>
+            <label for="testBundle" class="form-label">@L["TaskEditor_FieldTestBundle"]</label>
             <InputText id="testBundle" class="form-control" @bind-Value="_model.TestBundleReference" />
         </div>
 
-        <button type="submit" class="btn btn-primary">Save</button>
-        <a href="/tasks" class="btn btn-secondary">Cancel</a>
+        <button type="submit" class="btn btn-primary">@L["Save"]</button>
+        <a href="/tasks" class="btn btn-secondary">@L["Cancel"]</a>
     </EditForm>
 }
 
@@ -54,7 +56,7 @@ else
     public Guid? Id { get; set; }
 
     private bool IsEditMode => Id.HasValue;
-    private string Title => IsEditMode ? "Edit Task" : "Create Task";
+    private string Title => IsEditMode ? L["TaskEditor_Edit"] : L["TaskEditor_Create"];
     
     private CreateTaskDto _model = new();
     private string _tagsInput = "";

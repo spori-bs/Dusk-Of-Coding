@@ -1,18 +1,20 @@
 @using Microsoft.AspNetCore.SignalR.Client
+@using PracticePlatform.WebUi.Resources
 @implements IAsyncDisposable
 @inject NavigationManager Navigation
+@inject IStringLocalizer<SharedResource> L
 
 <div class="tutor-terminal @(IsExpanded ? "expanded" : "collapsed")">
     <div class="tutor-header" @onclick="ToggleExpanded">
         <span class="tutor-icon">🤖</span>
-        <span class="tutor-title">AI Tutor</span>
+        <span class="tutor-title">@L["Tutor_Title"]</span>
         @if (isWaiting)
         {
-            <span class="tutor-status waiting">thinking...</span>
+            <span class="tutor-status waiting">@L["Tutor_Thinking"]</span>
         }
         else if (messages.Count > 0)
         {
-            <span class="tutor-status ready">@messages.Count response(s)</span>
+            <span class="tutor-status ready">@messages.Count @L["Tutor_Responses"]</span>
         }
         <span class="tutor-toggle">@(IsExpanded ? "▼" : "▲")</span>
     </div>
@@ -23,8 +25,8 @@
             @if (messages.Count == 0 && !isWaiting)
             {
                 <div class="tutor-empty">
-                    <p>Submit your code to get feedback from the AI Tutor.</p>
-                    <p class="text-muted small">The tutor will guide you with questions — not answers!</p>
+                    <p>@L["Tutor_EmptyMessage"]</p>
+                    <p class="text-muted small">@L["Tutor_EmptyHint"]</p>
                 </div>
             }
 
@@ -32,7 +34,7 @@
             {
                 <div class="tutor-message @msg.TypeClass">
                     <div class="tutor-message-header">
-                        <span class="tutor-message-type">@msg.TypeLabel</span>
+                        <span class="tutor-message-type">@GetTypeLabel(msg.ResponseType)</span>
                         <span class="tutor-message-time">@msg.Timestamp.ToString("HH:mm:ss")</span>
                     </div>
                     <div class="tutor-message-content">
@@ -41,7 +43,7 @@
                     @if (!string.IsNullOrEmpty(msg.RawDiagnostics))
                     {
                         <details class="tutor-diagnostics">
-                            <summary>Raw Diagnostics</summary>
+                            <summary>@L["Tutor_RawDiagnostics"]</summary>
                             <pre>@msg.RawDiagnostics</pre>
                         </details>
                     }
@@ -119,6 +121,15 @@
         InvokeAsync(StateHasChanged);
     }
 
+    private string GetTypeLabel(string responseType) => responseType switch
+    {
+        "hint" => L["Tutor_Hint"],
+        "error" => L["Tutor_Error"],
+        "safety" => L["Tutor_Fallback"],
+        "feedback" => L["Tutor_Feedback"],
+        _ => L["Tutor_Response"]
+    };
+
     public void ClearMessages()
     {
         messages.Clear();
@@ -153,15 +164,6 @@
             "hint" => "msg-hint",
             "error" or "safety" => "msg-error",
             _ => "msg-feedback"
-        };
-
-        public string TypeLabel => ResponseType switch
-        {
-            "hint" => "💡 Hint",
-            "error" => "⚠️ Error",
-            "safety" => "🔄 Fallback",
-            "feedback" => "📝 Feedback",
-            _ => "📝 Response"
         };
 
         public string HtmlContent

@@ -1,13 +1,15 @@
 @inherits LayoutComponentBase
+@using PracticePlatform.WebUi.Resources
+@inject IStringLocalizer<SharedResource> L
 
 <div class="app-page-wrapper">
     <header class="app-header">
         <div class="d-flex align-items-center">
-            <a href="/" class="app-logo me-4">🚀 PracticePlatform</a>
+            <a href="/" class="app-logo me-4">@L["AppTitle"]</a>
             <NavMenu />
         </div>
         <div>
-            <!-- Header actions (e.g., Profile, Logout) can go here later -->
+            <LanguageSelector />
         </div>
     </header>
 
@@ -18,13 +20,13 @@
     </main>
 
     <footer class="app-footer">
-        &copy; @DateTime.Now.Year PracticePlatform. All rights reserved.
+        &copy; @DateTime.Now.Year @L["Footer_Rights"]
     </footer>
 </div>
 
 <div id="blazor-error-ui" data-nosnippet>
-    An unhandled error has occurred.
-    <a href="." class="reload">Reload</a>
+    @L["Error_Unhandled"]
+    <a href="." class="reload">@L["Error_Reload"]</a>
     <span class="dismiss">🗙</span>
 </div>
 

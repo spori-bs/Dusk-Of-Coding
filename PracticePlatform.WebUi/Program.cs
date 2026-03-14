@@ -1,9 +1,13 @@
+using System.Globalization;
 using PracticePlatform.WebUi.Components;
 using PracticePlatform.WebUi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
+
+// ── Localization ───────────────────────────────────────────
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
@@ -22,7 +26,19 @@ builder.Services.AddHttpClient<ApiClient>(client =>
     client.BaseAddress = new Uri("http://webapi");
 });
 
+// ── Controller for culture switching ──────────────────────
+builder.Services.AddControllers();
+
 var app = builder.Build();
+
+// ── Request Localization Middleware ────────────────────────
+var supportedCultures = new[] { new CultureInfo("hu"), new CultureInfo("en") };
+app.UseRequestLocalization(new RequestLocalizationOptions
+{
+    DefaultRequestCulture = new Microsoft.AspNetCore.Localization.RequestCulture("hu"),
+    SupportedCultures = supportedCultures,
+    SupportedUICultures = supportedCultures
+});
 
 app.MapDefaultEndpoints();
 
@@ -37,6 +53,7 @@ app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages:
 
 app.UseAntiforgery();
 
+app.MapControllers();
 app.MapStaticAssets();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
