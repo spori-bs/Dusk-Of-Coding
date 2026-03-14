@@ -91,6 +91,13 @@ var submissionsGroup = app.MapGroup("/submissions").WithTags("Submissions");
 
 submissionsGroup.MapPost("/", async ([FromBody] PracticePlatform.Application.DTOs.SubmitCodeDto request, ISubmissionService submissionService, CancellationToken ct) =>
 {
+    // Phase 5: Input validation — reject empty or oversized source code
+    if (string.IsNullOrWhiteSpace(request.SourceCode))
+        return Results.BadRequest(new { error = "Source code cannot be empty." });
+
+    if (request.SourceCode.Length > 50_000)
+        return Results.BadRequest(new { error = "Source code exceeds the maximum allowed length of 50,000 characters." });
+
     var result = await submissionService.SubmitCodeAsync(request.TaskId, request.SourceCode, request.UserId, ct);
     return Results.Created($"/submissions/{result.Submission.Id}", result);
 });

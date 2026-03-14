@@ -164,11 +164,17 @@
             _ => "📝 Response"
         };
 
-        public string HtmlContent => Content
-            .Replace("\n\n", "</p><p>")
-            .Replace("\n", "<br />")
-            .Replace("```", "")
-            is var text ? $"<p>{text}</p>" : Content;
+        public string HtmlContent
+        {
+            get
+            {
+                var encoded = System.Net.WebUtility.HtmlEncode(Content);
+                var formatted = encoded
+                    .Replace("\n\n", "</p><p>")
+                    .Replace("\n", "<br />");
+                return $"<p>{formatted}</p>";
+            }
+        }
     }
 
     private class TutorResponseDto

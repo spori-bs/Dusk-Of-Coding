@@ -13,6 +13,7 @@ namespace PracticePlatform.TutorWorker.McpTools;
 public static class ExecuteCustomTestTool
 {
     private const string ExecutionApiClientName = "executionapi";
+    private static readonly TimeSpan ToolTimeout = TimeSpan.FromSeconds(5);
 
     [McpServerTool(Name = "execute_custom_test"), Description("Compiles and runs student C# code along with custom test code using the sandboxed Execution API. Returns compilation results, test outcomes, and runtime metrics. Use this to verify if the student's code produces the correct output.")]
     public static async Task<string> ExecuteCustomTest(
@@ -21,6 +22,10 @@ public static class ExecuteCustomTestTool
         IServiceProvider serviceProvider,
         CancellationToken cancellationToken = default)
     {
+        using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        cts.CancelAfter(ToolTimeout);
+        var token = cts.Token;
+
         var httpClientFactory = serviceProvider.GetRequiredService<IHttpClientFactory>();
         var httpClient = httpClientFactory.CreateClient(ExecutionApiClientName);
 
@@ -43,10 +48,10 @@ public static class ExecuteCustomTestTool
 
         try
         {
-            var response = await httpClient.PostAsJsonAsync("/api/executions", request, cancellationToken);
+            var response = await httpClient.PostAsJsonAsync("/api/executions", request, token);
             response.EnsureSuccessStatusCode();
 
-            var executionResult = await response.Content.ReadFromJsonAsync<ExecutionResponse>(cancellationToken: cancellationToken);
+            var executionResult = await response.Content.ReadFromJsonAsync<ExecutionResponse>(cancellationToken: token);
 
             if (executionResult is null)
                 return "❌ Failed to parse execution response.";
@@ -81,6 +86,10 @@ public static class ExecuteCustomTestTool
                 lines.Add($"**Total Duration**: {executionResult.Runtime.TotalDurationMs}ms");
 
             return string.Join("\n", lines);
+        }
+        catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
+        {
+            return "⏱️ Execution timed out after 5 seconds. The Execution API may be unresponsive.";
         }
         catch (Exception ex)
         {

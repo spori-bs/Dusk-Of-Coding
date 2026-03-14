@@ -120,8 +120,17 @@ public sealed class TutorWorkerService : BackgroundService
         }
     }
 
+    /// <summary>Maximum source code length accepted per submission (50 KB).</summary>
+    private const int MaxSourceCodeLength = 50_000;
+
     private async Task<string> InvokeSocraticTutorAsync(SubmissionMessage message, CancellationToken ct)
     {
+        if (string.IsNullOrWhiteSpace(message.SourceCode))
+            return "⚠️ No source code was provided. Please submit your code and try again.";
+
+        if (message.SourceCode.Length > MaxSourceCodeLength)
+            return $"⚠️ Source code exceeds the maximum allowed length of {MaxSourceCodeLength:N0} characters. Please reduce the code size and try again.";
+
         var chatMessages = new List<ChatMessage>
         {
             new(ChatRole.System, SocraticTutorPrompt.SystemPrompt),
@@ -138,7 +147,8 @@ public sealed class TutorWorkerService : BackgroundService
 
         var chatOptions = new ChatOptions
         {
-            Tools = [.. _chatClient.GetService<IList<AITool>>() ?? []]
+            Tools = [.. _chatClient.GetService<IList<AITool>>() ?? []],
+            MaxOutputTokens = 2048
         };
 
         var response = await _chatClient.GetResponseAsync(chatMessages, chatOptions, ct);

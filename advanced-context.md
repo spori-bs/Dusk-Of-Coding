@@ -1,6 +1,6 @@
 # Advanced Context — AI-Tutor Platform
 
-> **Last updated**: 2026-03-12  
+> **Last updated**: 2026-03-14  
 > **Branch**: `feature/ai-tutor-platform`
 
 ---
@@ -66,7 +66,7 @@ flowchart LR
 | 2 | MCP-Enabled Worker with Fallback | ✅ Done |
 | 3 | Resilient LLM Loop | ✅ Done |
 | 4 | Blazor WebUI & SignalR Bridge | ✅ Done |
-| 5 | Sandboxing & Safety | 🔲 Not started |
+| 5 | Sandboxing & Safety | ✅ Done |
 | 6 | End-to-End Verification | 🔲 Not started |
 
 ---
@@ -109,26 +109,22 @@ flowchart LR
 | 2026-03-12 | Phase 2 done: ModelContextProtocol 1.1.0, TutorWorker BackgroundService with MCP tools |
 | 2026-03-12 | Phase 3 done: IChatClient with switchable OpenAI/AzureOpenAI, Polly retry+timeout, Socratic Tutor prompt |
 | 2026-03-12 | Phase 4 done: SignalR TutorHub, RabbitMQ→SignalR bridge, TutorTerminal Blazor component |
+| 2026-03-14 | Phase 5 done: 5s MCP tool timeouts, MaxOutputTokens=2048 cap, input length validation (50K), HTML sanitization (XSS fix) |
 
 ---
 
-## Resumption Point (2026-03-12 18:41)
+## Resumption Point (2026-03-14 13:35)
 
-**Next up: Phase 5 — Sandboxing & Safety**, then Phase 6 — End-to-End Verification.
-
-### Phase 5 scope
-- Add 5s execution timeouts to MCP tools
-- HTML sanitize tutor responses before rendering
-- Add input length limits
-- Validate SourceCode is not empty/too long
+**Next up: Phase 6 — End-to-End Verification.**
 
 ### Phase 6 scope
 - Full end-to-end flow test via Aspire Dashboard
 - Verify: Submit code → RabbitMQ → TutorWorker (LLM) → RabbitMQ → SignalR → TutorTerminal
+- Test "AI Down" scenario: simulate LLM failure → verify Safety Message + raw Roslyn diagnostics
+- Test "Broker Down" scenario: verify Polly connection retry logic
 
 ### Git state
 - **Branch**: `feature/ai-tutor-platform`
-- **Last commit**: `60fa6ad` — Phase 4 (Blazor WebUI & SignalR Bridge)
 - **Build**: ✅ 0 errors, 0 warnings (all 10 projects)
 
 ### LLM provider config needed
