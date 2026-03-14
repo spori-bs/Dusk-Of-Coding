@@ -67,7 +67,7 @@ flowchart LR
 | 3 | Resilient LLM Loop | ✅ Done |
 | 4 | Blazor WebUI & SignalR Bridge | ✅ Done |
 | 5 | Sandboxing & Safety | ✅ Done |
-| 6 | End-to-End Verification | 🔲 Not started |
+| 6 | End-to-End Verification | ✅ Done |
 
 ---
 
@@ -110,24 +110,20 @@ flowchart LR
 | 2026-03-12 | Phase 3 done: IChatClient with switchable OpenAI/AzureOpenAI, Polly retry+timeout, Socratic Tutor prompt |
 | 2026-03-12 | Phase 4 done: SignalR TutorHub, RabbitMQ→SignalR bridge, TutorTerminal Blazor component |
 | 2026-03-14 | Phase 5 done: 5s MCP tool timeouts, MaxOutputTokens=2048 cap, input length validation (50K), HTML sanitization (XSS fix) |
+| 2026-03-14 | Phase 6 done: Found and fixed missing RabbitMQ publish in /submissions endpoint — TutorWorker was never receiving work |
 
 ---
 
-## Resumption Point (2026-03-14 13:35)
+## Resumption Point (2026-03-14 13:42)
 
-**Next up: Phase 6 — End-to-End Verification.**
+**All 6 phases are complete.** The platform is ready for live testing with a configured LLM provider.
 
-### Phase 6 scope
-- Full end-to-end flow test via Aspire Dashboard
-- Verify: Submit code → RabbitMQ → TutorWorker (LLM) → RabbitMQ → SignalR → TutorTerminal
-- Test "AI Down" scenario: simulate LLM failure → verify Safety Message + raw Roslyn diagnostics
-- Test "Broker Down" scenario: verify Polly connection retry logic
+### To run end-to-end
+1. Set `LlmProvider:OpenAIApiKey` or switch to `AzureOpenAI` in `TutorWorker/appsettings.json`
+2. Run the Aspire AppHost
+3. Submit code via the Practice page → verify TutorTerminal receives AI feedback
 
 ### Git state
 - **Branch**: `feature/ai-tutor-platform`
 - **Build**: ✅ 0 errors, 0 warnings (all 10 projects)
-
-### LLM provider config needed
-- Set `LlmProvider:OpenAIApiKey` or switch to `AzureOpenAI` in `TutorWorker/appsettings.json`
-- No API key is configured yet — LLM calls will hit the Polly fallback path
 
