@@ -3,6 +3,8 @@
 @implements IAsyncDisposable
 @inject NavigationManager Navigation
 @inject IStringLocalizer<SharedResource> L
+@inject IConfiguration Configuration
+@inject ILogger<TutorTerminal> Logger
 
 <div class="tutor-terminal @(IsExpanded ? "expanded" : "collapsed")">
     <div class="tutor-header" @onclick="ToggleExpanded">
@@ -73,9 +75,12 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var hubUrl = Navigation.ToAbsoluteUri("/hubs/tutor")
-            .ToString()
-            .Replace(Navigation.BaseUri.TrimEnd('/'), "http://webapi");
+        // Resolve webapi base URL from Aspire service discovery configuration
+        var webApiBase = Configuration["services:webapi:http:0"]
+            ?? Configuration["services:webapi:https:0"]
+            ?? "http://webapi";
+
+        var hubUrl = $"{webApiBase.TrimEnd('/')}/hubs/tutor";
 
         hubConnection = new HubConnectionBuilder()
             .WithUrl(hubUrl)
@@ -84,7 +89,14 @@
 
         hubConnection.On<TutorResponseDto>("ReceiveTutorResponse", OnTutorResponse);
 
-        await hubConnection.StartAsync();
+        try
+        {
+            await hubConnection.StartAsync();
+        }
+        catch (Exception ex)
+        {
+            Logger.LogWarning(ex, "Could not connect to Tutor hub at {HubUrl}. The tutor will attempt to reconnect automatically.", hubUrl);
+        }
     }
 
     public async Task SubscribeToSubmission(Guid submissionId)

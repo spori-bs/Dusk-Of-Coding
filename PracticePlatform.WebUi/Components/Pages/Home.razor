@@ -1,9 +1,11 @@
 @page "/"
 @layout PracticePlatform.WebUi.Components.Layout.LandingLayout
 @using PracticePlatform.WebUi.Components.Landing
+@using PracticePlatform.WebUi.Resources
+@inject IStringLocalizer<SharedResource> L
 @rendermode InteractiveServer
 
-<PageTitle>AntiGravity - Revolutionize Your Coding</PageTitle>
+<PageTitle>@L["Landing_PageTitle"]</PageTitle>
 
 <HeroComponent />
 <FeaturesComponent />

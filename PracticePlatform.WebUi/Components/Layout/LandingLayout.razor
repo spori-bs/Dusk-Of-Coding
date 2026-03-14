@@ -1,14 +1,17 @@
 @inherits LayoutComponentBase
+@using PracticePlatform.WebUi.Resources
+@inject IStringLocalizer<SharedResource> L
 
 <div class="landing-page-wrapper">
     <header class="landing-header">
-        <a href="" class="landing-logo">🚀 PracticePlatform</a>
+        <a href="" class="landing-logo">@L["AppTitle"]</a>
         <!-- Distraction-free: No complex navigation links -->
-        <div>
-            <a href="/practice" class="btn btn-link text-decoration-none text-dark me-3">Practice</a>
-            <a href="/tasks" class="btn btn-link text-decoration-none text-dark me-3">Manage Tasks</a>
-            <a href="#demo" class="btn btn-outline-primary btn-sm me-2">Watch Demo</a>
-            <a href="#get-started" class="btn btn-primary btn-sm">Get Started</a>
+        <div class="d-flex align-items-center">
+            <a href="/practice" class="btn btn-link text-decoration-none text-dark me-3">@L["Landing_Practice"]</a>
+            <a href="/tasks" class="btn btn-link text-decoration-none text-dark me-3">@L["Landing_ManageTasks"]</a>
+            <a href="#demo" class="btn btn-outline-primary btn-sm me-2">@L["Landing_WatchDemo"]</a>
+            <a href="#get-started" class="btn btn-primary btn-sm me-3">@L["Landing_GetStarted"]</a>
+            <LanguageSelector />
         </div>
     </header>
 
@@ -17,7 +20,7 @@
     </main>
 
     <footer class="landing-footer">
-        &copy; @DateTime.Now.Year PracticePlatform. All rights reserved.
+        &copy; @DateTime.Now.Year @L["Footer_Rights"]
         <!-- Distraction-free: No exit links -->
     </footer>
 </div>
