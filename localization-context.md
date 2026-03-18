@@ -39,9 +39,9 @@ flowchart TD
 
 ## Resource Namespaces
 
-- **WebUi**: `PracticePlatform.WebUi.Resources.App`
-- **Application**: `PracticePlatform.Application.Resources.Messages`
-- **WebApi**: `PracticePlatform.WebApi.Resources.Messages`
+- **WebUi**: `Dusk of Coding.WebUi.Resources.App`
+- **Application**: `Dusk of Coding.Application.Resources.Messages`
+- **WebApi**: `Dusk of Coding.WebApi.Resources.Messages`
 
 ---
 

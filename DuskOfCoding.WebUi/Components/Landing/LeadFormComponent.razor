@@ -1,0 +1,69 @@
+@using DuskOfCoding.WebUi.Resources
+@inject IStringLocalizer<SharedResource> L
+
+<section id="get-started" class="lead-form-section py-5 bg-primary text-white text-center">
+    <div class="container">
+        <h2 class="fw-bold mb-3">@L["Lead_Heading"]</h2>
+        <p class="lead mb-5">@L["Lead_Subheading"]</p>
+
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-5 text-start">
+                <div class="card shadow-lg border-0 text-dark p-4">
+                    <div class="card-body">
+                        @if (!isQualified)
+                        {
+                            <!-- Step 1: Low fidelity question (Breadcrumb Technique) -->
+                            <h5 class="card-title fw-bold mb-3">@L["Lead_Question"]</h5>
+                            <div class="d-grid gap-2 mb-3">
+                                <button class="btn btn-outline-primary" @onclick="Qualify">C# / .NET</button>
+                                <button class="btn btn-outline-secondary" @onclick="Qualify">Java</button>
+                                <button class="btn btn-outline-secondary" @onclick="Qualify">Python</button>
+                                <button class="btn btn-outline-secondary" @onclick="Qualify">@L["Lead_Other"]</button>
+                            </div>
+                        }
+                        else if (!isSubmitted)
+                        {
+                            <!-- Step 2: Collection form -->
+                            <h5 class="card-title fw-bold mb-3">@L["Lead_InvitePrompt"]</h5>
+                            <div class="mb-3">
+                                <label class="form-label text-muted small">@L["Lead_EmailLabel"]</label>
+                                <input type="email" class="form-control" placeholder="@L["Lead_EmailPlaceholder"]" @bind="email" />
+                            </div>
+                            <button class="btn btn-primary w-100 fw-bold" @onclick="Submit">@L["Lead_Submit"]</button>
+                        }
+                        else
+                        {
+                            <!-- Success State -->
+                            <div class="text-center py-4">
+                                <h1 class="text-success mb-3">&#10003;</h1>
+                                <h5 class="fw-bold">@L["Lead_Success"]</h5>
+                                <p class="text-muted mb-4">@L["Lead_SuccessHint"]</p>
+                                <a href="/practice" class="btn btn-primary px-4 fw-bold">@L["Lead_StartNow"]</a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@code {
+    private bool isQualified = false;
+    private bool isSubmitted = false;
+    private string email = "";
+
+    private void Qualify()
+    {
+        isQualified = true;
+    }
+
+    private async Task Submit()
+    {
+        if (string.IsNullOrWhiteSpace(email)) return;
+        
+        // Simulate API call
+        await Task.Delay(500); 
+        isSubmitted = true;
+    }
+}

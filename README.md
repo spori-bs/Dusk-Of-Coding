@@ -1,4 +1,4 @@
-# PracticePlatform
+# Dusk of Coding
 
 > **Disclaimer on Methodology:** This repository serves as an experimental proof-of-concept. Its architecture and implementation were born from the exploratory development paradigm of "vibecoding," operating in close synergy with the Antigravity AI agent to rapidly prototype and synthesize complex system capabilities.
 
@@ -6,7 +6,7 @@ An internal AI-aware .NET junior onboarding platform and code execution environm
 
 ## 🚀 Overview
 
-PracticePlatform is a Proof of Concept (POC) designed to evaluate and onboard junior developers. 
+Dusk of Coding is a Proof of Concept (POC) designed to evaluate and onboard junior developers. 
 It provides a safe, sandboxed environment for presenting programming tasks and reviewing user-submitted code. 
 
 The platform is designed to:
@@ -40,11 +40,11 @@ It separates the main onboarding app from a dedicated **Execution API service**,
 
 ```mermaid
 C4Context
-    title Architecture Overview for PracticePlatform
+    title Architecture Overview for Dusk of Coding
 
     Person(candidate, "Junior Developer", "Uses the platform to read tasks and submit code")
     
-    System_Boundary(platform, "PracticePlatform Application") {
+    System_Boundary(platform, "Dusk of Coding Application") {
         System(webui, "Blazor Web UI", "Provides interactive Code Playground & Task Management")
         System(webapi, "Core Web API", "Handles business logic, persistence, and task orchestration")
         SystemDb(database, "Application Database", "Stores Tasks, Submissions, and Feedback")

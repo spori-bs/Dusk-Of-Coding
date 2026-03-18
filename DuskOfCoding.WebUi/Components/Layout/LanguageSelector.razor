@@ -1,0 +1,37 @@
+@using DuskOfCoding.WebUi.Resources
+@inject IStringLocalizer<SharedResource> L
+@inject NavigationManager Nav
+
+<div class="language-selector">
+    <select class="form-select form-select-sm" @onchange="OnLanguageChanged">
+        <option value="hu" selected="@(currentCulture == "hu")">🇭🇺 @L["Language_Hungarian"]</option>
+        <option value="en" selected="@(currentCulture == "en")">🇬🇧 @L["Language_English"]</option>
+    </select>
+</div>
+
+@code {
+    private string currentCulture = "hu";
+
+    protected override void OnInitialized()
+    {
+        currentCulture = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+    }
+
+    private void OnLanguageChanged(ChangeEventArgs e)
+    {
+        var culture = e.Value?.ToString() ?? "hu";
+        var uri = new Uri(Nav.Uri).PathAndQuery;
+        Nav.NavigateTo($"/Culture/Set?culture={culture}&redirectUri={uri}", forceLoad: true);
+    }
+}
+
+<style>
+    .language-selector .form-select {
+        width: auto;
+        min-width: 130px;
+        font-size: 0.85rem;
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 6px;
+    }
+</style>
