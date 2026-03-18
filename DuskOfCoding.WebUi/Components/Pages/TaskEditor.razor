@@ -1,0 +1,148 @@
+@page "/tasks/create"
+@page "/tasks/edit/{Id:guid}"
+@using DuskOfCoding.WebUi.Services
+@using DuskOfCoding.WebUi.Resources
+@inject ApiClient Api
+@inject NavigationManager Nav
+@inject IStringLocalizer<SharedResource> L
+@rendermode InteractiveServer
+
+<PageTitle>@Title | Dusk of Coding</PageTitle>
+
+<div class="d-flex align-items-center mb-4">
+    <div class="feature-icon-wrapper me-3" style="width: 50px; height: 50px; background: rgba(76, 29, 149, 0.2);">
+        <i class="bi bi-pencil-square fs-4 text-primary"></i>
+    </div>
+    <h2 class="display-6 fw-bold text-white mb-0">@Title</h2>
+</div>
+
+@if (_isLoading)
+{
+    <p><em>@L["Loading"]</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="dusk-glass-panel p-4 p-md-5">
+                <EditForm Model="@_model" OnValidSubmit="HandleValidSubmit" FormName="TaskEditorForm">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary class="text-danger mb-4 p-3 bg-danger bg-opacity-10 rounded border border-danger border-opacity-25" />
+
+                    <div class="mb-4">
+                        <label for="title" class="form-label text-secondary small fw-semibold text-uppercase tracking-wider">@L["TaskEditor_FieldTitle"]</label>
+                        <InputText id="title" class="form-control dusk-input" @bind-Value="_model.Title" />
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="description" class="form-label text-secondary small fw-semibold text-uppercase tracking-wider">@L["TaskEditor_FieldDescription"]</label>
+                        <InputTextArea id="description" class="form-control dusk-input" @bind-Value="_model.Description" rows="4" />
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <label for="difficulty" class="form-label text-secondary small fw-semibold text-uppercase tracking-wider">@L["TaskEditor_FieldDifficulty"]</label>
+                            <InputText id="difficulty" class="form-control dusk-input" @bind-Value="_model.DifficultyLevel" />
+                        </div>
+                        <div class="col-md-6 mt-4 mt-md-0">
+                            <label for="tags" class="form-label text-secondary small fw-semibold text-uppercase tracking-wider">@L["TaskEditor_FieldTags"]</label>
+                            <InputText id="tags" class="form-control dusk-input" @bind-Value="_tagsInput" placeholder="e.g. Logic, Array, AI" />
+                        </div>
+                    </div>
+
+                    <div class="mb-5">
+                        <label for="testBundle" class="form-label text-secondary small fw-semibold text-uppercase tracking-wider">@L["TaskEditor_FieldTestBundle"]</label>
+                        <InputText id="testBundle" class="form-control dusk-input" @bind-Value="_model.TestBundleReference" />
+                        <div class="form-text dusk-text-muted mt-2"><i class="bi bi-info-circle me-1"></i> Ensure the bundle name maps exactly to the Aspire worker reference.</div>
+                    </div>
+
+                    <div class="d-flex gap-3">
+                        <button type="submit" class="btn btn-primary px-5 py-2 fw-bold">
+                            <i class="bi bi-save me-2"></i> @L["Save"]
+                        </button>
+                        <a href="/tasks" class="btn dusk-btn-outline px-4 py-2">@L["Cancel"]</a>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public Guid? Id { get; set; }
+
+    private bool IsEditMode => Id.HasValue;
+    private string Title => IsEditMode ? L["TaskEditor_Edit"] : L["TaskEditor_Create"];
+    
+    private CreateTaskDto _model = new();
+    private string _tagsInput = "";
+    private bool _isLoading = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (IsEditMode)
+        {
+            _isLoading = true;
+            var task = await Api.GetTaskByIdAsync(Id!.Value);
+            if (task != null)
+            {
+                _model.Title = task.Title;
+                _model.Description = task.Description;
+                _model.DifficultyLevel = task.DifficultyLevel;
+                _model.TestBundleReference = task.TestBundleReference;
+                _tagsInput = string.Join(", ", task.Tags);
+            }
+            _isLoading = false;
+        }
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        _model.Tags = _tagsInput.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                                .Select(t => t.Trim())
+                                .ToList();
+
+        if (IsEditMode)
+        {
+            var updateDto = new UpdateTaskDto
+            {
+                Title = _model.Title,
+                Description = _model.Description,
+                DifficultyLevel = _model.DifficultyLevel,
+                Tags = _model.Tags,
+                TestBundleReference = _model.TestBundleReference
+            };
+            await Api.UpdateTaskAsync(Id!.Value, updateDto);
+        }
+        else
+        {
+            await Api.CreateTaskAsync(_model);
+        }
+
+        Nav.NavigateTo("/tasks");
+    }
+}
+
+<style>
+    .dusk-input {
+        background-color: rgba(15, 23, 42, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: white;
+    }
+    .dusk-input:focus {
+        background-color: rgba(15, 23, 42, 0.8);
+        border-color: var(--dusk-purple-light);
+        box-shadow: 0 0 0 0.25rem rgba(124, 58, 237, 0.25);
+        color: white;
+    }
+    .dusk-input::placeholder {
+        color: rgba(255, 255, 255, 0.2);
+    }
+    .dusk-text-muted {
+        color: var(--dusk-text-muted);
+    }
+    .tracking-wider {
+        letter-spacing: 0.05em;
+    }
+</style>

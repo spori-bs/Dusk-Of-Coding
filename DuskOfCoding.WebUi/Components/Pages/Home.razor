@@ -1,0 +1,14 @@
+@page "/"
+@layout DuskOfCoding.WebUi.Components.Layout.LandingLayout
+@using DuskOfCoding.WebUi.Components.Landing
+@using DuskOfCoding.WebUi.Resources
+@inject IStringLocalizer<SharedResource> L
+@rendermode InteractiveServer
+
+<PageTitle>@L["Landing_PageTitle"]</PageTitle>
+
+<HeroComponent />
+<FeaturesComponent />
+<MediaDemoComponent />
+<SocialProofComponent />
+<LeadFormComponent />

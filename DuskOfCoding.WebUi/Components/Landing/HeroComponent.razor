@@ -1,0 +1,151 @@
+@using DuskOfCoding.WebUi.Resources
+@inject IStringLocalizer<SharedResource> L
+
+<section class="hero-section d-flex align-items-center text-center text-lg-start">
+    <!-- Abstract background glow elements -->
+    <div class="hero-glow shape-1"></div>
+    <div class="hero-glow shape-2"></div>
+    
+    <div class="container hero-content">
+        <div class="row align-items-center">
+            <div class="col-lg-6 position-relative z-1 mb-5 mb-lg-0">
+                <span class="badge dusk-badge mb-4">@L["Hero_Tagline"]</span>
+                <h1 class="display-3 fw-bold mb-4 hero-title">
+                    @L["Hero_Title"]
+                </h1>
+                <p class="lead mb-5 hero-subtitle">
+                    @L["Hero_Description"]
+                </p>
+                <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center justify-content-lg-start">
+                    <a href="#get-started" class="btn btn-primary btn-lg px-5 py-3 rounded-pill fw-bold">
+                        @L["Hero_CTA"] <i class="bi bi-arrow-right ms-2"></i>
+                    </a>
+                    <a href="#demo" class="btn btn-outline-light btn-lg px-5 py-3 rounded-pill fw-semibold dusk-btn-outline">
+                        @L["Hero_SecondaryCTA"]
+                    </a>
+                </div>
+            </div>
+            
+            <div class="col-lg-6 position-relative z-1">
+                <!-- Premium Abstract Representation / Code Interface -->
+                <div class="hero-image-container dusk-glass-panel overflow-hidden">
+                    <div class="editor-header d-flex align-items-center px-3 py-2 border-bottom border-secondary border-opacity-25">
+                        <div class="mac-dots d-flex gap-2">
+                            <div class="dot red"></div>
+                            <div class="dot yellow"></div>
+                            <div class="dot green"></div>
+                        </div>
+                        <div class="ms-3 text-muted small font-monospace">Architecture.cs — Dusk of Coding</div>
+                    </div>
+                    <div class="editor-body p-4 text-start font-monospace text-light" style="font-size: 0.9rem; line-height: 1.6;">
+                        <span class="text-secondary">// Learn the architecture. Master the AI tool.</span><br/>
+                        <span class="text-primary">public class</span> <span class="text-warning">DeveloperToolkit</span><br/>
+                        {<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-primary">public void</span> <span class="text-info">AnalyzeSystem</span>()<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;{<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-secondary">/* The sun is setting on manual coding. <br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A new dawn begins here. */</span><br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sandbox.Execute(<span class="text-success">"Safe Sandbox Environment"</span>);<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br/>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .hero-section {
+        min-height: 100vh;
+        background: var(--dusk-bg-dark);
+        position: relative;
+        overflow: hidden;
+        padding-top: 80px; /* offset for fixed header */
+        margin-top: -80px;
+    }
+    
+    .hero-glow {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(80px);
+        opacity: 0.4;
+        z-index: 0;
+        animation: pulseGlow 8s infinite alternate;
+    }
+    .hero-glow.shape-1 {
+        top: -10%;
+        left: -10%;
+        width: 50vw;
+        height: 50vw;
+        background: radial-gradient(circle, var(--dusk-purple-mid) 0%, transparent 70%);
+    }
+    .hero-glow.shape-2 {
+        bottom: -20%;
+        right: -10%;
+        width: 60vw;
+        height: 60vw;
+        background: radial-gradient(circle, var(--dusk-orange-warm) 0%, transparent 70%);
+        animation-delay: -4s;
+    }
+
+    @@keyframes pulseGlow {
+        0% { transform: scale(1) translate(0, 0); opacity: 0.3; }
+        100% { transform: scale(1.1) translate(20px, 20px); opacity: 0.5; }
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 10;
+        padding-top: 4rem;
+        padding-bottom: 4rem;
+    }
+    
+    .hero-title {
+        letter-spacing: -1px;
+        line-height: 1.1;
+        background: linear-gradient(180deg, #FFFFFF 0%, rgba(255, 255, 255, 0.7) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    .hero-subtitle {
+        color: var(--dusk-text-muted);
+        font-size: 1.25rem;
+        font-weight: 300;
+        line-height: 1.6;
+    }
+    
+    .dusk-badge {
+        background: rgba(234, 88, 12, 0.15);
+        color: var(--dusk-orange-glow);
+        border: 1px solid rgba(234, 88, 12, 0.3);
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-weight: 500;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+    }
+    
+    .hero-image-container {
+        transform: perspective(1000px) rotateY(-5deg) rotateX(5deg);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 40px rgba(124, 58, 237, 0.2);
+        transition: transform 0.5s ease, box-shadow 0.5s ease;
+        background: rgba(15, 23, 42, 0.7);
+    }
+    
+    .hero-image-container:hover {
+        transform: perspective(1000px) rotateY(0deg) rotateX(0deg) translateY(-10px);
+        box-shadow: 0 35px 60px -15px rgba(0, 0, 0, 0.6), 0 0 60px rgba(234, 88, 12, 0.2);
+    }
+
+    .mac-dots .dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+    }
+    .mac-dots .red { background-color: #ff5f56; }
+    .mac-dots .yellow { background-color: #ffbd2e; }
+    .mac-dots .green { background-color: #27c93f; }
+</style>

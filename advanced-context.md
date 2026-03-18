@@ -7,7 +7,7 @@
 
 ## Architecture Overview
 
-The PracticePlatform is being evolved from a **Modular Monolith POC** into an **Interactive AI-Tutor Platform** using:
+The Dusk of Coding is being evolved from a **Modular Monolith POC** into an **Interactive AI-Tutor Platform** using:
 
 - **RabbitMQ** (official `RabbitMQ.Client`) for async messaging
 - **MCP** (Model Context Protocol) for LLM ↔ Roslyn/Sandbox tool calling
@@ -75,15 +75,15 @@ flowchart LR
 
 | Project | Role |
 |---------|------|
-| `PracticePlatform.AppHost` | Aspire orchestrator |
-| `PracticePlatform.ServiceDefaults` | Shared Aspire defaults |
-| `PracticePlatform.Domain` | Entities, interfaces, models |
-| `PracticePlatform.Application` | Services (SubmissionService, TaskService) |
-| `PracticePlatform.Infrastructure` | EF Core, HTTP execution engine, AI review |
-| `PracticePlatform.WebApi` | Minimal API endpoints |
-| `PracticePlatform.WebUi` | Blazor Server frontend |
-| `PracticePlatform.ExecutionApi` | Sandboxed code execution (stub) |
-| `PracticePlatform.Execution.Contracts` | Shared DTOs for execution |
+| `Dusk of Coding.AppHost` | Aspire orchestrator |
+| `Dusk of Coding.ServiceDefaults` | Shared Aspire defaults |
+| `Dusk of Coding.Domain` | Entities, interfaces, models |
+| `Dusk of Coding.Application` | Services (SubmissionService, TaskService) |
+| `Dusk of Coding.Infrastructure` | EF Core, HTTP execution engine, AI review |
+| `Dusk of Coding.WebApi` | Minimal API endpoints |
+| `Dusk of Coding.WebUi` | Blazor Server frontend |
+| `Dusk of Coding.ExecutionApi` | Sandboxed code execution (stub) |
+| `Dusk of Coding.Execution.Contracts` | Shared DTOs for execution |
 
 ---
 

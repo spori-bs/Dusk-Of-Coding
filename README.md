@@ -1,61 +1,72 @@
-# PracticePlatform
+# Dusk of Coding
 
-> **Disclaimer on Methodology:** This repository serves as an experimental proof-of-concept. Its architecture and implementation were born from the exploratory development paradigm of "vibecoding," operating in close synergy with the Antigravity AI agent to rapidly prototype and synthesize complex system capabilities.
+> **Disclaimer on Methodology:** This repository serves as an experimental proof-of-concept. Its architecture and implementation were born from the exploratory development paradigm of "vibecoding," operating in close synergy with AI agents to rapidly prototype and synthesize complex system capabilities.
 
-An internal AI-aware .NET junior onboarding platform and code execution environment.
+*Master the craft. Wield the tool.*
+
+An **AI-awareness and code mastery platform** designed to prepare developers for the new dawn of software engineering.
 
 ## 🚀 Overview
 
-PracticePlatform is a Proof of Concept (POC) designed to evaluate and onboard junior developers. 
-It provides a safe, sandboxed environment for presenting programming tasks and reviewing user-submitted code. 
+The sun is setting on coding as we traditionally knew it. **Dusk of Coding** represents the twilight of the old way—where developers wrote every line by hand, unassisted. But dusk is not an ending; it is the transition into a new dawn. 
 
-The platform is designed to:
-- Present structured programming tasks.
-- Accept and validate user-submitted C# code.
-- Compile and execute code safely within a sandbox.
-- Run automated unit tests against submissions.
-- Provide detailed, structured feedback rather than simple pass/fail metrics.
-- Support future integration of AI-assisted code reviews.
+This platform exists at this crossroads, serving as a safe, sandboxed environment where developers can learn to build systems correctly while simultaneously learning to harness AI effectively.
+
+### ✨ Key Features
+
+- **Sandboxed Execution Environment**: Compile and safely execute C# code within an isolated Docker sandbox using the Roslyn compiler.
+- **Automated Testing & Feedback**: Receive detailed, structured feedback via automated unit tests instead of simple pass/fail metrics.
+- **Socratic AI Mentor (TutorWorker)**: Connects to OpenAI and Azure OpenAI via a resilient Polly pipeline to provide real-time, streaming guidance. It teaches the "new literacy" by mentoring users using the Socratic method, ensuring they learn to direct AI rather than rely on it blindly.
+- **Bilingual Premium UI**: Fully localized in English and Hungarian.
+- **Modern Dark Aesthetic**: A fully redesigned user interface leveraging glassmorphism, responsive micro-animations, and curated vibrant color palettes to provide a dynamic and visually stunning experience.
+
+## 🌌 Philosophy: AI is a Tool, Not a Brain
+
+AI code generation is restructuring how software is conceived, written, tested, and maintained. Developers who treat AI as their brain will hit a ceiling—they will lose the ability to architect, debug, and reason about complex systems. 
+
+At **Dusk of Coding**, we believe that AI is a power tool—like an IDE, a debugger, or a compiler. The developers who thrive in the new dawn will be those who master the fundamentals of software engineering *and* learn to wield AI as the most powerful tool in their arsenal.
 
 ## 🛠️ Built With
 
 This project is built using modern .NET technologies and architectural patterns to ensure clarity, extensibility, and observability.
 
 - **[.NET 10](https://dotnet.microsoft.com/)** - The core runtime for high-performance cross-platform execution.
-- **[.NET Aspire](https://learn.microsoft.com/en-us/dotnet/aspire/)** - Orchestration and configuration as code (connecting UI, APIs, and DB).
-- **[Blazor Server](https://dotnet.microsoft.com/apps/aspnet/web-apps/blazor)** - Driving the interactive Task Management and Code Playground UIs.
+- **[.NET Aspire](https://learn.microsoft.com/en-us/dotnet/aspire/)** - Orchestration and configuration as code (connecting UI, APIs, AI workers, and DB).
+- **[Blazor Server](https://dotnet.microsoft.com/apps/aspnet/web-apps/blazor)** - Driving the interactive Code Playground and Task Management interfaces.
 - **[Entity Framework Core](https://learn.microsoft.com/en-us/ef/core/)** - ORM for persistence, storing tasks, submissions, and execution results.
-- **[Scalar](https://github.com/scalar/scalar)** - Modern OpenAPI documentation and testing for the API endpoints.
-- **[OpenTelemetry](https://opentelemetry.io/)** - Comprehensive observability and telemetry integration via Aspire.
-- **[Serilog](https://serilog.net/)** - Structured logging throughout the application.
+- **[Semantic Kernel / Azure OpenAI](https://learn.microsoft.com/en-us/semantic-kernel/)** - Powering the intelligent, context-aware AI Tutor.
+- **[Polly](https://github.com/App-vNext/Polly)** - Used extensively in the AI pipeline for retries, timeouts, and fallbacks to ensure robust API resilience.
 - **[Docker](https://www.docker.com/)** - Used for the Execution API to safely sandbox external code compilation and testing.
 - **[Roslyn Compiler](https://github.com/dotnet/roslyn)** - Integrated for C# syntax analysis, compilation diagnostics, and execution.
 
 ## 🏗 Architecture
 
 The platform follows a **Modular Monolith** structure applying **Clean Architecture** principles.
-It separates the main onboarding app from a dedicated **Execution API service**, which acts as a hard boundary for sandboxed code compilation and execution.
+It separates the main onboarding app from a dedicated **Execution API service** (for sandboxed code compilation) and a **Tutor Worker service** (for AI mentoring).
 
 ### High-Level Component Flow
 
 ```mermaid
 C4Context
-    title Architecture Overview for PracticePlatform
+    title Architecture Overview for Dusk of Coding
 
-    Person(candidate, "Junior Developer", "Uses the platform to read tasks and submit code")
+    Person(candidate, "Developer", "Uses the platform to read tasks and submit code")
     
-    System_Boundary(platform, "PracticePlatform Application") {
+    System_Boundary(platform, "Dusk of Coding Application") {
         System(webui, "Blazor Web UI", "Provides interactive Code Playground & Task Management")
-        System(webapi, "Core Web API", "Handles business logic, persistence, and task orchestration")
+        System(webapi, "Core Web API", "Handles business logic, persistence, and orchestrates executions")
         SystemDb(database, "Application Database", "Stores Tasks, Submissions, and Feedback")
+        System(tutor_worker, "Tutor Worker", "Background service handling resilient AI evaluation streams")
     }
 
-    System_Ext(execution_api, "Execution API (Sandbox)", "Isolated Docker container that safely compiles and runs unit tests on submitted code")
-    System_Ext(ai_reviewer, "AI Review Service", "Optional extension point providing LLM-based feedback on code quality")
+    System_Ext(execution_api, "Execution API (Sandbox)", "Isolated Docker container that safely compiles and runs unit tests")
+    System_Ext(llm_provider, "OpenAI / Azure OpenAI", "External LLM providers for the Socratic AI Mentor")
 
     Rel(candidate, webui, "Practices coding tasks", "HTTPS")
     Rel(webui, webapi, "Submits C# code & retrieves tasks", "REST")
     Rel(webapi, database, "Reads/Writes data", "EF Core")
     Rel(webapi, execution_api, "Delegates unsafe execution", "HTTP/JSON")
-    Rel(webapi, ai_reviewer, "Requests code review", "API")
+    Rel(webapi, tutor_worker, "Queues AI review tasks", "Messaging / Queue")
+    Rel(tutor_worker, llm_provider, "Fetches AI mentoring feedback (with Polly Resilience)", "HTTPS")
+    Rel(tutor_worker, webui, "Streams real-time feedback", "SignalR (Terminal)")
 ```

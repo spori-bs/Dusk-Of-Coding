@@ -1,0 +1,112 @@
+@using DuskOfCoding.WebUi.Resources
+@inject IStringLocalizer<SharedResource> L
+
+<section id="get-started" class="lead-form-section py-5 text-center position-relative">
+    <div class="container py-5 position-relative z-1">
+        <h2 class="display-5 fw-bold text-white mb-3">@L["Lead_Heading"]</h2>
+        <p class="lead text-white-50 mb-5 mx-auto" style="max-width: 600px;">@L["Lead_Subheading"]</p>
+
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-5 text-start">
+                <div class="dusk-glass-panel border-0 text-white p-5 lead-card">
+                    <div class="card-body">
+                        @if (!isQualified)
+                        {
+                            <!-- Step 1: Low fidelity question (Breadcrumb Technique) -->
+                            <h5 class="fw-bold mb-4 text-center">@L["Lead_Question"]</h5>
+                            <div class="d-grid gap-3 mb-2">
+                                <button class="btn btn-primary py-3 fw-semibold" @onclick="Qualify">C# / .NET</button>
+                                <button class="btn dusk-btn-outline py-3 fw-semibold" @onclick="Qualify">Java</button>
+                                <button class="btn dusk-btn-outline py-3 fw-semibold" @onclick="Qualify">Python</button>
+                                <button class="btn dusk-btn-outline py-3 fw-semibold" @onclick="Qualify">@L["Lead_Other"]</button>
+                            </div>
+                        }
+                        else if (!isSubmitted)
+                        {
+                            <!-- Step 2: Collection form -->
+                            <h5 class="fw-bold mb-4 text-center">@L["Lead_InvitePrompt"]</h5>
+                            <div class="mb-4">
+                                <label class="form-label text-secondary small fw-semibold text-uppercase tracking-wider">@L["Lead_EmailLabel"]</label>
+                                <input type="email" class="form-control form-control-lg dusk-input" placeholder="@L["Lead_EmailPlaceholder"]" @bind="email" />
+                            </div>
+                            <button class="btn btn-primary btn-lg w-100 fw-bold py-3" @onclick="Submit">@L["Lead_Submit"]</button>
+                        }
+                        else
+                        {
+                            <!-- Success State -->
+                            <div class="text-center py-4 success-animation">
+                                <div class="success-icon mb-4 mx-auto">
+                                    <i class="bi bi-check-lg display-4 text-success"></i>
+                                </div>
+                                <h4 class="fw-bold text-white mb-3">@L["Lead_Success"]</h4>
+                                <p class="dusk-text-muted mb-4">@L["Lead_SuccessHint"]</p>
+                                <a href="/practice" class="btn btn-primary px-5 py-3 rounded-pill fw-bold">@L["Lead_StartNow"]</a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .lead-form-section {
+        background: linear-gradient(135deg, var(--dusk-purple-deep) 0%, var(--dusk-bg-dark) 100%);
+        overflow: hidden;
+    }
+    
+    .lead-card {
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 40px rgba(234, 88, 12, 0.15);
+    }
+
+    .dusk-input {
+        background-color: rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: white;
+        transition: all 0.3s ease;
+    }
+    
+    .dusk-input:focus {
+        background-color: rgba(0, 0, 0, 0.4);
+        border-color: var(--dusk-orange-glow);
+        box-shadow: 0 0 0 0.25rem rgba(234, 88, 12, 0.25);
+        color: white;
+    }
+    
+    .dusk-input::placeholder {
+        color: rgba(255, 255, 255, 0.3);
+    }
+    
+    .success-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: rgba(40, 167, 69, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid rgba(40, 167, 69, 0.3);
+        box-shadow: 0 0 20px rgba(40, 167, 69, 0.2);
+    }
+</style>
+
+@code {
+    private bool isQualified = false;
+    private bool isSubmitted = false;
+    private string email = "";
+
+    private void Qualify()
+    {
+        isQualified = true;
+    }
+
+    private async Task Submit()
+    {
+        if (string.IsNullOrWhiteSpace(email)) return;
+        
+        // Simulate API call
+        await Task.Delay(500); 
+        isSubmitted = true;
+    }
+}

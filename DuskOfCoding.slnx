@@ -1,0 +1,12 @@
+<Solution>
+  <Project Path="DuskOfCoding.AppHost/DuskOfCoding.AppHost.csproj" />
+  <Project Path="DuskOfCoding.Application/DuskOfCoding.Application.csproj" />
+  <Project Path="DuskOfCoding.Domain/DuskOfCoding.Domain.csproj" />
+  <Project Path="DuskOfCoding.Execution.Contracts/DuskOfCoding.Execution.Contracts.csproj" />
+  <Project Path="DuskOfCoding.ExecutionApi/DuskOfCoding.ExecutionApi.csproj" />
+  <Project Path="DuskOfCoding.Infrastructure/DuskOfCoding.Infrastructure.csproj" />
+  <Project Path="DuskOfCoding.ServiceDefaults/DuskOfCoding.ServiceDefaults.csproj" />
+  <Project Path="DuskOfCoding.TutorWorker/DuskOfCoding.TutorWorker.csproj" />
+  <Project Path="DuskOfCoding.WebApi/DuskOfCoding.WebApi.csproj" />
+  <Project Path="DuskOfCoding.WebUi/DuskOfCoding.WebUi.csproj" />
+</Solution>
