@@ -47,3 +47,21 @@ Currently, the application lacks authentication. We need to secure the WebApi an
 ## UX & Design Guidelines
 - Any new UI controls (like the Login/Logout buttons in the header) must adhere to the premium **Dusk of Coding** glassmorphism aesthetic defined in `app.css` (e.g., leveraging the `.dusk-btn-outline` class).
 - Ensure unauthorized API calls are handled gracefully in the frontend rather than causing unhandled Blazor exceptions.
+
+### Phase 4: User Registration & Security Hardening
+1. **Keycloak Realm**: Enable self-registration in `realm.json`:
+    - `"registrationAllowed": true`
+    - `"registrationEmailAsUsername": true`
+    - Disable `directAccessGrantsEnabled` on the `webui` client (security best practice).
+    - Add `postLogoutRedirectUris` and `webOrigins` to the `webui` client configuration.
+2. **Registration Endpoint**: Add a `/register` GET endpoint in `WebUi/Program.cs` that triggers an OIDC challenge with `prompt=create`, directing users straight to the Keycloak registration form.
+3. **Landing Page Integration**:
+    - Update the **Hero CTA** ("Start Practicing") to link to `/login?returnUrl=/practice` so users are authenticated before accessing the practice environment.
+    - Update the **Landing header** "Get Started" button to link to `/register`.
+    - Refactor the **LeadFormComponent**: Replace the simulated email collection step with a redirect to Keycloak registration. Keep the breadcrumb "What's your primary coding language?" step for engagement, then the second step shows a "Create Free Account" button linking to `/register` and a "Already have an account? Log in" link.
+4. **Missing Localization**: Add resource keys that were referenced but never defined:
+    - `Hero_Tagline` (EN: "AI-Augmented Learning", HU: "MI-alapú tanulás")
+    - `Lead_AlreadyRegistered` (EN: "Already have an account?", HU: "Már van fiókod?")
+    - `Lead_LoginLink` (EN: "Log in", HU: "Bejelentkezés")
+    - Update `Lead_Submit` to reflect registration (EN: "Create Free Account", HU: "Ingyenes fiók létrehozása").
+5. **Build Warning Fix**: Remove unnecessary `Microsoft.AspNetCore.Components.Authorization` NuGet package from `WebUi.csproj` (it's already provided by the framework SDK, causing NU1510).
