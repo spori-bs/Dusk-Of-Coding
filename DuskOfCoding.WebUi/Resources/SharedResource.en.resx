@@ -107,37 +107,38 @@
   <data name="Landing_PageTitle" xml:space="preserve"><value>DuskOfCoding - Revolutionize Your Coding</value></data>
 
   <!-- Hero -->
-  <data name="Hero_Title" xml:space="preserve"><value>The sun is setting on coding as we knew it.</value></data>
-  <data name="Hero_Description" xml:space="preserve"><value>Are you ready for what comes next? Master the craft. Wield the tool. Embrace AI as a power tool—like an IDE or a debugger—not as a replacement for critical thinking.</value></data>
-  <data name="Hero_CTA" xml:space="preserve"><value>Prepare for the Dawn</value></data>
+  <data name="Hero_Title" xml:space="preserve"><value>Learn to code the right way, augmented by AI.</value></data>
+  <data name="Hero_Description" xml:space="preserve"><value>AI won't write perfect software for you, but it will supercharge your workflow if you know what you are doing. Focus on stable fundamentals, write clean code, and use AI like the pros—as a tool, not a crutch.</value></data>
+  <data name="Hero_CTA" xml:space="preserve"><value>Start Practicing</value></data>
+  <data name="Hero_SecondaryCTA" xml:space="preserve"><value>Watch Demo</value></data>
 
   <!-- Features -->
-  <data name="Features_Heading" xml:space="preserve"><value>Code with purpose. Augment with intelligence.</value></data>
-  <data name="Features_Subheading" xml:space="preserve"><value>DuskOfCoding prepares you for the transition era, where learning to code properly has never been more important.</value></data>
-  <data name="Features_Sandbox_Title" xml:space="preserve"><value>AI as your forge, not your crutch</value></data>
-  <data name="Features_Sandbox_Desc" xml:space="preserve"><value>Accepts and validates user-submitted C# code, compiling and executing it safely within a Docker sandbox, utilizing the Roslyn Compiler.</value></data>
+  <data name="Features_Heading" xml:space="preserve"><value>Stable fundamentals. Modern tools.</value></data>
+  <data name="Features_Subheading" xml:space="preserve"><value>Dusk of Coding helps you understand the deeper layers of software development, ensuring AI remains a helpful assistant rather than an unexplainable magic box.</value></data>
+  <data name="Features_Sandbox_Title" xml:space="preserve"><value>Safe Execution Environment</value></data>
+  <data name="Features_Sandbox_Desc" xml:space="preserve"><value>Test your C# solutions in a fully isolated, secure environment backed by Docker and the Roslyn Compiler, where you can experiment freely.</value></data>
   <data name="Features_Testing_Title" xml:space="preserve"><value>Automated Unit Testing</value></data>
-  <data name="Features_Testing_Desc" xml:space="preserve"><value>Runs automated unit tests against submissions and provides detailed, structured feedback rather than simple pass/fail metrics.</value></data>
-  <data name="Features_AI_Title" xml:space="preserve"><value>AI-Assisted Reviews</value></data>
-  <data name="Features_AI_Desc" xml:space="preserve"><value>An integrated AI extension point that teaches you how to direct AI effectively—becoming exponentially more productive while avoiding the skills gap.</value></data>
+  <data name="Features_Testing_Desc" xml:space="preserve"><value>We don't just give you a pass/fail. Our automated tests provide detailed, structured feedback so you can understand exactly why your code didn't work.</value></data>
+  <data name="Features_AI_Title" xml:space="preserve"><value>Targeted AI Feedback</value></data>
+  <data name="Features_AI_Desc" xml:space="preserve"><value>Our built-in AI tutor won't solve the tasks for you. Instead, it guides you to the right approach, helping you learn how to effectively prompt and direct AI models.</value></data>
 
   <!-- Media Demo -->
-  <data name="MediaDemo_Title" xml:space="preserve"><value>See the New Dawn in Action</value></data>
-  <data name="MediaDemo_Subtitle" xml:space="preserve"><value>Want to know more? Chat with our live support below or schedule a personalized demo to see how we blend fundamentals with AI assistance.</value></data>
+  <data name="MediaDemo_Title" xml:space="preserve"><value>See it in action</value></data>
+  <data name="MediaDemo_Subtitle" xml:space="preserve"><value>Curious about the details? Watch our demo video to see how we blend strong software engineering fundamentals with the capabilities of modern AI.</value></data>
 
   <!-- Social Proof -->
   <data name="Social_Heading" xml:space="preserve"><value>Built With Modern Architecture</value></data>
   <data name="Social_Subheading" xml:space="preserve"><value>Applying Clean Architecture principles in a Modular Monolith structure.</value></data>
   <data name="Social_PoweredBy" xml:space="preserve"><value>Powered By</value></data>
-  <data name="Social_Quote" xml:space="preserve"><value>"This repository serves as an experimental proof-of-concept. Its architecture and implementation were born from the exploratory development paradigm of 'vibecoding'."</value></data>
+  <data name="Social_Quote" xml:space="preserve"><value>"The goal of this platform is to prove that AI-assisted development doesn't replace clean, well-structured coding principles—it complements them."</value></data>
   <data name="Social_QuoteSource" xml:space="preserve"><value>Project Methodology</value></data>
 
   <!-- Lead Form -->
-  <data name="Lead_Heading" xml:space="preserve"><value>Ready to Start Your Onboarding?</value></data>
-  <data name="Lead_Subheading" xml:space="preserve"><value>Join the platform and level up your skills with DuskOfCoding today.</value></data>
+  <data name="Lead_Heading" xml:space="preserve"><value>Ready to challenge yourself?</value></data>
+  <data name="Lead_Subheading" xml:space="preserve"><value>Join the platform and build future-proof programming skills with Dusk of Coding.</value></data>
   <data name="Lead_Question" xml:space="preserve"><value>What's your primary coding language?</value></data>
   <data name="Lead_Other" xml:space="preserve"><value>Other</value></data>
-  <data name="Lead_InvitePrompt" xml:space="preserve"><value>Great! Where should we send your invite?</value></data>
+  <data name="Lead_InvitePrompt" xml:space="preserve"><value>Awesome! Where should we send your access link?</value></data>
   <data name="Lead_EmailLabel" xml:space="preserve"><value>Work Email</value></data>
   <data name="Lead_EmailPlaceholder" xml:space="preserve"><value>you@company.com</value></data>
   <data name="Lead_Submit" xml:space="preserve"><value>Get Instant Access</value></data>

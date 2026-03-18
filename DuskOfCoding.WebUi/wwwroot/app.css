@@ -1,15 +1,70 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --dusk-bg-dark: #09090b;
+    --dusk-bg-panel: #0f172a;
+    --dusk-purple-deep: #1e1b4b;
+    --dusk-purple-mid: #4c1d95;
+    --dusk-purple-light: #7c3aed;
+    --dusk-orange-glow: #ea580c;
+    --dusk-orange-warm: #c2410c;
+    
+    --dusk-text-primary: #f8fafc;
+    --dusk-text-muted: #94a3b8;
+
+    --glass-bg: rgba(15, 23, 42, 0.45);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
 html, body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: 'Outfit', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--dusk-bg-dark);
+    color: var(--dusk-text-primary);
+    -webkit-font-smoothing: antialiased;
 }
 
 a, .btn-link {
-    color: #006bb7;
+    color: var(--dusk-purple-light);
+    transition: all 0.2s ease-in-out;
+}
+a:hover, .btn-link:hover {
+    color: var(--dusk-orange-glow);
+    text-decoration: none;
 }
 
 .btn-primary {
     color: #fff;
-    background-color: #1b6ec2;
-    border-color: #1861ac;
+    background: linear-gradient(135deg, var(--dusk-purple-mid) 0%, var(--dusk-purple-light) 100%);
+    border: none;
+    box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3);
+    transition: all 0.3s ease;
+}
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(124, 58, 237, 0.5);
+}
+
+.dusk-btn-outline {
+    color: var(--dusk-text-primary);
+    background-color: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+}
+.dusk-btn-outline:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* Glass panel utility class */
+.dusk-glass-panel {
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    box-shadow: var(--glass-shadow);
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {

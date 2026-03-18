@@ -1,33 +1,58 @@
 @using DuskOfCoding.WebUi.Resources
 @inject IStringLocalizer<SharedResource> L
 
-<section class="social-proof-section py-5 bg-white">
-    <div class="container text-center">
+<section class="social-proof-section py-5">
+    <div class="container text-center py-5">
         <!-- Statistics / Features -->
-        <h2 class="fw-bold mb-4">@L["Social_Heading"]</h2>
-        <p class="text-muted mb-5">@L["Social_Subheading"]</p>
+        <h2 class="display-6 fw-bold text-white mb-4">@L["Social_Heading"]</h2>
+        <p class="lead dusk-text-muted mb-5 mx-auto" style="max-width: 600px;">@L["Social_Subheading"]</p>
 
         <!-- Tech Stack Logos (Placeholders mapping to README tech) -->
-        <p class="text-muted mb-4 fw-bold text-uppercase">@L["Social_PoweredBy"]</p>
-        <div class="d-flex justify-content-center flex-wrap gap-4 opacity-50 mb-5">
-            <h4 class="m-0">.NET 10</h4>
-            <h4 class="m-0">.NET Aspire</h4>
-            <h4 class="m-0">Blazor Server</h4>
-            <h4 class="m-0">EF Core</h4>
-            <h4 class="m-0">Roslyn</h4>
-            <h4 class="m-0">Docker</h4>
+        <p class="text-secondary mb-4 fw-semibold tracking-wider text-uppercase small">@L["Social_PoweredBy"]</p>
+        <div class="d-flex justify-content-center flex-wrap gap-4 gap-md-5 opacity-75 mb-5 tech-stack-container">
+            <h5 class="m-0 tech-item">.NET 10</h5>
+            <h5 class="m-0 tech-item">.NET Aspire</h5>
+            <h5 class="m-0 tech-item">Blazor Server</h5>
+            <h5 class="m-0 tech-item">EF Core</h5>
+            <h5 class="m-0 tech-item">Roslyn</h5>
+            <h5 class="m-0 tech-item">Docker</h5>
         </div>
 
-        <!-- Quote -->
-        <div class="row justify-content-center">
+        <!-- Premium Quote -->
+        <div class="row justify-content-center mt-5">
             <div class="col-lg-8">
-                <blockquote class="blockquote border-0 fs-4 fst-italic text-dark">
-                    @L["Social_Quote"]
-                </blockquote>
-                <figcaption class="blockquote-footer mt-3 fs-6">
-                    <cite title="Source Title">@L["Social_QuoteSource"]</cite>
-                </figcaption>
+                <div class="position-relative">
+                    <i class="bi bi-quote position-absolute text-secondary opacity-25" style="font-size: 6rem; top: -40px; left: -20px; z-index: 0;"></i>
+                    <blockquote class="blockquote border-0 fs-3 fst-italic text-white position-relative z-1 mb-4" style="line-height: 1.6;">
+                        "@L["Social_Quote"]"
+                    </blockquote>
+                    <figcaption class="blockquote-footer mt-3 fs-6">
+                        <cite title="Source Title" class="text-white fw-bold">@L["Social_QuoteSource"]</cite>
+                    </figcaption>
+                </div>
             </div>
         </div>
     </div>
 </section>
+
+<style>
+    .social-proof-section {
+        background-color: var(--dusk-bg-panel);
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    
+    .tracking-wider {
+        letter-spacing: 0.1em;
+    }
+    
+    .tech-item {
+        color: var(--dusk-text-muted);
+        transition: color 0.3s ease;
+        cursor: default;
+    }
+    
+    .tech-item:hover {
+        color: white;
+    }
+</style>

@@ -107,37 +107,38 @@
   <data name="Landing_PageTitle" xml:space="preserve"><value>DuskOfCoding - Forradalmasítsd a kódolást</value></data>
 
   <!-- Hero -->
-  <data name="Hero_Title" xml:space="preserve"><value>Lemegy a nap a kódolás felett, ahogy eddig ismertük.</value></data>
-  <data name="Hero_Description" xml:space="preserve"><value>Készen állsz arra, ami ezután következik? Építs mesteri alapot. Forgasd az eszközt. Fogadd el az MI-t úgy, mint egy új eszközt – mint egy IDE-t vagy debuggert –, nem pedig a kritikus gondolkodás helyettesítését.</value></data>
-  <data name="Hero_CTA" xml:space="preserve"><value>Készülj fel a hajnalra</value></data>
+  <data name="Hero_Title" xml:space="preserve"><value>Kódolj stabil alapokkal, használd az MI-t okosan.</value></data>
+  <data name="Hero_Description" xml:space="preserve"><value>Az MI nem írja meg helyetted a tökéletes szoftvert, de megnöveli a hatékonyságod, ha tudod, mit csinálsz. Fókuszálj a stabil alapokra, írj tiszta kódot, és dolgozz a mesterséges intelligenciával úgy, ahogy a profik: eszközként és nem mankóként.</value></data>
+  <data name="Hero_CTA" xml:space="preserve"><value>Vágj bele most</value></data>
+  <data name="Hero_SecondaryCTA" xml:space="preserve"><value>Bemutató</value></data>
 
   <!-- Features -->
-  <data name="Features_Heading" xml:space="preserve"><value>Kódolj céllal. Erősíts intelligenciával.</value></data>
-  <data name="Features_Subheading" xml:space="preserve"><value>A DuskOfCoding felkészít az átmeneti időszakra, ahol a helyes kódolás elsajátítása még soha nem volt ilyen fontos.</value></data>
-  <data name="Features_Sandbox_Title" xml:space="preserve"><value>Az MI az eszközöd, nem a mankód</value></data>
-  <data name="Features_Sandbox_Desc" xml:space="preserve"><value>Felhasználói C# kód fogadása és validálása, biztonságos fordítás és futtatás Docker sandbox-ban, a Roslyn Compiler segítségével.</value></data>
+  <data name="Features_Heading" xml:space="preserve"><value>Stabil alapok és modern eszközök.</value></data>
+  <data name="Features_Subheading" xml:space="preserve"><value>A Dusk of Coding segít megérteni a szoftverfejlesztés mélyebb rétegeit, hogy az MI ne egy megmagyarázhatatlan varázsdoboz, hanem egy hatékony asszisztens legyen a kezedben.</value></data>
+  <data name="Features_Sandbox_Title" xml:space="preserve"><value>Biztonságos kódolási környezet</value></data>
+  <data name="Features_Sandbox_Desc" xml:space="preserve"><value>Teszteld a C# megoldásaidat egy teljesen elszigetelt, biztonságos Docker és Roslyn alapú környezetben, ahol szabadon kísérletezhetsz.</value></data>
   <data name="Features_Testing_Title" xml:space="preserve"><value>Automatizált egységtesztelés</value></data>
-  <data name="Features_Testing_Desc" xml:space="preserve"><value>Automatizált egységtesztek futtatása a beküldött megoldásokon, részletes, strukturált visszajelzés egyszerű sikeres/sikertelen értékelések helyett.</value></data>
-  <data name="Features_AI_Title" xml:space="preserve"><value>MI-alapú kódellenőrzés</value></data>
-  <data name="Features_AI_Desc" xml:space="preserve"><value>Integrált MI funkciók, amik megtanítanak rá, hogyan irányítsd az MI-t hatékonyan – hogy exopnenciálisan produktívabb legyél anélkül, hogy elveszítenéd a mérnöki gondolkodást.</value></data>
+  <data name="Features_Testing_Desc" xml:space="preserve"><value>Nemcsak azt mondjuk meg, hogy lefutott-e a kódod. Részletes visszajelzést adunk az automatizált tesztek alapján, hogy értsd a hibáid okát.</value></data>
+  <data name="Features_AI_Title" xml:space="preserve"><value>Célzott MI-visszajelzés</value></data>
+  <data name="Features_AI_Desc" xml:space="preserve"><value>A beépített MI mentor nem oldja meg helyetted a feladatot, de rávezet a helyes útra, és megtanít arra, hogyan kommunikálj hatékonyan a modellekkel.</value></data>
 
   <!-- Media Demo -->
-  <data name="MediaDemo_Title" xml:space="preserve"><value>Nézd meg az új hajnalt akcióban</value></data>
-  <data name="MediaDemo_Subtitle" xml:space="preserve"><value>Többet szeretnél tudni? Csevegj az élő támogatásunkkal, vagy kérj személyre szabott bemutatót arról, hogyan ötvözzük a mérnöki alapokat az MI segítségével.</value></data>
+  <data name="MediaDemo_Title" xml:space="preserve"><value>Nézd meg működés közben</value></data>
+  <data name="MediaDemo_Subtitle" xml:space="preserve"><value>Kíváncsi vagy a részletekre? Nézd meg bemutató videónkat, és ismerd meg, hogyan ötvözzük a mérnöki alapokat a mesterséges intelligencia nyújtotta lehetőségekkel.</value></data>
 
   <!-- Social Proof -->
   <data name="Social_Heading" xml:space="preserve"><value>Modern architektúrával építve</value></data>
-  <data name="Social_Subheading" xml:space="preserve"><value>Clean Architecture elvek alkalmazása moduláris monolitikus struktúrában.</value></data>
+  <data name="Social_Subheading" xml:space="preserve"><value>Clean Architecture és moduláris monolit fókusszal.</value></data>
   <data name="Social_PoweredBy" xml:space="preserve"><value>Technológiák</value></data>
-  <data name="Social_Quote" xml:space="preserve"><value>"Ez a repository kísérleti proof-of-concept-ként szolgál. Architektúrája és megvalósítása a 'vibecoding' felfedező fejlesztési paradigmából született."</value></data>
+  <data name="Social_Quote" xml:space="preserve"><value>"A platform célja, hogy bemutassa: az MI-asszisztált fejlesztés nem helyettesíti a tiszta, jól strukturált kódolási elveket, hanem kiegészíti azokat."</value></data>
   <data name="Social_QuoteSource" xml:space="preserve"><value>Projekt módszertan</value></data>
 
   <!-- Lead Form -->
-  <data name="Lead_Heading" xml:space="preserve"><value>Készen állsz a betanításra?</value></data>
-  <data name="Lead_Subheading" xml:space="preserve"><value>Csatlakozz a platformhoz és fejleszd a tudásod a DuskOfCoding segítségével!</value></data>
+  <data name="Lead_Heading" xml:space="preserve"><value>Szeretnéd próbára tenni magad?</value></data>
+  <data name="Lead_Subheading" xml:space="preserve"><value>Csatlakozz hozzánk, és alapozd meg a jövőálló programozói tudásod a Dusk of Coding segítségével.</value></data>
   <data name="Lead_Question" xml:space="preserve"><value>Mi a fő programozási nyelved?</value></data>
   <data name="Lead_Other" xml:space="preserve"><value>Egyéb</value></data>
-  <data name="Lead_InvitePrompt" xml:space="preserve"><value>Remek! Hova küldjük a meghívót?</value></data>
+  <data name="Lead_InvitePrompt" xml:space="preserve"><value>Szuper! Hova küldhetjük a hozzáférést?</value></data>
   <data name="Lead_EmailLabel" xml:space="preserve"><value>Munkahelyi email</value></data>
   <data name="Lead_EmailPlaceholder" xml:space="preserve"><value>te@ceg.hu</value></data>
   <data name="Lead_Submit" xml:space="preserve"><value>Azonnali hozzáférés</value></data>

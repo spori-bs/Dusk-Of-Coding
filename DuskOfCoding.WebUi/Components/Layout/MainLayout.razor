@@ -14,13 +14,15 @@
     </header>
 
     <main class="app-main">
-        <div class="container py-4 border-start border-end bg-white" style="min-height: calc(100vh - 140px);">
+        <div class="container py-4" style="min-height: calc(100vh - 140px);">
             @Body
         </div>
     </main>
 
     <footer class="app-footer">
-        &copy; @DateTime.Now.Year @L["Footer_Rights"]
+        <div class="container text-center">
+            <span class="opacity-75">&copy; @DateTime.Now.Year @L["Footer_Rights"]</span>
+        </div>
     </footer>
 </div>
 
@@ -32,8 +34,9 @@
 
 <style>
     .app-page-wrapper {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background-color: #0f172a; /* Dark night background to frame the container */
+        font-family: 'Outfit', sans-serif;
+        background-color: var(--dusk-bg-dark);
+        color: var(--dusk-text-primary);
     }
     .app-header {
         padding: 0 2rem;
@@ -41,19 +44,25 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        background: #1e1b4b; /* Deep twilight purple */
-        box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        background: rgba(15, 23, 42, 0.85);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
         position: sticky;
         top: 0;
         z-index: 1000;
-        border-bottom: 2px solid #ea580c; /* Horizon orange accent */
+        border-bottom: 2px solid var(--dusk-orange-glow);
     }
     .app-logo {
         font-size: 1.5rem;
-        font-weight: bold;
-        color: #f8fafc;
+        font-weight: 700;
+        color: var(--dusk-text-primary);
         text-decoration: none;
         letter-spacing: 0.5px;
+        transition: text-shadow 0.3s ease;
+    }
+    .app-logo:hover {
+        text-shadow: 0 0 10px rgba(255,255,255,0.3);
+        color: white;
     }
     .app-main {
         min-height: calc(100vh - 140px);
@@ -61,10 +70,9 @@
     .app-footer {
         height: 70px;
         padding: 2rem;
-        text-align: center;
-        background: #09090b;
-        border-top: 1px solid #1e1b4b;
-        color: #94a3b8;
+        background: rgba(9, 9, 11, 0.95);
+        border-top: 1px solid rgba(255,255,255,0.05);
+        color: var(--dusk-text-muted);
         font-size: 0.9rem;
     }
 </style>

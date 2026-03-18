@@ -7,10 +7,10 @@
         <a href="" class="landing-logo">@L["AppTitle"]</a>
         <!-- Distraction-free: No complex navigation links -->
         <div class="d-flex align-items-center">
-            <a href="/practice" class="btn btn-link text-decoration-none text-dark me-3">@L["Landing_Practice"]</a>
-            <a href="/tasks" class="btn btn-link text-decoration-none text-dark me-3">@L["Landing_ManageTasks"]</a>
-            <a href="#demo" class="btn btn-outline-primary btn-sm me-2">@L["Landing_WatchDemo"]</a>
-            <a href="#get-started" class="btn btn-primary btn-sm me-3">@L["Landing_GetStarted"]</a>
+            <a href="/practice" class="btn btn-link dusk-nav-link text-decoration-none me-4">@L["Landing_Practice"]</a>
+            <a href="/tasks" class="btn btn-link dusk-nav-link text-decoration-none me-4">@L["Landing_ManageTasks"]</a>
+            <a href="#demo" class="btn btn-outline-light btn-sm me-3 dusk-btn-outline">@L["Landing_WatchDemo"]</a>
+            <a href="#get-started" class="btn btn-primary btn-sm me-4 px-4">@L["Landing_GetStarted"]</a>
             <LanguageSelector />
         </div>
     </header>
@@ -20,37 +20,75 @@
     </main>
 
     <footer class="landing-footer">
-        &copy; @DateTime.Now.Year @L["Footer_Rights"]
+        <div class="container text-center">
+            <span class="opacity-75">&copy; @DateTime.Now.Year @L["Footer_Rights"]</span>
+        </div>
         <!-- Distraction-free: No exit links -->
     </footer>
 </div>
 
 <style>
     .landing-page-wrapper {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-family: 'Outfit', sans-serif;
+        background-color: var(--dusk-bg-dark);
+        color: var(--dusk-text-primary);
+        overflow-x: hidden;
     }
     .landing-header {
-        padding: 1rem 2rem;
+        padding: 0 4rem;
+        height: 80px;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        background: #ffffff;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        background: rgba(9, 9, 11, 0.7);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
     }
     .landing-logo {
-        font-size: 1.5rem;
-        font-weight: bold;
-        color: #2b3a42;
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--dusk-text-primary);
         text-decoration: none;
+        letter-spacing: 0.5px;
+        transition: text-shadow 0.3s ease;
+    }
+    .landing-logo:hover {
+        text-shadow: 0 0 15px rgba(255,255,255,0.4);
+        color: white;
     }
     .landing-main {
-        min-height: calc(100vh - 140px);
+        min-height: calc(100vh - 80px); /* 80px is header height */
     }
     .landing-footer {
-        padding: 2rem;
-        text-align: center;
-        background: #f8f9fa;
-        color: #6c757d;
+        padding: 3rem 0;
+        background: var(--dusk-bg-dark);
+        border-top: 1px solid rgba(255,255,255,0.05);
+        color: var(--dusk-text-muted);
         font-size: 0.9rem;
+    }
+    
+    .dusk-nav-link {
+        color: var(--dusk-text-muted) !important;
+        transition: color 0.3s ease;
+    }
+    .dusk-nav-link:hover {
+        color: var(--dusk-text-primary) !important;
+    }
+    
+    .dusk-btn-outline {
+        border-color: rgba(255,255,255,0.2);
+        color: var(--dusk-text-primary);
+        transition: all 0.3s ease;
+    }
+    .dusk-btn-outline:hover {
+        background: rgba(255,255,255,0.1);
+        border-color: rgba(255,255,255,0.4);
+        color: white;
     }
 </style>
