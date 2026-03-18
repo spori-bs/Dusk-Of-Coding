@@ -2,20 +2,27 @@
 
 > **Disclaimer on Methodology:** This repository serves as an experimental proof-of-concept. Its architecture and implementation were born from the exploratory development paradigm of "vibecoding," operating in close synergy with the Antigravity AI agent to rapidly prototype and synthesize complex system capabilities.
 
-An internal AI-aware .NET junior onboarding platform and code execution environment.
+*Master the craft. Wield the tool.*
+
+An **AI-awareness and code mastery platform** designed to prepare developers for the new dawn of software engineering.
 
 ## 🚀 Overview
 
-Dusk of Coding is a Proof of Concept (POC) designed to evaluate and onboard junior developers. 
-It provides a safe, sandboxed environment for presenting programming tasks and reviewing user-submitted code. 
+The sun is setting on coding as we traditionally knew it. **Dusk of Coding** represents the twilight of the old way—where developers wrote every line by hand, unassisted. But dusk is not an ending; it is the transition into a new dawn. 
+
+This platform exists at this crossroads, serving as a safe, sandboxed environment where developers can learn to build systems correctly while simultaneously learning to harness AI effectively.
 
 The platform is designed to:
-- Present structured programming tasks.
-- Accept and validate user-submitted C# code.
-- Compile and execute code safely within a sandbox.
-- Run automated unit tests against submissions.
-- Provide detailed, structured feedback rather than simple pass/fail metrics.
-- Support future integration of AI-assisted code reviews.
+- **Build resilience** by presenting structured programming tasks that require deep architectural understanding.
+- **Validate fundamentals** by compiling and executing C# code safely within a Docker sandbox.
+- **Provide structured feedback** through automated unit tests rather than simple pass/fail metrics.
+- **Teach the new literacy** through an MCP-enabled AI Tutor that mentors users using the Socratic method, ensuring they learn to direct AI rather than rely on it blindly.
+
+## 🌌 Philosophy: AI is a Tool, Not a Brain
+
+AI code generation is restructuring how software is conceived, written, tested, and maintained. Developers who treat AI as their brain will hit a ceiling—they will lose the ability to architect, debug, and reason about complex systems. 
+
+At **Dusk of Coding**, we believe that AI is a power tool—like an IDE, a debugger, or a compiler. The developers who thrive in the new dawn will be those who master the fundamentals of software engineering *and* learn to wield AI as the most powerful tool in their arsenal.
 
 ## 🛠️ Built With
 
