@@ -70,3 +70,18 @@ C4Context
     Rel(tutor_worker, llm_provider, "Fetches AI mentoring feedback (with Polly Resilience)", "HTTPS")
     Rel(tutor_worker, webui, "Streams real-time feedback", "SignalR (Terminal)")
 ```
+
+## 📜 Development History (Prompt Progression)
+
+This project was built iteratively using a sequence of specialized AI prompts located in the `_ArchivePromts` directory. The chronological sequence reflects the evolution of the application:
+
+1. **Master (`master promt.md` / `context.md` / `PHASE1-Architecture.md`)**
+   - **Goal:** Initial application scaffolding. Setting up the Blazor Server UI, the Core WebAPI, Entity Framework database connection, and the basic structure of the Modular Monolith architecture.
+2. **Advanced (`advanced-master-promt.md` / `advanced-context.md`)**
+   - **Goal:** Complex backend features. Introduced the isolated Docker/Roslyn code execution sandbox, as well as the background AI `TutorWorker` integrating OpenAI/Azure OpenAI with Polly resilience pipelines.
+3. **Localization (`localization-master-promt.md` / `localization-context.md`)**
+   - **Goal:** Bilingual support (English & Hungarian). Implementing the resource `.resx` files and the Blazor globalization services.
+4. **Rebrand (`rebrand-master-promt.md` / `rebrand-context.md`)**
+   - **Goal:** Structural identity change. Transitioning the generic project name to **Dusk of Coding**, migrating away from the old sidebar layout to a new horizontal top navigation bar.
+5. **Rebrand Page Modification (`rebrand-page-modification-master-prompt.md` / `rebrand-page-modification-context.md` / `landing-page.md`)**
+   - **Goal:** Premium UI Overhaul. Redesigning the visual identity to feature the dark mode glassmorphism aesthetic, building out the premium Landing Page, and fixing UX/UI contrast issues across the app.
