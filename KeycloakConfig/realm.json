@@ -26,16 +26,10 @@
       "rootUrl": "",
       "adminUrl": "",
       "redirectUris": [
-        "https://localhost:*/signin-oidc",
-        "http://localhost:*/signin-oidc"
-      ],
-      "postLogoutRedirectUris": [
-        "https://localhost:*/*",
-        "http://localhost:*/*"
+        "*"
       ],
       "webOrigins": [
-        "https://localhost:*",
-        "http://localhost:*"
+        "*"
       ]
     },
     {

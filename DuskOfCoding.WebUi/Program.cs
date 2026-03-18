@@ -12,6 +12,18 @@ builder.AddServiceDefaults();
 // ── Localization ───────────────────────────────────────────
 builder.Services.AddLocalization();
 
+// ── Dev certificate trust (Aspire service-to-service) ─────
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services.ConfigureHttpClientDefaults(http =>
+    {
+        http.ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+        {
+            ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+        });
+    });
+}
+
 // ── Authentication (Keycloak OIDC) ───────────────────────────
 builder.Services.AddAuthentication(options =>
 {
@@ -24,7 +36,14 @@ builder.Services.AddAuthentication(options =>
     realm: "DuskOfCoding",
     configureOptions: options =>
     {
+        options.ClientId = "webui";
+        options.ResponseType = "code";
         options.SaveTokens = true;
+        options.RequireHttpsMetadata = false;
+        options.BackchannelHttpHandler = new HttpClientHandler
+        {
+            ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+        };
     });
 
 // Add services to the container.
@@ -85,9 +104,9 @@ app.UseAntiforgery();
 
 app.MapControllers();
 app.MapStaticAssets();
-app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode();
 
+// Auth endpoints — must be registered BEFORE MapRazorComponents
+// so Blazor's client-side router doesn't intercept them.
 app.MapGet("/login", (string? returnUrl) =>
 {
     return TypedResults.Challenge(new AuthenticationProperties { RedirectUri = returnUrl ?? "/" });
@@ -105,6 +124,9 @@ app.MapGet("/register", (string? returnUrl) =>
     props.SetParameter("prompt", "create");
     return TypedResults.Challenge(props);
 });
+
+app.MapRazorComponents<App>()
+    .AddInteractiveServerRenderMode();
 
 app.Run();
 

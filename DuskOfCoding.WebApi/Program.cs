@@ -14,6 +14,18 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 
+// ── Dev certificate trust (Aspire service-to-service) ─────
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services.ConfigureHttpClientDefaults(http =>
+    {
+        http.ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+        {
+            ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+        });
+    });
+}
+
 // Add services to the container.
 builder.Services.AddOpenApi();
 builder.Services.AddHealthChecks()
@@ -29,7 +41,14 @@ builder.Services.AddMessagingServices();
 
 // Keycloak JWT Bearer Authentication
 builder.Services.AddAuthentication()
-       .AddKeycloakJwtBearer("keycloak", realm: "DuskOfCoding");
+       .AddKeycloakJwtBearer("keycloak", realm: "DuskOfCoding", options =>
+       {
+           options.RequireHttpsMetadata = false;
+           options.BackchannelHttpHandler = new HttpClientHandler
+           {
+               ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+           };
+       });
 builder.Services.AddAuthorization();
 
 // SignalR for real-time tutor feedback

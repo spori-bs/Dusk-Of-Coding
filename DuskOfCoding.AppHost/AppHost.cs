@@ -18,13 +18,15 @@ var webApi = builder.AddProject<Projects.DuskOfCoding_WebApi>("webapi")
     .WithReference(executionApi)
     .WithReference(messaging)
     .WithReference(keycloak)
-    .WaitFor(messaging);
+    .WaitFor(messaging)
+    .WaitFor(keycloak);
 
 // Web UI — Blazor Server frontend, calls Web API via service discovery
 builder.AddProject<Projects.DuskOfCoding_WebUi>("webui")
     .WithHttpHealthCheck("/health")
     .WithReference(webApi)
-    .WithReference(keycloak);
+    .WithReference(keycloak)
+    .WaitFor(keycloak);
 
 // Tutor Worker — MCP-enabled background worker consuming from RabbitMQ
 builder.AddProject<Projects.DuskOfCoding_TutorWorker>("tutorworker")
