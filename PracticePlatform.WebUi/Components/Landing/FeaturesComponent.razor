@@ -1,30 +1,33 @@
+@using PracticePlatform.WebUi.Resources
+@inject IStringLocalizer<SharedResource> L
+
 <section class="features-section py-5">
     <div class="container">
         <div class="text-center mb-5">
-            <h2 class="fw-bold">Structured Onboarding. Automated Execution.</h2>
-            <p class="text-muted lead">PracticePlatform provides a safe, sandboxed environment for presenting programming tasks.</p>
+            <h2 class="fw-bold">@L["Features_Heading"]</h2>
+            <p class="text-muted lead">@L["Features_Subheading"]</p>
         </div>
 
         <div class="row g-4">
             <div class="col-md-4">
                 <div class="card h-100 border-0 shadow-sm p-4 text-center">
                     <div class="display-4 text-primary mb-3">🛡️</div>
-                    <h4 class="fw-bold">Sandboxed Execution</h4>
-                    <p class="text-muted">Accepts and validates user-submitted C# code, compiling and executing it safely within a Docker sandbox, utilizing the Roslyn Compiler.</p>
+                    <h4 class="fw-bold">@L["Features_Sandbox_Title"]</h4>
+                    <p class="text-muted">@L["Features_Sandbox_Desc"]</p>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="card h-100 border-0 shadow-sm p-4 text-center">
                     <div class="display-4 text-primary mb-3">🧪</div>
-                    <h4 class="fw-bold">Automated Unit Testing</h4>
-                    <p class="text-muted">Runs automated unit tests against submissions and provides detailed, structured feedback rather than simple pass/fail metrics.</p>
+                    <h4 class="fw-bold">@L["Features_Testing_Title"]</h4>
+                    <p class="text-muted">@L["Features_Testing_Desc"]</p>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="card h-100 border-0 shadow-sm p-4 text-center">
                     <div class="display-4 text-primary mb-3">🤖</div>
-                    <h4 class="fw-bold">AI-Assisted Reviews</h4>
-                    <p class="text-muted">An integrated AI extension point to provide qualitative, AI-assisted code reviews on architecture, readability, and best practices.</p>
+                    <h4 class="fw-bold">@L["Features_AI_Title"]</h4>
+                    <p class="text-muted">@L["Features_AI_Desc"]</p>
                 </div>
             </div>
         </div>

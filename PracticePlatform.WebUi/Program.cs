@@ -1,9 +1,13 @@
+using System.Globalization;
 using PracticePlatform.WebUi.Components;
 using PracticePlatform.WebUi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
+
+// ── Localization ───────────────────────────────────────────
+builder.Services.AddLocalization();
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
@@ -22,7 +26,26 @@ builder.Services.AddHttpClient<ApiClient>(client =>
     client.BaseAddress = new Uri("http://webapi");
 });
 
+// ── Controller for culture switching ──────────────────────
+builder.Services.AddControllers();
+
 var app = builder.Build();
+
+// ── Request Localization Middleware ────────────────────────
+var supportedCultures = new[] { new CultureInfo("hu"), new CultureInfo("en") };
+app.UseRequestLocalization(new RequestLocalizationOptions
+{
+    DefaultRequestCulture = new Microsoft.AspNetCore.Localization.RequestCulture("hu"),
+    SupportedCultures = supportedCultures,
+    SupportedUICultures = supportedCultures,
+    // Only use Cookie + QueryString providers so the browser Accept-Language
+    // header does not override the default Hungarian culture.
+    RequestCultureProviders =
+    [
+        new Microsoft.AspNetCore.Localization.QueryStringRequestCultureProvider(),
+        new Microsoft.AspNetCore.Localization.CookieRequestCultureProvider()
+    ]
+});
 
 app.MapDefaultEndpoints();
 
@@ -37,6 +60,7 @@ app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages:
 
 app.UseAntiforgery();
 
+app.MapControllers();
 app.MapStaticAssets();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();

@@ -1,6 +1,9 @@
+@using PracticePlatform.WebUi.Resources
+@inject IStringLocalizer<SharedResource> L
+
 <section id="demo" class="media-demo-section py-5 text-center bg-light">
     <div class="container">
-        <h2 class="fw-bold mb-4">See PracticePlatform in Action</h2>
+        <h2 class="fw-bold mb-4">@L["MediaDemo_Title"]</h2>
         <div class="row justify-content-center">
             <div class="col-lg-8">
                 <!-- Video Placeholder -->
@@ -11,6 +14,6 @@
                 </div>
             </div>
         </div>
-        <p class="mt-4 text-muted">Want to know more? Chat with our live support below or schedule a personalized demo.</p>
+        <p class="mt-4 text-muted">@L["MediaDemo_Subtitle"]</p>
     </div>
 </section>
