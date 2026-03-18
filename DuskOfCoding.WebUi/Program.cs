@@ -99,5 +99,12 @@ app.MapPost("/logout", () =>
         new[] { OpenIdConnectDefaults.AuthenticationScheme, CookieAuthenticationDefaults.AuthenticationScheme });
 });
 
+app.MapGet("/register", (string? returnUrl) =>
+{
+    var props = new AuthenticationProperties { RedirectUri = returnUrl ?? "/" };
+    props.SetParameter("prompt", "create");
+    return TypedResults.Challenge(props);
+});
+
 app.Run();
 

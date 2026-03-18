@@ -1,6 +1,8 @@
 {
   "realm": "DuskOfCoding",
   "enabled": true,
+  "registrationAllowed": true,
+  "registrationEmailAsUsername": true,
   "users": [
     {
       "username": "student",
@@ -20,12 +22,20 @@
       "enabled": true,
       "publicClient": true,
       "standardFlowEnabled": true,
-      "directAccessGrantsEnabled": true,
+      "directAccessGrantsEnabled": false,
       "rootUrl": "",
       "adminUrl": "",
       "redirectUris": [
         "https://localhost:*/signin-oidc",
         "http://localhost:*/signin-oidc"
+      ],
+      "postLogoutRedirectUris": [
+        "https://localhost:*/*",
+        "http://localhost:*/*"
+      ],
+      "webOrigins": [
+        "https://localhost:*",
+        "http://localhost:*"
       ]
     },
     {

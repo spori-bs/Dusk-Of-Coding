@@ -108,6 +108,7 @@
 
   <!-- Hero -->
   <data name="Hero_Title" xml:space="preserve"><value>Junior fejlesztők biztonságos értékelése és betanítása</value></data>
+  <data name="Hero_Tagline" xml:space="preserve"><value>MI-alapú tanulás</value></data>
   <data name="Hero_Description" xml:space="preserve"><value>Belső, MI-támogatott .NET kódfuttatási környezet. Strukturált feladatok, C# kód validáció és részletes visszajelzések MI-alapú kódellenőrzéssel, biztonságos sandbox környezetben.</value></data>
   <data name="Hero_CTA" xml:space="preserve"><value>Gyakorlás indítása</value></data>
 
@@ -140,7 +141,9 @@
   <data name="Lead_InvitePrompt" xml:space="preserve"><value>Remek! Hova küldjük a meghívót?</value></data>
   <data name="Lead_EmailLabel" xml:space="preserve"><value>Munkahelyi email</value></data>
   <data name="Lead_EmailPlaceholder" xml:space="preserve"><value>te@ceg.hu</value></data>
-  <data name="Lead_Submit" xml:space="preserve"><value>Azonnali hozzáférés</value></data>
+  <data name="Lead_Submit" xml:space="preserve"><value>Ingyenes fiók létrehozása</value></data>
+  <data name="Lead_AlreadyRegistered" xml:space="preserve"><value>Már van fiókod?</value></data>
+  <data name="Lead_LoginLink" xml:space="preserve"><value>Bejelentkezés</value></data>
   <data name="Lead_Success" xml:space="preserve"><value>Feliratkoztál!</value></data>
   <data name="Lead_SuccessHint" xml:space="preserve"><value>Ellenőrizd a postaládádat a további utasításokért.</value></data>
   <data name="Lead_StartNow" xml:space="preserve"><value>Gyakorlás indítása</value></data>
