@@ -8,6 +8,7 @@ using DuskOfCoding.Infrastructure.Persistence;
 using DuskOfCoding.WebApi.Hubs;
 using DuskOfCoding.WebApi.Services;
 using Scalar.AspNetCore;
+using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +27,11 @@ builder.Services.AddInfrastructureServices();
 builder.AddRabbitMQClient("messaging");
 builder.Services.AddMessagingServices();
 
+// Keycloak JWT Bearer Authentication
+builder.Services.AddAuthentication()
+       .AddKeycloakJwtBearer("keycloak", realm: "DuskOfCoding");
+builder.Services.AddAuthorization();
+
 // SignalR for real-time tutor feedback
 builder.Services.AddSignalR();
 
@@ -43,6 +49,9 @@ using (var scope = app.Services.CreateScope())
 
 app.MapDefaultEndpoints();
 
+app.UseAuthentication();
+app.UseAuthorization();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -56,7 +65,7 @@ else
 
 // ---- ENDPOINTS ----
 
-var tasksGroup = app.MapGroup("/tasks").WithTags("Tasks");
+var tasksGroup = app.MapGroup("/tasks").WithTags("Tasks").RequireAuthorization();
 
 tasksGroup.MapGet("/", async (ITaskService taskService, CancellationToken ct) =>
 {
@@ -88,7 +97,7 @@ tasksGroup.MapDelete("/{id:guid}", async (Guid id, ITaskService taskService, Can
     return success ? Results.NoContent() : Results.NotFound();
 });
 
-var submissionsGroup = app.MapGroup("/submissions").WithTags("Submissions");
+var submissionsGroup = app.MapGroup("/submissions").WithTags("Submissions").RequireAuthorization();
 
 submissionsGroup.MapPost("/", async (
     [FromBody] DuskOfCoding.Application.DTOs.SubmitCodeDto request,

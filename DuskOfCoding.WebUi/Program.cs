@@ -1,6 +1,9 @@
 using System.Globalization;
 using DuskOfCoding.WebUi.Components;
 using DuskOfCoding.WebUi.Services;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +11,21 @@ builder.AddServiceDefaults();
 
 // ── Localization ───────────────────────────────────────────
 builder.Services.AddLocalization();
+
+// ── Authentication (Keycloak OIDC) ───────────────────────────
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+})
+.AddCookie()
+.AddKeycloakOpenIdConnect(
+    "keycloak",
+    realm: "DuskOfCoding",
+    configureOptions: options =>
+    {
+        options.SaveTokens = true;
+    });
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
@@ -28,6 +46,9 @@ builder.Services.AddHttpClient<ApiClient>(client =>
 
 // ── Controller for culture switching ──────────────────────
 builder.Services.AddControllers();
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<TokenProvider>();
 
 var app = builder.Build();
 
@@ -58,12 +79,25 @@ if (!app.Environment.IsDevelopment())
 }
 app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
 
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseAntiforgery();
 
 app.MapControllers();
 app.MapStaticAssets();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
+
+app.MapGet("/login", (string? returnUrl) =>
+{
+    return TypedResults.Challenge(new AuthenticationProperties { RedirectUri = returnUrl ?? "/" });
+});
+
+app.MapPost("/logout", () =>
+{
+    return TypedResults.SignOut(new AuthenticationProperties { RedirectUri = "/" },
+        new[] { OpenIdConnectDefaults.AuthenticationScheme, CookieAuthenticationDefaults.AuthenticationScheme });
+});
 
 app.Run();
 
