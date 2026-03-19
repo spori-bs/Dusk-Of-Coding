@@ -3,6 +3,9 @@
 @using DuskOfCoding.WebUi.Resources
 @inject ApiClient Api
 @inject IStringLocalizer<SharedResource> L
+@using Microsoft.AspNetCore.Authorization
+
+@attribute [Authorize]
 @rendermode InteractiveServer
 
 <PageTitle>@L["Tasks_Title"] | Dusk of Coding</PageTitle>

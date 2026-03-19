@@ -17,6 +17,7 @@ This platform exists at this crossroads, serving as a safe, sandboxed environmen
 - **Sandboxed Execution Environment**: Compile and safely execute C# code within an isolated Docker sandbox using the Roslyn compiler.
 - **Automated Testing & Feedback**: Receive detailed, structured feedback via automated unit tests instead of simple pass/fail metrics.
 - **Socratic AI Mentor (TutorWorker)**: Connects to OpenAI and Azure OpenAI via a resilient Polly pipeline to provide real-time, streaming guidance. It teaches the "new literacy" by mentoring users using the Socratic method, ensuring they learn to direct AI rather than rely on it blindly.
+- **Keycloak IAM**: Centralized authentication and user registration via OpenID Connect, with JWT-secured API access and self-service account creation.
 - **Bilingual Premium UI**: Fully localized in English and Hungarian.
 - **Modern Dark Aesthetic**: A fully redesigned user interface leveraging glassmorphism, responsive micro-animations, and curated vibrant color palettes to provide a dynamic and visually stunning experience.
 
@@ -38,6 +39,7 @@ This project is built using modern .NET technologies and architectural patterns 
 - **[Polly](https://github.com/App-vNext/Polly)** - Used extensively in the AI pipeline for retries, timeouts, and fallbacks to ensure robust API resilience.
 - **[Docker](https://www.docker.com/)** - Used for the Execution API to safely sandbox external code compilation and testing.
 - **[Roslyn Compiler](https://github.com/dotnet/roslyn)** - Integrated for C# syntax analysis, compilation diagnostics, and execution.
+- **[Keycloak](https://www.keycloak.org/)** - Open-source IAM providing centralized authentication, user registration, and JWT-based authorization via OpenID Connect.
 
 ## 🏗 Architecture
 
@@ -57,13 +59,16 @@ C4Context
         System(webapi, "Core Web API", "Handles business logic, persistence, and orchestrates executions")
         SystemDb(database, "Application Database", "Stores Tasks, Submissions, and Feedback")
         System(tutor_worker, "Tutor Worker", "Background service handling resilient AI evaluation streams")
+        System(keycloak, "Keycloak IAM", "Centralized identity provider with OIDC and user self-registration")
     }
 
     System_Ext(execution_api, "Execution API (Sandbox)", "Isolated Docker container that safely compiles and runs unit tests")
     System_Ext(llm_provider, "OpenAI / Azure OpenAI", "External LLM providers for the Socratic AI Mentor")
 
     Rel(candidate, webui, "Practices coding tasks", "HTTPS")
-    Rel(webui, webapi, "Submits C# code & retrieves tasks", "REST")
+    Rel(webui, keycloak, "Authenticates users (OIDC)", "HTTPS")
+    Rel(webui, webapi, "Submits C# code & retrieves tasks", "REST + Bearer JWT")
+    Rel(webapi, keycloak, "Validates JWT tokens", "HTTPS")
     Rel(webapi, database, "Reads/Writes data", "EF Core")
     Rel(webapi, execution_api, "Delegates unsafe execution", "HTTP/JSON")
     Rel(webapi, tutor_worker, "Queues AI review tasks", "Messaging / Queue")
@@ -85,3 +90,5 @@ This project was built iteratively using a sequence of specialized AI prompts lo
    - **Goal:** Structural identity change. Transitioning the generic project name to **Dusk of Coding**, migrating away from the old sidebar layout to a new horizontal top navigation bar.
 5. **Rebrand Page Modification (`rebrand-page-modification-master-prompt.md` / `rebrand-page-modification-context.md` / `landing-page.md`)**
    - **Goal:** Premium UI Overhaul. Redesigning the visual identity to feature the dark mode glassmorphism aesthetic, building out the premium Landing Page, and fixing UX/UI contrast issues across the app.
+6. **Keycloak (`keycloak-master-prompt.md` / `keycloak-context.md`)**
+   - **Goal:** Centralized IAM with Keycloak. Setting up a Keycloak container in Aspire, securing the WebApi with JWT Bearer tokens, implementing OpenID Connect authentication in Blazor, adding user self-registration, and connecting the Landing Page "Get Started" flow to the Keycloak registration page.

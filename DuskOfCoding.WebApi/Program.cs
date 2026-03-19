@@ -8,10 +8,23 @@ using DuskOfCoding.Infrastructure.Persistence;
 using DuskOfCoding.WebApi.Hubs;
 using DuskOfCoding.WebApi.Services;
 using Scalar.AspNetCore;
+using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
+
+// ── Dev certificate trust (Aspire service-to-service) ─────
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services.ConfigureHttpClientDefaults(http =>
+    {
+        http.ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+        {
+            ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+        });
+    });
+}
 
 // Add services to the container.
 builder.Services.AddOpenApi();
@@ -25,6 +38,18 @@ builder.Services.AddInfrastructureServices();
 // Register RabbitMQ via Aspire client integration + messaging services
 builder.AddRabbitMQClient("messaging");
 builder.Services.AddMessagingServices();
+
+// Keycloak JWT Bearer Authentication
+builder.Services.AddAuthentication()
+       .AddKeycloakJwtBearer("keycloak", realm: "DuskOfCoding", options =>
+       {
+           options.RequireHttpsMetadata = false;
+           options.BackchannelHttpHandler = new HttpClientHandler
+           {
+               ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+           };
+       });
+builder.Services.AddAuthorization();
 
 // SignalR for real-time tutor feedback
 builder.Services.AddSignalR();
@@ -43,6 +68,9 @@ using (var scope = app.Services.CreateScope())
 
 app.MapDefaultEndpoints();
 
+app.UseAuthentication();
+app.UseAuthorization();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -56,7 +84,7 @@ else
 
 // ---- ENDPOINTS ----
 
-var tasksGroup = app.MapGroup("/tasks").WithTags("Tasks");
+var tasksGroup = app.MapGroup("/tasks").WithTags("Tasks").RequireAuthorization();
 
 tasksGroup.MapGet("/", async (ITaskService taskService, CancellationToken ct) =>
 {
@@ -112,7 +140,7 @@ tasksGroup.MapGet("/{id:guid}/stats", async (Guid id, DuskOfCoding.Infrastructur
     });
 });
 
-var submissionsGroup = app.MapGroup("/submissions").WithTags("Submissions");
+var submissionsGroup = app.MapGroup("/submissions").WithTags("Submissions").RequireAuthorization();
 
 submissionsGroup.MapPost("/", async (
     [FromBody] DuskOfCoding.Application.DTOs.SubmitCodeDto request,

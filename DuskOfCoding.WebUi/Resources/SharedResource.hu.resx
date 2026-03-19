@@ -108,6 +108,7 @@
 
   <!-- Hero -->
   <data name="Hero_Title" xml:space="preserve"><value>Kódolj stabil alapokkal, használd az MI-t okosan.</value></data>
+  <data name="Hero_Tagline" xml:space="preserve"><value>MI-alapú tanulás</value></data>
   <data name="Hero_Description" xml:space="preserve"><value>Az MI nem írja meg helyetted a tökéletes szoftvert, de megnöveli a hatékonyságod, ha tudod, mit csinálsz. Fókuszálj a stabil alapokra, írj tiszta kódot, és dolgozz a mesterséges intelligenciával úgy, ahogy a profik: eszközként és nem mankóként.</value></data>
   <data name="Hero_CTA" xml:space="preserve"><value>Vágj bele most</value></data>
   <data name="Hero_SecondaryCTA" xml:space="preserve"><value>Bemutató</value></data>
@@ -141,7 +142,9 @@
   <data name="Lead_InvitePrompt" xml:space="preserve"><value>Szuper! Hova küldhetjük a hozzáférést?</value></data>
   <data name="Lead_EmailLabel" xml:space="preserve"><value>Munkahelyi email</value></data>
   <data name="Lead_EmailPlaceholder" xml:space="preserve"><value>te@ceg.hu</value></data>
-  <data name="Lead_Submit" xml:space="preserve"><value>Azonnali hozzáférés</value></data>
+  <data name="Lead_Submit" xml:space="preserve"><value>Ingyenes fiók létrehozása</value></data>
+  <data name="Lead_AlreadyRegistered" xml:space="preserve"><value>Már van fiókod?</value></data>
+  <data name="Lead_LoginLink" xml:space="preserve"><value>Bejelentkezés</value></data>
   <data name="Lead_Success" xml:space="preserve"><value>Feliratkoztál!</value></data>
   <data name="Lead_SuccessHint" xml:space="preserve"><value>Ellenőrizd a postaládádat a további utasításokért.</value></data>
   <data name="Lead_StartNow" xml:space="preserve"><value>Gyakorlás indítása</value></data>

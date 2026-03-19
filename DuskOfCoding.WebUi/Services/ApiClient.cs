@@ -1,4 +1,5 @@
 using System.Net.Http.Json;
+using System.Net.Http.Headers;
 using DuskOfCoding.Domain.Enums;
 
 namespace DuskOfCoding.WebUi.Services;
@@ -6,10 +7,17 @@ namespace DuskOfCoding.WebUi.Services;
 public class ApiClient
 {
     private readonly HttpClient _http;
+    private readonly TokenProvider _tokenProvider;
 
-    public ApiClient(HttpClient http)
+    public ApiClient(HttpClient http, TokenProvider tokenProvider)
     {
         _http = http;
+        _tokenProvider = tokenProvider;
+        
+        if (!string.IsNullOrEmpty(_tokenProvider.AccessToken))
+        {
+            _http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _tokenProvider.AccessToken);
+        }
     }
 
     public class SubmitCodeDto
