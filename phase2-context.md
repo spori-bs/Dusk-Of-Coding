@@ -119,6 +119,7 @@ flowchart LR
 | 2026-03-19 | Phase 2 completed: FeedbackRecord persisted via EF Core. Added UserId to WebApi for security and aggregate endpoint. |
 | 2026-03-19 | Phase 3 completed: Roslyn sandbox implemented. Added SecureCompilationService with SandboxSyntaxAnalyzer and SafetyRewriter, and SandboxExecutionService with ALC, 5s timeout, and reflection-based test execution. |
 | 2026-03-19 | Phase 4 completed: Execution engine re-wired to use TestCode in execution requests. Polly resilience added to the HttpClient. SocraticTutorPrompt strictly constrained from rendering direct code solutions and given context about compiler/test logging. |
+| 2026-03-19 | Gemini LLM Provider Integration completed: Added `GeminiApiKey` to configuration and mapped the `OpenAIClient` to hit the Gemini API compatibility endpoint seamlessly under the `"gemini"` provider setting. |
 
 ---
 

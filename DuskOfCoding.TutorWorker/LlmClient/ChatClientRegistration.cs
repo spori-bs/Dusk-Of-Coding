@@ -24,8 +24,9 @@ public static class ChatClientRegistration
             {
                 "azureopenai" => CreateAzureOpenAIClient(options),
                 "openai" => CreateOpenAIClient(options),
+                "gemini" => CreateGeminiClient(options),
                 _ => throw new InvalidOperationException(
-                    $"Unknown LLM provider '{options.Provider}'. Supported: 'OpenAI', 'AzureOpenAI'.")
+                    $"Unknown LLM provider '{options.Provider}'. Supported: 'OpenAI', 'AzureOpenAI', 'Gemini'.")
             };
 
             // Wrap with function-calling support for MCP tools
@@ -46,6 +47,22 @@ public static class ChatClientRegistration
                 "OpenAI API key is required. Set LlmProvider:OpenAIApiKey in configuration.");
 
         var client = new OpenAIClient(new ApiKeyCredential(options.OpenAIApiKey));
+        return client.GetChatClient(options.ModelId).AsIChatClient();
+    }
+
+    private static IChatClient CreateGeminiClient(LlmProviderOptions options)
+    {
+        if (string.IsNullOrWhiteSpace(options.GeminiApiKey))
+            throw new InvalidOperationException(
+                "Gemini API key is required. Set LlmProvider:GeminiApiKey in configuration.");
+
+        // Gemini natively supports the OpenAI API contract.
+        var clientOptions = new OpenAIClientOptions
+        {
+            Endpoint = new Uri("https://generativelanguage.googleapis.com/v1beta/openai/")
+        };
+        
+        var client = new OpenAIClient(new ApiKeyCredential(options.GeminiApiKey), clientOptions);
         return client.GetChatClient(options.ModelId).AsIChatClient();
     }
 
