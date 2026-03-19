@@ -100,4 +100,6 @@ This project was built iteratively using a sequence of specialized AI prompts lo
    - **Goal:** Introduce `admin` and `student` Keycloak roles with proper JWT claim mapping. Refactor the Landing Page and Navigation with `<AuthorizeView>`. Build an Admin Dashboard with aggregate student analytics.
 10. **User Feedback System (`phase5-feedback-system-master-prompt.md` / `phase5-feedback-system-context.md`)**
     - **Goal:** Allow students to rate tasks and submit feedback. Store feedback in the database. Expose admin-facing analytics and feedback summaries.
+11. **How It Was Made (`phase6-how-it-was-made-master-prompt.md` / `phase6-how-it-was-made-context.md`)**
+    - **Goal:** A premium storytelling/teaser page at `/how-it-was-made`. Explaining the "vibecoding" philosophy, showing the iterative prompt-driven development, and creating a "wow" experience that showcases the platform's unique AI-driven origin.
 
