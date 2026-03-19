@@ -94,3 +94,10 @@ This project was built iteratively using a sequence of specialized AI prompts lo
    - **Goal:** Centralized IAM with Keycloak. Setting up a Keycloak container in Aspire, securing the WebApi with JWT Bearer tokens, implementing OpenID Connect authentication in Blazor, adding user self-registration, and connecting the Landing Page "Get Started" flow to the Keycloak registration page.
 7. **Phase 2: Execution & Persistence (`phase2-master-promt.md` / `phase2-context.md`)**
    - **Goal:** Real execution engine and feedback persistence. Hardened the domain model with enums and immutability. Persisted feedback records via EF Core. Built the in-process Roslyn sandbox with `SecureCompilationService` (syntax analysis, safety rewriting) and `SandboxExecutionService` (collectible ALC, 5s timeout, memory limits). Wired Polly resilience to the Execution API HTTP client. Enhanced the Socratic Tutor prompt. Added Google Gemini as a third LLM provider via the OpenAI API compatibility layer.
+8. **Error Handling & Resilience (`phase3-error-handling-master-prompt.md` / `phase3-error-handling-context.md`)**
+   - **Goal:** Replace the default Blazor error bar with a premium branded `<ErrorBoundary>`. Implement a custom `AuthDelegatingHandler` for graceful 401/403 handling. Create a branded "Access Denied" page.
+9. **RBAC & Identity UX (`phase4-rbac-identity-master-prompt.md` / `phase4-rbac-identity-context.md`)**
+   - **Goal:** Introduce `admin` and `student` Keycloak roles with proper JWT claim mapping. Refactor the Landing Page and Navigation with `<AuthorizeView>`. Build an Admin Dashboard with aggregate student analytics.
+10. **User Feedback System (`phase5-feedback-system-master-prompt.md` / `phase5-feedback-system-context.md`)**
+    - **Goal:** Allow students to rate tasks and submit feedback. Store feedback in the database. Expose admin-facing analytics and feedback summaries.
+
