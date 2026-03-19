@@ -160,9 +160,13 @@ else
     private List<string>? syntaxErrors;
     private bool showSuccessBlink;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        tasks = await Api.GetTasksAsync();
+        if (firstRender)
+        {
+            tasks = await Api.GetTasksAsync();
+            StateHasChanged();
+        }
     }
 
     private async Task SelectTask(TaskDto task)

@@ -82,11 +82,12 @@ else
     private string _tagsInput = "";
     private bool _isLoading = false;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (IsEditMode)
+        if (firstRender && IsEditMode)
         {
             _isLoading = true;
+            StateHasChanged();
             var task = await Api.GetTaskByIdAsync(Id!.Value);
             if (task != null)
             {
@@ -97,6 +98,7 @@ else
                 _tagsInput = string.Join(", ", task.Tags);
             }
             _isLoading = false;
+            StateHasChanged();
         }
     }
 
