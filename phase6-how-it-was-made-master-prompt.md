@@ -32,21 +32,26 @@ Implement the following sections as the user scrolls:
 - **Narrative:** Explain the birth of the execution environment. 
 - **Component:** A visual representation of the "Heart of the System" (The Secure Compilation Service).
 
-### 3. The Identity (Phase 6 - Keycloak)
+### 3. The Language (Phase 3 - Localization)
+- **Focus:** Bilingual support and global reach.
+- **Narrative:** "Teaching the platform to speak."
+- **Visual:** A floating globe or dynamic text translation effect showing English and Hungarian strings swapping.
+
+### 4. The Identity (Phase 4 - Keycloak)
 - **Focus:** Security and IAM.
 - **Narrative:** "Securing the perimeter."
 - **Visual:** A "Holographic Perimeter" animation representing Keycloak’s OIDC protection.
 
-### 4. The Evolution (Phase 5 - Rebrand)
+### 5. The Evolution (Rebranding)
 - **Interaction:** An **Interactive Comparison Slider** component.
 - **Content:** Show the transformation from the original "Generic Sidebar UI" to the "Dusk Glassmorphism" layout.
 
-### 5. The Prompt Gallery
+### 6. The Prompt Gallery
 - **Component:** **Holographic Prompt Cards**. 
 - **Content:** Display snippets of actual prompts (e.g., the Master Prompt, the Localization Prompt).
 - **Style:** Cards should look like floating glass artifacts with syntax-highlighted code.
 
-### 6. The Manifesto (The Future)
+### 7. The Manifesto (The Future)
 - **Content:** "Master the craft. Wield the tool." 
 - **CTA:** A high-contrast "Join the New Dawn" button redirecting to `/register`.
 
@@ -66,4 +71,9 @@ Implement the following sections as the user scrolls:
 | :--- | :--- | :--- |
 | `PageTitle` | How It Was Made | Így készült |
 | `HeroSubtitle` | A journey from manual lines to AI-driven mastery. | Utazás a kézi kódolástól az AI-vezérelt szakértelemig. |
-| `VibeManifesto` | We don't just write code; we wield intent. | Nem csak kó
+| `VibeManifesto` | We don't just write code; we wield intent. | Nem csak kódot írunk; szándékot irányítunk. |
+| `SparkTitle` | The Spark | A Szikra |
+| `LanguageTitle` | The Language | A Nyelv |
+| `IdentityTitle` | The Identity | Az Identitás |
+| `EvolutionTitle` | The Evolution | Az Evolúció |
+| `JoinPlatform` | Join the New Dawn | Csatlakozz az új hajnalhoz |

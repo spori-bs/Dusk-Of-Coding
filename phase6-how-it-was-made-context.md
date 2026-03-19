@@ -12,8 +12,9 @@
 
 - [ ] **Phase 2: Narrative Timeline Sections**
   - [ ] **The Spark**: Visualize the Roslyn Compilation engine & Sandbox (Phases 1-2 logic).
-  - [ ] **The Identity**: Create the "Holographic Perimeter" visual for Keycloak/OIDC integration (Phase 6 logic).
-  - [ ] **The Evolution**: Build the **Interactive Comparison Slider** (Phase 5: Rebrand) to show Generic UI vs. Dusk UI.
+  - [ ] **The Language**: Implement the "Global Reach" visual representing the App's Bilingual (HU/EN) capability (Phase 3 logic).
+  - [ ] **The Identity**: Create the "Holographic Perimeter" visual for Keycloak/OIDC integration (Phase 4 logic).
+  - [ ] **The Evolution**: Build the **Interactive Comparison Slider** (Rebranding) to show Generic UI vs. Dusk UI.
 
 - [ ] **Phase 3: Interactive Artifacts & Manifesto**
   - [ ] Build `PromptCard.razor` component with **Glassmorphism** and **3D-tilt** hover effects.
@@ -34,9 +35,10 @@
 ## 🌌 Narrative Beats
 1. **The Big Bang**: The industry shift from manual coding to high-level AI orchestration.
 2. **The Spark**: Building the "heart" of the platform—safe code execution via Roslyn/Docker.
-3. **The Perimeter**: Securing the vision and user data with Keycloak IAM.
-4. **The New Dawn**: The aesthetic evolution into the "Dusk" glassmorphism identity.
-5. **The Methodology**: Defining "Vibecoding"—mastery of the craft through directing AI with intent.
+3. **The Language**: Teaching the platform to speak—bilingual support and global accessibility.
+4. **The Perimeter**: Securing the vision and user data with Keycloak IAM.
+5. **The New Dawn**: The aesthetic evolution into the "Dusk" glassmorphism identity.
+6. **The Methodology**: Defining "Vibecoding"—mastery of the craft through directing AI with intent.
 
 ---
 

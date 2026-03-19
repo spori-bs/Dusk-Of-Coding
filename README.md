@@ -78,7 +78,7 @@ C4Context
 
 ## 📜 Development History (Prompt Progression)
 
-This project was built iteratively using a sequence of specialized AI prompts located in the `_ArchivePromts` directory. The chronological sequence reflects the evolution of the application:
+This project was built iteratively using a sequence of specialized AI prompts located in the `_ArchivePrompts` directory. The chronological sequence reflects the evolution of the application:
 
 1. **Master (`master promt.md` / `context.md` / `PHASE1-Architecture.md`)**
    - **Goal:** Initial application scaffolding. Setting up the Blazor Server UI, the Core WebAPI, Entity Framework database connection, and the basic structure of the Modular Monolith architecture.
