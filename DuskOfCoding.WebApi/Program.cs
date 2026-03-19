@@ -88,15 +88,42 @@ tasksGroup.MapDelete("/{id:guid}", async (Guid id, ITaskService taskService, Can
     return success ? Results.NoContent() : Results.NotFound();
 });
 
+tasksGroup.MapGet("/{id:guid}/stats", async (Guid id, DuskOfCoding.Infrastructure.Persistence.AppDbContext db, CancellationToken ct) => 
+{
+    var submissions = await db.Submissions
+        .Where(s => s.TaskId == id && s.UserId != null)
+        .Select(s => new { s.UserId, s.Status })
+        .ToListAsync(ct);
+
+    if (!submissions.Any()) return Results.Ok(new { TaskId = id, TotalUsersAttempted = 0, TotalSubmissions = 0, AverageTries = 0, SuccessRate = 0 });
+
+    var userAttempts = submissions.GroupBy(s => s.UserId);
+    var totalUsers = userAttempts.Count();
+    var totalTries = submissions.Count;
+    var averageTries = (double)totalTries / totalUsers;
+    var successfulUsers = userAttempts.Count(g => g.Any(s => s.Status == DuskOfCoding.Domain.Enums.SubmissionStatus.Success));
+
+    return Results.Ok(new { 
+        TaskId = id, 
+        TotalUsersAttempted = totalUsers, 
+        TotalSubmissions = totalTries, 
+        AverageTries = Math.Round(averageTries, 1),
+        SuccessRate = Math.Round((double)successfulUsers / totalUsers * 100, 1)
+    });
+});
+
 var submissionsGroup = app.MapGroup("/submissions").WithTags("Submissions");
 
 submissionsGroup.MapPost("/", async (
     [FromBody] DuskOfCoding.Application.DTOs.SubmitCodeDto request,
+    Microsoft.AspNetCore.Http.HttpContext httpContext,
     ISubmissionService submissionService,
     RabbitMQService rabbitMqService,
     ILogger<Program> logger,
     CancellationToken ct) =>
 {
+    var userIdClaim = httpContext.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+    Guid? userId = userIdClaim != null ? Guid.Parse(userIdClaim) : request.UserId;
     // Phase 5: Input validation — reject empty or oversized source code
     if (string.IsNullOrWhiteSpace(request.SourceCode))
         return Results.BadRequest(new { error = "Source code cannot be empty." });
@@ -104,7 +131,7 @@ submissionsGroup.MapPost("/", async (
     if (request.SourceCode.Length > 50_000)
         return Results.BadRequest(new { error = "Source code exceeds the maximum allowed length of 50,000 characters." });
 
-    var result = await submissionService.SubmitCodeAsync(request.TaskId, request.SourceCode, request.UserId, ct);
+    var result = await submissionService.SubmitCodeAsync(request.TaskId, request.SourceCode, userId, ct);
 
     // Phase 6: Publish to RabbitMQ so the TutorWorker picks up the submission
     try
@@ -139,10 +166,18 @@ submissionsGroup.MapPost("/", async (
     return Results.Created($"/submissions/{result.Submission.Id}", result);
 });
 
-submissionsGroup.MapGet("/{id:guid}", async (Guid id, ISubmissionService submissionService, CancellationToken ct) =>
+submissionsGroup.MapGet("/{id:guid}", async (Guid id, Microsoft.AspNetCore.Http.HttpContext httpContext, ISubmissionService submissionService, CancellationToken ct) =>
 {
-    var submission = await submissionService.GetSubmissionByIdAsync(id, ct);
-    return submission is not null ? Results.Ok(submission) : Results.NotFound();
+    var result = await submissionService.GetSubmissionByIdAsync(id, ct);
+    if (result is null) return Results.NotFound();
+
+    var userIdClaim = httpContext.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+    if (userIdClaim != null && result.Submission.UserId.HasValue && result.Submission.UserId.Value.ToString() != userIdClaim)
+    {
+        return Results.Forbid();
+    }
+
+    return Results.Ok(result);
 });
 
 // SignalR hub for real-time tutor responses

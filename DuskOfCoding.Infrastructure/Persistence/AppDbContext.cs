@@ -11,6 +11,7 @@ public class AppDbContext : DbContext
 
     public DbSet<TaskDefinition> Tasks => Set<TaskDefinition>();
     public DbSet<Submission> Submissions => Set<Submission>();
+    public DbSet<FeedbackRecord> FeedbackRecords => Set<FeedbackRecord>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -38,6 +39,14 @@ public class AppDbContext : DbContext
             entity.Property(e => e.SourceCode).IsRequired();
             entity.Property(e => e.Status).HasConversion<string>().IsRequired().HasMaxLength(50);
             entity.HasOne<TaskDefinition>().WithMany().HasForeignKey(e => e.TaskId);
+        });
+
+        // FeedbackRecord configuration
+        modelBuilder.Entity<FeedbackRecord>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Summary).IsRequired();
+            entity.HasOne<Submission>().WithOne(s => s.Feedback).HasForeignKey<FeedbackRecord>(e => e.SubmissionId);
         });
 
         // Seed a default task

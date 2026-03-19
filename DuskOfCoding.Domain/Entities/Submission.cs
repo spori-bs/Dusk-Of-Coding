@@ -11,4 +11,5 @@ public class Submission
     public SubmissionStatus Status { get; set; } = SubmissionStatus.Pending;
     public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
     public DateTime? CompletedAt { get; set; }
+    public FeedbackRecord? Feedback { get; set; }
 }

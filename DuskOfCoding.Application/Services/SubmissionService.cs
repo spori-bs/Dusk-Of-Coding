@@ -18,10 +18,6 @@ public class SubmissionService : ISubmissionService
     private readonly IServiceProvider _serviceProvider;
     private readonly ILogger<SubmissionService> _logger;
 
-    // Temporary storage for Feedback since our POC domain models didn't link Feedback directly 
-    // to Submission in the DB. In Phase 7 (EFCore) we'll persist this properly.
-    private static readonly ConcurrentDictionary<Guid, Feedback> _feedbacks = new();
-
     public SubmissionService(
         ITaskRepository taskRepository,
         ISubmissionRepository submissionRepository,
@@ -83,7 +79,12 @@ public class SubmissionService : ISubmissionService
                         CompilationMessages = diagnostics,
                         AiReviewRemarks = "The submission contains syntax errors. Please fix them before attempting execution."
                     };
-                    _feedbacks[submission.Id] = syntaxFeedback;
+                    
+                    var fr = new FeedbackRecord { SubmissionId = submission.Id, IsSuccess = false, Summary = syntaxFeedback.Summary, AiReviewRemarks = syntaxFeedback.AiReviewRemarks };
+                    fr.SetCompilationMessages(diagnostics);
+                    submission.Feedback = fr;
+                    
+                    await _submissionRepository.UpdateAsync(submission, ct);
                     return new SubmissionResult(submission, syntaxFeedback);
                 }
             }
@@ -98,29 +99,30 @@ public class SubmissionService : ISubmissionService
 
             var feedback = await _aiReviewService.EnrichFeedbackAsync(task, submission, executionResult, ct);
 
+            var record = new FeedbackRecord 
+            { 
+                SubmissionId = submission.Id, IsSuccess = feedback.IsSuccess, Summary = feedback.Summary, AiReviewRemarks = feedback.AiReviewRemarks 
+            };
+            record.SetCompilationMessages(feedback.CompilationMessages?.ToList() ?? new List<string>());
+            record.SetTestMessages(feedback.TestMessages?.ToList() ?? new List<string>());
+            submission.Feedback = record;
+
             submission.Status = feedback.IsSuccess ? SubmissionStatus.Success : SubmissionStatus.TestsFailed;
             submission.CompletedAt = DateTime.UtcNow;
             await _submissionRepository.UpdateAsync(submission, ct);
-
-            _feedbacks[submission.Id] = feedback;
 
             return new SubmissionResult(submission, feedback);
         }
         catch (Exception ex)
         {
+            var errorFeedback = new FeedbackRecord { SubmissionId = submission.Id, IsSuccess = false, Summary = "Internal Execution Error", AiReviewRemarks = ex.Message };
+            submission.Feedback = errorFeedback;
+
             submission.Status = SubmissionStatus.Error;
             submission.CompletedAt = DateTime.UtcNow;
             await _submissionRepository.UpdateAsync(submission, ct);
 
-            var errorFeedback = new Feedback 
-            { 
-                IsSuccess = false, 
-                Summary = "Internal Execution Error", 
-                AiReviewRemarks = ex.Message 
-            };
-            _feedbacks[submission.Id] = errorFeedback;
-
-            return new SubmissionResult(submission, errorFeedback);
+            return new SubmissionResult(submission, new Feedback { IsSuccess = false, Summary = "Internal Execution Error", AiReviewRemarks = ex.Message });
         }
     }
 
@@ -129,7 +131,19 @@ public class SubmissionService : ISubmissionService
         var submission = await _submissionRepository.GetByIdAsync(id, ct);
         if (submission == null) return null;
 
-        _feedbacks.TryGetValue(id, out var feedback);
+        Feedback? feedback = null;
+        if (submission.Feedback != null)
+        {
+            feedback = new Feedback
+            {
+                IsSuccess = submission.Feedback.IsSuccess,
+                Summary = submission.Feedback.Summary,
+                CompilationMessages = submission.Feedback.GetCompilationMessages(),
+                TestMessages = submission.Feedback.GetTestMessages(),
+                AiReviewRemarks = submission.Feedback.AiReviewRemarks
+            };
+        }
+        
         return new SubmissionResult(submission, feedback);
     }
 }
