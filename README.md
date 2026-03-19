@@ -16,7 +16,7 @@ This platform exists at this crossroads, serving as a safe, sandboxed environmen
 
 - **Sandboxed Execution Environment**: Compile and safely execute C# code within an isolated Docker sandbox using the Roslyn compiler.
 - **Automated Testing & Feedback**: Receive detailed, structured feedback via automated unit tests instead of simple pass/fail metrics.
-- **Socratic AI Mentor (TutorWorker)**: Connects to OpenAI and Azure OpenAI via a resilient Polly pipeline to provide real-time, streaming guidance. It teaches the "new literacy" by mentoring users using the Socratic method, ensuring they learn to direct AI rather than rely on it blindly.
+- **Socratic AI Mentor (TutorWorker)**: Connects to OpenAI, Azure OpenAI, or Google Gemini via a resilient Polly pipeline to provide real-time, streaming guidance. It teaches the "new literacy" by mentoring users using the Socratic method, ensuring they learn to direct AI rather than rely on it blindly.
 - **Keycloak IAM**: Centralized authentication and user registration via OpenID Connect, with JWT-secured API access and self-service account creation.
 - **Bilingual Premium UI**: Fully localized in English and Hungarian.
 - **Modern Dark Aesthetic**: A fully redesigned user interface leveraging glassmorphism, responsive micro-animations, and curated vibrant color palettes to provide a dynamic and visually stunning experience.
@@ -35,9 +35,9 @@ This project is built using modern .NET technologies and architectural patterns 
 - **[.NET Aspire](https://learn.microsoft.com/en-us/dotnet/aspire/)** - Orchestration and configuration as code (connecting UI, APIs, AI workers, and DB).
 - **[Blazor Server](https://dotnet.microsoft.com/apps/aspnet/web-apps/blazor)** - Driving the interactive Code Playground and Task Management interfaces.
 - **[Entity Framework Core](https://learn.microsoft.com/en-us/ef/core/)** - ORM for persistence, storing tasks, submissions, and execution results.
-- **[Semantic Kernel / Azure OpenAI](https://learn.microsoft.com/en-us/semantic-kernel/)** - Powering the intelligent, context-aware AI Tutor.
-- **[Polly](https://github.com/App-vNext/Polly)** - Used extensively in the AI pipeline for retries, timeouts, and fallbacks to ensure robust API resilience.
-- **[Docker](https://www.docker.com/)** - Used for the Execution API to safely sandbox external code compilation and testing.
+- **[Microsoft.Extensions.AI](https://learn.microsoft.com/en-us/dotnet/ai/)** - Unified `IChatClient` abstraction powering the AI Tutor with pluggable providers (OpenAI, Azure OpenAI, Google Gemini).
+- **[Polly](https://github.com/App-vNext/Polly)** - Used extensively in the AI and execution pipelines for retries, timeouts, and fallbacks to ensure robust API resilience.
+- **[Podman / Docker](https://podman.io/)** - Container runtime for infrastructure services (Keycloak, RabbitMQ) via Aspire orchestration.
 - **[Roslyn Compiler](https://github.com/dotnet/roslyn)** - Integrated for C# syntax analysis, compilation diagnostics, and execution.
 - **[Keycloak](https://www.keycloak.org/)** - Open-source IAM providing centralized authentication, user registration, and JWT-based authorization via OpenID Connect.
 
@@ -62,8 +62,8 @@ C4Context
         System(keycloak, "Keycloak IAM", "Centralized identity provider with OIDC and user self-registration")
     }
 
-    System_Ext(execution_api, "Execution API (Sandbox)", "Isolated Docker container that safely compiles and runs unit tests")
-    System_Ext(llm_provider, "OpenAI / Azure OpenAI", "External LLM providers for the Socratic AI Mentor")
+    System_Ext(execution_api, "Execution API (Sandbox)", "In-process Roslyn sandbox that safely compiles and runs xUnit tests")
+    System_Ext(llm_provider, "OpenAI / Azure OpenAI / Gemini", "External LLM providers for the Socratic AI Mentor")
 
     Rel(candidate, webui, "Practices coding tasks", "HTTPS")
     Rel(webui, keycloak, "Authenticates users (OIDC)", "HTTPS")
@@ -92,3 +92,5 @@ This project was built iteratively using a sequence of specialized AI prompts lo
    - **Goal:** Premium UI Overhaul. Redesigning the visual identity to feature the dark mode glassmorphism aesthetic, building out the premium Landing Page, and fixing UX/UI contrast issues across the app.
 6. **Keycloak (`keycloak-master-prompt.md` / `keycloak-context.md`)**
    - **Goal:** Centralized IAM with Keycloak. Setting up a Keycloak container in Aspire, securing the WebApi with JWT Bearer tokens, implementing OpenID Connect authentication in Blazor, adding user self-registration, and connecting the Landing Page "Get Started" flow to the Keycloak registration page.
+7. **Phase 2: Execution & Persistence (`phase2-master-promt.md` / `phase2-context.md`)**
+   - **Goal:** Real execution engine and feedback persistence. Hardened the domain model with enums and immutability. Persisted feedback records via EF Core. Built the in-process Roslyn sandbox with `SecureCompilationService` (syntax analysis, safety rewriting) and `SandboxExecutionService` (collectible ALC, 5s timeout, memory limits). Wired Polly resilience to the Execution API HTTP client. Enhanced the Socratic Tutor prompt. Added Google Gemini as a third LLM provider via the OpenAI API compatibility layer.
