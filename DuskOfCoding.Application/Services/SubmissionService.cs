@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using DuskOfCoding.Domain.Entities;
+using DuskOfCoding.Domain.Enums;
 using DuskOfCoding.Domain.Interfaces;
 using DuskOfCoding.Domain.Models;
 using Microsoft.Extensions.DependencyInjection; // For GetRequiredKeyedService
@@ -46,13 +47,13 @@ public class SubmissionService : ISubmissionService
             TaskId = taskId,
             UserId = userId,
             SourceCode = sourceCode,
-            Status = "Pending"
+            Status = SubmissionStatus.Pending
         };
         await _submissionRepository.AddAsync(submission, ct);
 
         try
         {
-            submission.Status = "Executing";
+            submission.Status = SubmissionStatus.Executing;
             await _submissionRepository.UpdateAsync(submission, ct);
 
             // For Phase 12, we map incoming requests to the C# execution engine unconditionally for now,
@@ -71,7 +72,7 @@ public class SubmissionService : ISubmissionService
                 if (diagnostics.Any())
                 {
                     _logger.LogWarning("Syntax errors detected for submission {SubmissionId}", submission.Id);
-                    submission.Status = "Failed";
+                    submission.Status = SubmissionStatus.CompilationFailed;
                     submission.CompletedAt = DateTime.UtcNow;
                     await _submissionRepository.UpdateAsync(submission, ct);
 
@@ -97,7 +98,7 @@ public class SubmissionService : ISubmissionService
 
             var feedback = await _aiReviewService.EnrichFeedbackAsync(task, submission, executionResult, ct);
 
-            submission.Status = feedback.IsSuccess ? "Success" : "Failed";
+            submission.Status = feedback.IsSuccess ? SubmissionStatus.Success : SubmissionStatus.TestsFailed;
             submission.CompletedAt = DateTime.UtcNow;
             await _submissionRepository.UpdateAsync(submission, ct);
 
@@ -107,7 +108,7 @@ public class SubmissionService : ISubmissionService
         }
         catch (Exception ex)
         {
-            submission.Status = "Error";
+            submission.Status = SubmissionStatus.Error;
             submission.CompletedAt = DateTime.UtcNow;
             await _submissionRepository.UpdateAsync(submission, ct);
 

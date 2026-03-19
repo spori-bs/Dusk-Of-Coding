@@ -82,7 +82,7 @@ flowchart LR
 
 | Phase | Description | Status |
 |-------|-------------|--------|
-| 1 | Domain Model Hardening (enum, mutability, rename) | ⬜ Not Started |
+| 1 | Domain Model Hardening (enum, mutability, rename) | ✅ Completed |
 | 2 | Feedback Persistence (EF entity, migration) | ⬜ Not Started |
 | 3 | Real Execution Engine (Roslyn sandbox, test gen, xUnit runner) | ⬜ Not Started |
 | 4 | Integration Wiring (connect engine to services & UI) | ⬜ Not Started |
@@ -115,14 +115,15 @@ flowchart LR
 | 2026-03-19 | Tests run via pure Reflection `Invoke` (xUnit util requires disk I/O) |
 | 2026-03-19 | Thread memory tracking via `GC.GetAllocatedBytesForCurrentThread()` |
 | 2026-03-19 | Feedback to be persisted as `FeedbackRecord` EF entity with JSON-serialized lists |
+| 2026-03-19 | Phase 1 completed: SubmissionStatus enum added, mutability fixed, migrations applied |
 
 ---
 
-## Resumption Point (2026-03-19 17:46)
+## Resumption Point (2026-03-19)
 
-**Phase 2 work has not yet started.** Master prompt and context created. Ready to begin Phase 1 (Domain Model Hardening).
+**Phase 1 is COMPLETE.** 
 
 ### To resume
 1. Read this `phase2-context.md` to understand current status
-2. Begin with Phase 1 tasks from `phase2-master-promt.md`
+2. Begin with **Phase 2 (Feedback Persistence)** tasks from `phase2-master-promt.md` (creating FeedbackRecord entity)
 3. Update this file at the end of every response

@@ -36,7 +36,7 @@ public class AppDbContext : DbContext
         {
             entity.HasKey(e => e.Id);
             entity.Property(e => e.SourceCode).IsRequired();
-            entity.Property(e => e.Status).IsRequired().HasMaxLength(50);
+            entity.Property(e => e.Status).HasConversion<string>().IsRequired().HasMaxLength(50);
             entity.HasOne<TaskDefinition>().WithMany().HasForeignKey(e => e.TaskId);
         });
 
