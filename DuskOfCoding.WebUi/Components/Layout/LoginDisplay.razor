@@ -1,0 +1,21 @@
+@using Microsoft.AspNetCore.Components.Authorization
+@inject NavigationManager NavigationManager
+
+<AuthorizeView>
+    <Authorized>
+        <div class="d-flex align-items-center me-3">
+            <span class="text-white me-3 d-none d-md-inline" style="font-size: 0.9rem;">
+                <i class="bi bi-person-circle me-1"></i> @context.User.Identity?.Name
+            </span>
+            <form action="logout" method="post" class="m-0">
+                <AntiforgeryToken />
+                <button type="submit" class="btn btn-sm dusk-btn-outline">Log out</button>
+            </form>
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        <div class="d-flex align-items-center me-3">
+            <a href="login?returnUrl=@Uri.EscapeDataString(NavigationManager.ToBaseRelativePath(NavigationManager.Uri))" class="btn btn-sm btn-primary px-3 fw-semibold shadow-sm">Log in</a>
+        </div>
+    </NotAuthorized>
+</AuthorizeView>

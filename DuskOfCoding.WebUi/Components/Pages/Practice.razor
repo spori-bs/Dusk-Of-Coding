@@ -6,6 +6,9 @@
 @using Microsoft.CodeAnalysis.CSharp
 @inject ApiClient Api
 @inject IStringLocalizer<SharedResource> L
+@using Microsoft.AspNetCore.Authorization
+
+@attribute [Authorize]
 @rendermode InteractiveServer
 
 <PageTitle>@L["Practice_Title"] | Dusk of Coding</PageTitle>

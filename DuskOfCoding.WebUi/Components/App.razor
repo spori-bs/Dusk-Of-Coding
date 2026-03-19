@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@inject DuskOfCoding.WebUi.Services.TokenProvider TokenProvider
+@using Microsoft.AspNetCore.Authentication
 
 <head>
     <meta charset="utf-8" />
@@ -24,3 +27,13 @@
 </body>
 
 </html>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        if (HttpContextAccessor.HttpContext != null)
+        {
+            TokenProvider.AccessToken = await HttpContextAccessor.HttpContext.GetTokenAsync("access_token");
+        }
+    }
+}

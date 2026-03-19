@@ -108,6 +108,7 @@
 
   <!-- Hero -->
   <data name="Hero_Title" xml:space="preserve"><value>Learn to code the right way, augmented by AI.</value></data>
+  <data name="Hero_Tagline" xml:space="preserve"><value>AI-Augmented Learning</value></data>
   <data name="Hero_Description" xml:space="preserve"><value>AI won't write perfect software for you, but it will supercharge your workflow if you know what you are doing. Focus on stable fundamentals, write clean code, and use AI like the pros—as a tool, not a crutch.</value></data>
   <data name="Hero_CTA" xml:space="preserve"><value>Start Practicing</value></data>
   <data name="Hero_SecondaryCTA" xml:space="preserve"><value>Watch Demo</value></data>
@@ -141,7 +142,9 @@
   <data name="Lead_InvitePrompt" xml:space="preserve"><value>Awesome! Where should we send your access link?</value></data>
   <data name="Lead_EmailLabel" xml:space="preserve"><value>Work Email</value></data>
   <data name="Lead_EmailPlaceholder" xml:space="preserve"><value>you@company.com</value></data>
-  <data name="Lead_Submit" xml:space="preserve"><value>Get Instant Access</value></data>
+  <data name="Lead_Submit" xml:space="preserve"><value>Create Free Account</value></data>
+  <data name="Lead_AlreadyRegistered" xml:space="preserve"><value>Already have an account?</value></data>
+  <data name="Lead_LoginLink" xml:space="preserve"><value>Log in</value></data>
   <data name="Lead_Success" xml:space="preserve"><value>You're on the list!</value></data>
   <data name="Lead_SuccessHint" xml:space="preserve"><value>Check your inbox for further instructions.</value></data>
   <data name="Lead_StartNow" xml:space="preserve"><value>Start Practicing Now</value></data>

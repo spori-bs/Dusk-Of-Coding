@@ -5,6 +5,9 @@
 @inject ApiClient Api
 @inject NavigationManager Nav
 @inject IStringLocalizer<SharedResource> L
+@using Microsoft.AspNetCore.Authorization
+
+@attribute [Authorize]
 @rendermode InteractiveServer
 
 <PageTitle>@Title | Dusk of Coding</PageTitle>
