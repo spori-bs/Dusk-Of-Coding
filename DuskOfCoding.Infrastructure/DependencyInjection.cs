@@ -28,7 +28,8 @@ public static class DependencyInjection
         services.AddHttpClient("executionapi", client => 
         {
             client.BaseAddress = new Uri("http://executionapi");
-        });
+        })
+        .AddStandardResilienceHandler();
 
         services.AddKeyedScoped<ICodeExecutionEngine, HttpCodeExecutionEngine>(nameof(ProgrammingLanguage.CSharp), (sp, key) => 
         {
