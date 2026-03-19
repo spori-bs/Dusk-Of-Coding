@@ -57,7 +57,18 @@ public class AppDbContext : DbContext
             Description = "Write a method that returns the string 'Hello World!'",
             DifficultyLevel = "Easy",
             Tags = new List<string> { "fundamentals" },
-            TestBundleReference = "tasks/helloworld/tests.csproj"
+            TestBundleReference = @"using System;
+using Xunit;
+
+public class SolutionTests 
+{
+    [Fact]
+    public void TestHelloWorld() 
+    {
+        var result = Solution.GetHelloWorld();
+        Assert.Equal(""Hello World!"", result);
+    }
+}"
         });
     }
 }

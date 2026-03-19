@@ -84,7 +84,7 @@ flowchart LR
 |-------|-------------|--------|
 | 1 | Domain Model Hardening (enum, mutability, rename) | ✅ Completed |
 | 2 | Feedback Persistence (EF entity, migration) | ✅ Completed |
-| 3 | Real Execution Engine (Roslyn sandbox, test gen, xUnit runner) | ⬜ Not Started |
+| 3 | Real Execution Engine (Roslyn sandbox, test gen, xUnit runner) | ✅ Completed |
 | 4 | Integration Wiring (connect engine to services & UI) | ⬜ Not Started |
 | 5 | End-to-End Verification | ⬜ Not Started |
 
@@ -117,14 +117,15 @@ flowchart LR
 | 2026-03-19 | Feedback to be persisted as `FeedbackRecord` EF entity with JSON-serialized lists |
 | 2026-03-19 | Phase 1 completed: SubmissionStatus enum added, mutability fixed, migrations applied |
 | 2026-03-19 | Phase 2 completed: FeedbackRecord persisted via EF Core. Added UserId to WebApi for security and aggregate endpoint. |
+| 2026-03-19 | Phase 3 completed: Roslyn sandbox implemented. Added SecureCompilationService with SandboxSyntaxAnalyzer and SafetyRewriter, and SandboxExecutionService with ALC, 5s timeout, and reflection-based test execution. |
 
 ---
 
 ## Resumption Point (2026-03-19)
 
-**Phase 2 is COMPLETE.** 
+**Phase 3 is COMPLETE.** 
 
 ### To resume
 1. Read this `phase2-context.md` to understand current status
-2. Begin with **Phase 3 (Real Execution Engine)** tasks from `phase2-master-promt.md` (creating the Roslyn sandbox)
+2. Begin with **Phase 4 (Integration Wiring)** tasks from `phase2-master-promt.md` (connecting Execution API to services and UI)
 3. Update this file at the end of every response
