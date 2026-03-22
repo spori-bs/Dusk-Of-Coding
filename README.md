@@ -78,28 +78,28 @@ C4Context
 
 ## 📜 Development History (Prompt Progression)
 
-This project was built iteratively using a sequence of specialized AI prompts located in the `_ArchivePrompts` directory. The chronological sequence reflects the evolution of the application:
+This project was built iteratively using a sequence of specialized AI prompts. Completed phases are located in the `_ArchivePrompts` directory, while active or recent prompts remain in the root directory. The chronological sequence reflects the evolution of the application:
 
-1. **Master (`master promt.md` / `context.md` / `PHASE1-Architecture.md`)**
+1. **Master (`phase1-architecture-master-prompt.md` / `phase1-architecture-context.md` / `phase1-architecture.md`)**
    - **Goal:** Initial application scaffolding. Setting up the Blazor Server UI, the Core WebAPI, Entity Framework database connection, and the basic structure of the Modular Monolith architecture.
-2. **Advanced (`advanced-master-promt.md` / `advanced-context.md`)**
+2. **Advanced (`phase2-advanced-master-prompt.md` / `phase2-advanced-context.md`)**
    - **Goal:** Complex backend features. Introduced the isolated Docker/Roslyn code execution sandbox, as well as the background AI `TutorWorker` integrating OpenAI/Azure OpenAI with Polly resilience pipelines.
-3. **Localization (`localization-master-promt.md` / `localization-context.md`)**
+3. **Localization (`phase3-localization-master-prompt.md` / `phase3-localization-context.md`)**
    - **Goal:** Bilingual support (English & Hungarian). Implementing the resource `.resx` files and the Blazor globalization services.
-4. **Rebrand (`rebrand-master-promt.md` / `rebrand-context.md`)**
+4. **Rebrand (`phase4-rebrand-master-prompt.md` / `phase4-rebrand-context.md`)**
    - **Goal:** Structural identity change. Transitioning the generic project name to **Dusk of Coding**, migrating away from the old sidebar layout to a new horizontal top navigation bar.
-5. **Rebrand Page Modification (`rebrand-page-modification-master-prompt.md` / `rebrand-page-modification-context.md` / `landing-page.md`)**
+5. **Rebrand Page Modification (`phase5-rebrand-page-modification-master-prompt.md` / `phase5-rebrand-page-modification-context.md` / `phase5-landing-page.md`)**
    - **Goal:** Premium UI Overhaul. Redesigning the visual identity to feature the dark mode glassmorphism aesthetic, building out the premium Landing Page, and fixing UX/UI contrast issues across the app.
-6. **Keycloak (`keycloak-master-prompt.md` / `keycloak-context.md`)**
+6. **Keycloak (`phase6-keycloak-master-prompt.md` / `phase6-keycloak-context.md`)**
    - **Goal:** Centralized IAM with Keycloak. Setting up a Keycloak container in Aspire, securing the WebApi with JWT Bearer tokens, implementing OpenID Connect authentication in Blazor, adding user self-registration, and connecting the Landing Page "Get Started" flow to the Keycloak registration page.
-7. **Phase 2: Execution & Persistence (`phase2-master-promt.md` / `phase2-context.md`)**
+7. **Phase 2: Execution & Persistence (`phase7-execution-persistence-master-prompt.md` / `phase7-execution-persistence-context.md`)**
    - **Goal:** Real execution engine and feedback persistence. Hardened the domain model with enums and immutability. Persisted feedback records via EF Core. Built the in-process Roslyn sandbox with `SecureCompilationService` (syntax analysis, safety rewriting) and `SandboxExecutionService` (collectible ALC, 5s timeout, memory limits). Wired Polly resilience to the Execution API HTTP client. Enhanced the Socratic Tutor prompt. Added Google Gemini as a third LLM provider via the OpenAI API compatibility layer.
-8. **Error Handling & Resilience (`phase3-error-handling-master-prompt.md` / `phase3-error-handling-context.md`)**
+8. **Error Handling & Resilience (`phase8-error-handling-master-prompt.md` / `phase8-error-handling-context.md`)**
    - **Goal:** Replace the default Blazor error bar with a premium branded `<ErrorBoundary>`. Implement a custom `AuthDelegatingHandler` for graceful 401/403 handling. Create a branded "Access Denied" page.
-9. **RBAC & Identity UX (`phase4-rbac-identity-master-prompt.md` / `phase4-rbac-identity-context.md`)**
+9. **RBAC & Identity UX (`phase9-rbac-identity-master-prompt.md` / `phase9-rbac-identity-context.md`)**
    - **Goal:** Introduce `admin` and `student` Keycloak roles with proper JWT claim mapping. Refactor the Landing Page and Navigation with `<AuthorizeView>`. Build an Admin Dashboard with aggregate student analytics.
-10. **User Feedback System (`phase5-feedback-system-master-prompt.md` / `phase5-feedback-system-context.md`)**
+10. **User Feedback System (`phase10-feedback-system-master-prompt.md` / `phase10-feedback-system-context.md`)**
     - **Goal:** Allow students to rate tasks and submit feedback. Store feedback in the database. Expose admin-facing analytics and feedback summaries.
-11. **How It Was Made (`phase6-how-it-was-made-master-prompt.md` / `phase6-how-it-was-made-context.md`)**
+11. **How It Was Made (`phase11-how-it-was-made-master-prompt.md` / `phase11-how-it-was-made-context.md`)**
     - **Goal:** A premium storytelling/teaser page at `/how-it-was-made`. Explaining the "vibecoding" philosophy, showing the iterative prompt-driven development, and creating a "wow" experience that showcases the platform's unique AI-driven origin.
 
