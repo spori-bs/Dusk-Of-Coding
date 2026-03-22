@@ -7,6 +7,11 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.Limits.MaxRequestHeadersTotalSize = 131072; // 128KB
+});
+
 builder.AddServiceDefaults();
 
 // ── Localization ───────────────────────────────────────────
@@ -49,6 +54,10 @@ builder.Services.AddAuthentication(options =>
         {
             ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
         };
+        options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+        {
+            RoleClaimType = "roles"
+        };
     });
 
 // Add services to the container.
@@ -63,12 +72,10 @@ builder.Services.AddRazorComponents()
     });
 
 // Register typed HttpClient pointing to WebApi via Aspire service discovery
-builder.Services.AddTransient<AuthDelegatingHandler>();
 builder.Services.AddHttpClient<ApiClient>(client =>
 {
     client.BaseAddress = new Uri("http://webapi");
-})
-.AddHttpMessageHandler<AuthDelegatingHandler>();
+});
 
 // ── Controller for culture switching ──────────────────────
 builder.Services.AddControllers();

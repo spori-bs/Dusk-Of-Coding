@@ -12,6 +12,11 @@ using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.Limits.MaxRequestHeadersTotalSize = 131072; // 128KB
+});
+
 builder.AddServiceDefaults();
 
 // ── Dev certificate trust (Aspire service-to-service) ─────
@@ -47,6 +52,10 @@ builder.Services.AddAuthentication()
            options.BackchannelHttpHandler = new HttpClientHandler
            {
                ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+           };
+           options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+           {
+               RoleClaimType = "roles"
            };
        });
 builder.Services.AddAuthorization();
@@ -98,19 +107,19 @@ tasksGroup.MapGet("/{id:guid}", async (Guid id, ITaskService taskService, Cancel
     return task is not null ? Results.Ok(task) : Results.NotFound();
 });
 
-tasksGroup.MapPost("/", async ([FromBody] DuskOfCoding.Application.DTOs.CreateTaskDto dto, ITaskService taskService, CancellationToken ct) =>
+tasksGroup.MapPost("/", [Microsoft.AspNetCore.Authorization.Authorize(Roles = "admin")] async ([FromBody] DuskOfCoding.Application.DTOs.CreateTaskDto dto, ITaskService taskService, CancellationToken ct) =>
 {
     var task = await taskService.CreateTaskAsync(dto, ct);
     return Results.Created($"/tasks/{task.Id}", task);
 });
 
-tasksGroup.MapPut("/{id:guid}", async (Guid id, [FromBody] DuskOfCoding.Application.DTOs.UpdateTaskDto dto, ITaskService taskService, CancellationToken ct) =>
+tasksGroup.MapPut("/{id:guid}", [Microsoft.AspNetCore.Authorization.Authorize(Roles = "admin")] async (Guid id, [FromBody] DuskOfCoding.Application.DTOs.UpdateTaskDto dto, ITaskService taskService, CancellationToken ct) =>
 {
     var task = await taskService.UpdateTaskAsync(id, dto, ct);
     return task is not null ? Results.Ok(task) : Results.NotFound();
 });
 
-tasksGroup.MapDelete("/{id:guid}", async (Guid id, ITaskService taskService, CancellationToken ct) =>
+tasksGroup.MapDelete("/{id:guid}", [Microsoft.AspNetCore.Authorization.Authorize(Roles = "admin")] async (Guid id, ITaskService taskService, CancellationToken ct) =>
 {
     var success = await taskService.DeleteTaskAsync(id, ct);
     return success ? Results.NoContent() : Results.NotFound();
@@ -137,6 +146,25 @@ tasksGroup.MapGet("/{id:guid}/stats", async (Guid id, DuskOfCoding.Infrastructur
         TotalSubmissions = totalTries, 
         AverageTries = Math.Round(averageTries, 1),
         SuccessRate = Math.Round((double)successfulUsers / totalUsers * 100, 1)
+    });
+});
+
+var adminGroup = app.MapGroup("/admin").WithTags("Admin").RequireAuthorization(new Microsoft.AspNetCore.Authorization.AuthorizeAttribute { Roles = "admin" });
+
+adminGroup.MapGet("/stats", async (DuskOfCoding.Infrastructure.Persistence.AppDbContext db, CancellationToken ct) => 
+{
+    var totalStudents = await db.Submissions.Where(s => s.UserId != null).Select(s => s.UserId).Distinct().CountAsync(ct);
+    var totalSubmissions = await db.Submissions.CountAsync(ct);
+    var totalTasks = await db.Tasks.CountAsync(ct);
+    var successfulSubmissions = await db.Submissions.CountAsync(s => s.Status == DuskOfCoding.Domain.Enums.SubmissionStatus.Success, ct);
+
+    double successRate = totalSubmissions > 0 ? ((double)successfulSubmissions / totalSubmissions) * 100 : 0;
+
+    return Results.Ok(new {
+        TotalStudents = totalStudents,
+        TotalTasks = totalTasks,
+        TotalSubmissions = totalSubmissions,
+        SuccessRate = Math.Round(successRate, 1)
     });
 });
 

@@ -17,10 +17,22 @@
                     @L["Hero_Description"]
                 </p>
                 <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center justify-content-lg-start">
-                    <a href="/login?returnUrl=%2Fpractice" class="btn btn-primary btn-lg px-5 py-3 rounded-pill fw-bold">
-                        @L["Hero_CTA"] <i class="bi bi-arrow-right ms-2"></i>
-                    </a>
-                    <a href="#demo" class="btn btn-outline-light btn-lg px-5 py-3 rounded-pill fw-semibold dusk-btn-outline">
+                    <AuthorizeView>
+                        <Authorized>
+                            <a href="/practice" class="btn btn-primary btn-lg px-5 py-3 rounded-pill fw-bold">
+                                @L["Hero_CTA"] <i class="bi bi-arrow-right ms-2"></i>
+                            </a>
+                        </Authorized>
+                        <NotAuthorized>
+                            <a href="/register?returnUrl=%2Fpractice" class="btn btn-primary btn-lg px-5 py-3 rounded-pill fw-bold">
+                                Get Started <i class="bi bi-person-plus ms-2"></i>
+                            </a>
+                            <a href="/login" class="btn btn-outline-light btn-lg px-5 py-3 rounded-pill fw-semibold dusk-btn-outline">
+                                Login
+                            </a>
+                        </NotAuthorized>
+                    </AuthorizeView>
+                    <a href="#demo" class="btn btn-outline-secondary btn-lg px-5 py-3 rounded-pill fw-semibold text-white-50 border-0 ms-lg-2">
                         @L["Hero_SecondaryCTA"]
                     </a>
                 </div>

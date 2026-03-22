@@ -11,7 +11,7 @@ var executionApi = builder.AddProject<Projects.DuskOfCoding_ExecutionApi>("execu
 var keycloak = builder.AddKeycloak("keycloak", 8080)
     .WithDataVolume()
     .WithRealmImport("../KeycloakConfig")
-    .WithEnvironment("QUARKUS_HTTP_LIMITS_MAX_HEADER_SIZE", "32k");
+    .WithEnvironment("QUARKUS_HTTP_LIMITS_MAX_HEADER_SIZE", "128k");
 
 // Web API — main onboarding app, calls Execution API via service discovery
 var webApi = builder.AddProject<Projects.DuskOfCoding_WebApi>("webapi")

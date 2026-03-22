@@ -3,14 +3,39 @@
   "enabled": true,
   "registrationAllowed": true,
   "registrationEmailAsUsername": true,
+  "roles": {
+    "realm": [
+      {
+        "name": "admin",
+        "description": "Administrator role"
+      },
+      {
+        "name": "student",
+        "description": "Default student role"
+      }
+    ]
+  },
   "users": [
     {
       "username": "student",
       "enabled": true,
+      "realmRoles": [ "student" ],
       "credentials": [
         {
           "type": "password",
           "value": "password",
+          "temporary": false
+        }
+      ]
+    },
+    {
+      "username": "admin",
+      "enabled": true,
+      "realmRoles": [ "admin" ],
+      "credentials": [
+        {
+          "type": "password",
+          "value": "admin",
           "temporary": false
         }
       ]
@@ -30,6 +55,22 @@
       ],
       "webOrigins": [
         "*"
+      ],
+      "protocolMappers": [
+        {
+          "name": "roles",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-realm-role-mapper",
+          "consentRequired": false,
+          "config": {
+            "multivalued": "true",
+            "userinfo.token.claim": "true",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "roles",
+            "jsonType.label": "String"
+          }
+        }
       ]
     },
     {

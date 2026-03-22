@@ -4,6 +4,7 @@ using DuskOfCoding.Domain.Enums;
 using DuskOfCoding.Domain.Common;
 using Microsoft.Extensions.Localization;
 using DuskOfCoding.WebUi.Resources;
+using Microsoft.AspNetCore.Components;
 
 namespace DuskOfCoding.WebUi.Services;
 
@@ -12,17 +13,35 @@ public class ApiClient
     private readonly HttpClient _http;
     private readonly TokenProvider _tokenProvider;
     private readonly IStringLocalizer<SharedResource> _localizer;
+    private readonly NavigationManager _nav;
 
-    public ApiClient(HttpClient http, TokenProvider tokenProvider, IStringLocalizer<SharedResource> localizer)
+    public ApiClient(HttpClient http, TokenProvider tokenProvider, IStringLocalizer<SharedResource> localizer, NavigationManager nav)
     {
         _http = http;
         _tokenProvider = tokenProvider;
         _localizer = localizer;
+        _nav = nav;
         
         if (!string.IsNullOrEmpty(_tokenProvider.AccessToken))
         {
             _http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _tokenProvider.AccessToken);
         }
+    }
+
+    private bool HandleAuthErrors(HttpResponseMessage response)
+    {
+        if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+        {
+            var returnUrl = Uri.EscapeDataString(new Uri(_nav.Uri).PathAndQuery);
+            _nav.NavigateTo($"/login?returnUrl={returnUrl}", forceLoad: true);
+            return true;
+        }
+        else if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+        {
+            _nav.NavigateTo("/access-denied", forceLoad: true);
+            return true;
+        }
+        return false;
     }
 
     public class SubmitCodeDto
@@ -39,6 +58,8 @@ public class ApiClient
         try
         {
             var response = await _http.GetAsync("/tasks");
+            if (HandleAuthErrors(response)) return Result<List<TaskDto>>.Failure(string.Empty);
+            
             if (response.IsSuccessStatusCode)
             {
                 var data = await response.Content.ReadFromJsonAsync<List<TaskDto>>() ?? new();
@@ -57,6 +78,8 @@ public class ApiClient
         try
         {
             var response = await _http.GetAsync($"/tasks/{id}");
+            if (HandleAuthErrors(response)) return Result<TaskDto>.Failure(string.Empty);
+
             if (response.IsSuccessStatusCode)
             {
                 var data = await response.Content.ReadFromJsonAsync<TaskDto>();
@@ -78,6 +101,8 @@ public class ApiClient
         try
         {
             var response = await _http.PostAsJsonAsync("/tasks", dto);
+            if (HandleAuthErrors(response)) return Result<TaskDto>.Failure(string.Empty);
+
             if (response.IsSuccessStatusCode)
             {
                 var data = await response.Content.ReadFromJsonAsync<TaskDto>();
@@ -97,6 +122,8 @@ public class ApiClient
         try
         {
             var response = await _http.PutAsJsonAsync($"/tasks/{id}", dto);
+            if (HandleAuthErrors(response)) return Result<TaskDto>.Failure(string.Empty);
+
             if (response.IsSuccessStatusCode)
             {
                 var data = await response.Content.ReadFromJsonAsync<TaskDto>();
@@ -116,6 +143,8 @@ public class ApiClient
         try
         {
             var response = await _http.DeleteAsync($"/tasks/{id}");
+            if (HandleAuthErrors(response)) return Result.Failure(string.Empty);
+
             if (response.IsSuccessStatusCode)
             {
                 return Result.Success();
@@ -141,6 +170,8 @@ public class ApiClient
                 Language = language
             };
             var response = await _http.PostAsJsonAsync("/submissions", payload, ct);
+            if (HandleAuthErrors(response)) return Result<SubmissionResultDto>.Failure(string.Empty);
+            
             if (response.IsSuccessStatusCode)
             {
                 var data = await response.Content.ReadFromJsonAsync<SubmissionResultDto>(cancellationToken: ct);
@@ -160,6 +191,8 @@ public class ApiClient
         try
         {
             var response = await _http.GetAsync($"/submissions/{id}");
+            if (HandleAuthErrors(response)) return Result<SubmissionResultDto>.Failure(string.Empty);
+
             if (response.IsSuccessStatusCode)
             {
                 var data = await response.Content.ReadFromJsonAsync<SubmissionResultDto>();
@@ -170,6 +203,35 @@ public class ApiClient
         catch (HttpRequestException ex)
         {
             return Result<SubmissionResultDto>.Failure(_localizer["Error_Network", ex.Message]);
+        }
+    }
+
+    // ---- Admin ----
+    public class AdminStatsDto
+    {
+        public int TotalStudents { get; set; }
+        public int TotalTasks { get; set; }
+        public int TotalSubmissions { get; set; }
+        public double SuccessRate { get; set; }
+    }
+
+    public async Task<Result<AdminStatsDto>> GetAdminStatsAsync()
+    {
+        try
+        {
+            var response = await _http.GetAsync("/admin/stats");
+            if (HandleAuthErrors(response)) return Result<AdminStatsDto>.Failure(string.Empty);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var data = await response.Content.ReadFromJsonAsync<AdminStatsDto>();
+                return Result<AdminStatsDto>.Success(data!);
+            }
+            return Result<AdminStatsDto>.Failure($"Failed to fetch analytics: {response.StatusCode}");
+        }
+        catch (HttpRequestException ex)
+        {
+            return Result<AdminStatsDto>.Failure(_localizer["Error_Network", ex.Message]);
         }
     }
 }
