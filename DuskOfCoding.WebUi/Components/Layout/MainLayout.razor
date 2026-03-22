@@ -15,9 +15,26 @@
 
     <main class="app-main">
         <div class="container py-4" style="min-height: calc(100vh - 140px);">
-            @Body
+            <ErrorBoundary @ref="_errorBoundary">
+                <ChildContent>
+                    @Body
+                </ChildContent>
+                <ErrorContent Context="exception">
+                    <CustomErrorContent Exception="exception" OnRecover="Recover" />
+                </ErrorContent>
+            </ErrorBoundary>
         </div>
     </main>
+
+    @code {
+        private ErrorBoundary? _errorBoundary;
+
+        private void Recover()
+        {
+            _errorBoundary?.Recover();
+        }
+    }
+
 
     <footer class="app-footer">
         <div class="container text-center">

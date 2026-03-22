@@ -153,5 +153,15 @@
   <data name="Landing_ManageTasks" xml:space="preserve"><value>Feladatok kezelése</value></data>
   <data name="Landing_WatchDemo" xml:space="preserve"><value>Bemutató</value></data>
   <data name="Landing_GetStarted" xml:space="preserve"><value>Kezdés</value></data>
+  <!-- API Errors -->
+  <data name="Error_FetchTasks" xml:space="preserve"><value>Failed to fetch tasks: {0}</value></data>
+  <data name="Error_Network" xml:space="preserve"><value>Network error: {0}</value></data>
+  <data name="Error_TaskNotFound" xml:space="preserve"><value>Task not found.</value></data>
+  <data name="Error_FetchTask" xml:space="preserve"><value>Failed to fetch task: {0}</value></data>
+  <data name="Error_CreateTask" xml:space="preserve"><value>Failed to create task: {0}. {1}</value></data>
+  <data name="Error_UpdateTask" xml:space="preserve"><value>Failed to update task: {0}. {1}</value></data>
+  <data name="Error_DeleteTask" xml:space="preserve"><value>Failed to delete task: {0}</value></data>
+  <data name="Error_SubmitCode" xml:space="preserve"><value>Submission failed: {0}. {1}</value></data>
+  <data name="Error_FetchSubmission" xml:space="preserve"><value>Failed to fetch submission: {0}</value></data>
 </root>
 

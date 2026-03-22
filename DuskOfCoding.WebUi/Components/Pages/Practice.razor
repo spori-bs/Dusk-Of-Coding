@@ -20,6 +20,13 @@
     <h2 class="display-6 fw-bold text-white mb-0">@L["Practice_Title"]</h2>
 </div>
 
+@if (!string.IsNullOrEmpty(_errorMessage))
+{
+    <div class="alert alert-danger dusk-glass-panel border-danger shadow-sm mb-4">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i> @_errorMessage
+    </div>
+}
+
 @if (tasks == null)
 {
     <p><em>@L["Loading"]</em></p>
@@ -159,12 +166,22 @@ else
     private SubmissionResultDto? submissionResult;
     private List<string>? syntaxErrors;
     private bool showSuccessBlink;
+    private string? _errorMessage;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            tasks = await Api.GetTasksAsync();
+            var result = await Api.GetTasksAsync();
+            if (result.IsSuccess)
+            {
+                tasks = result.Value;
+            }
+            else
+            {
+                _errorMessage = result.ErrorMessage;
+                tasks = new List<TaskDto>();
+            }
             StateHasChanged();
         }
     }
@@ -242,14 +259,25 @@ else
         isSubmitting = true;
         submissionResult = null;
         syntaxErrors = null;
+        _errorMessage = null;
         try
         {
-            submissionResult = await Api.SubmitCodeAsync(selectedTask.Id, sourceCode, selectedLanguage);
-
-            // Subscribe TutorTerminal to receive real-time tutor feedback
-            if (submissionResult?.Submission?.Id is Guid subId && tutorTerminal is not null)
+            var result = await Api.SubmitCodeAsync(selectedTask.Id, sourceCode, selectedLanguage);
+            if (!result.IsSuccess)
             {
-                await tutorTerminal.SubscribeToSubmission(subId);
+                submissionResult = new SubmissionResultDto
+                {
+                    Feedback = new FeedbackDto { IsSuccess = false, Summary = result.ErrorMessage ?? "Submission failed" }
+                };
+            }
+            else
+            {
+                submissionResult = result.Value;
+                // Subscribe TutorTerminal to receive real-time tutor feedback
+                if (submissionResult?.Submission?.Id is Guid subId && tutorTerminal is not null)
+                {
+                    await tutorTerminal.SubscribeToSubmission(subId);
+                }
             }
         }
         catch (Exception ex)

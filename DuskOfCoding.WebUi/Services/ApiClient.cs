@@ -1,6 +1,9 @@
 using System.Net.Http.Json;
 using System.Net.Http.Headers;
 using DuskOfCoding.Domain.Enums;
+using DuskOfCoding.Domain.Common;
+using Microsoft.Extensions.Localization;
+using DuskOfCoding.WebUi.Resources;
 
 namespace DuskOfCoding.WebUi.Services;
 
@@ -8,11 +11,13 @@ public class ApiClient
 {
     private readonly HttpClient _http;
     private readonly TokenProvider _tokenProvider;
+    private readonly IStringLocalizer<SharedResource> _localizer;
 
-    public ApiClient(HttpClient http, TokenProvider tokenProvider)
+    public ApiClient(HttpClient http, TokenProvider tokenProvider, IStringLocalizer<SharedResource> localizer)
     {
         _http = http;
         _tokenProvider = tokenProvider;
+        _localizer = localizer;
         
         if (!string.IsNullOrEmpty(_tokenProvider.AccessToken))
         {
@@ -29,54 +34,143 @@ public class ApiClient
 
     // ---- Tasks ----
 
-    public async Task<List<TaskDto>> GetTasksAsync()
+    public async Task<Result<List<TaskDto>>> GetTasksAsync()
     {
-        return await _http.GetFromJsonAsync<List<TaskDto>>("/tasks") ?? new();
+        try
+        {
+            var response = await _http.GetAsync("/tasks");
+            if (response.IsSuccessStatusCode)
+            {
+                var data = await response.Content.ReadFromJsonAsync<List<TaskDto>>() ?? new();
+                return Result<List<TaskDto>>.Success(data);
+            }
+            return Result<List<TaskDto>>.Failure(_localizer["Error_FetchTasks", response.StatusCode]);
+        }
+        catch (HttpRequestException ex)
+        {
+            return Result<List<TaskDto>>.Failure(_localizer["Error_Network", ex.Message]);
+        }
     }
 
-    public async Task<TaskDto?> GetTaskByIdAsync(Guid id)
+    public async Task<Result<TaskDto>> GetTaskByIdAsync(Guid id)
     {
-        return await _http.GetFromJsonAsync<TaskDto>($"/tasks/{id}");
+        try
+        {
+            var response = await _http.GetAsync($"/tasks/{id}");
+            if (response.IsSuccessStatusCode)
+            {
+                var data = await response.Content.ReadFromJsonAsync<TaskDto>();
+                return Result<TaskDto>.Success(data!);
+            }
+            if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                return Result<TaskDto>.Failure(_localizer["Error_TaskNotFound"]);
+            
+            return Result<TaskDto>.Failure(_localizer["Error_FetchTask", response.StatusCode]);
+        }
+        catch (HttpRequestException ex)
+        {
+            return Result<TaskDto>.Failure(_localizer["Error_Network", ex.Message]);
+        }
     }
 
-    public async Task<TaskDto?> CreateTaskAsync(CreateTaskDto dto)
+    public async Task<Result<TaskDto>> CreateTaskAsync(CreateTaskDto dto)
     {
-        var response = await _http.PostAsJsonAsync("/tasks", dto);
-        response.EnsureSuccessStatusCode();
-        return await response.Content.ReadFromJsonAsync<TaskDto>();
+        try
+        {
+            var response = await _http.PostAsJsonAsync("/tasks", dto);
+            if (response.IsSuccessStatusCode)
+            {
+                var data = await response.Content.ReadFromJsonAsync<TaskDto>();
+                return Result<TaskDto>.Success(data!);
+            }
+            var err = await response.Content.ReadAsStringAsync();
+            return Result<TaskDto>.Failure(_localizer["Error_CreateTask", response.StatusCode, err]);
+        }
+        catch (HttpRequestException ex)
+        {
+            return Result<TaskDto>.Failure(_localizer["Error_Network", ex.Message]);
+        }
     }
 
-    public async Task<TaskDto?> UpdateTaskAsync(Guid id, UpdateTaskDto dto)
+    public async Task<Result<TaskDto>> UpdateTaskAsync(Guid id, UpdateTaskDto dto)
     {
-        var response = await _http.PutAsJsonAsync($"/tasks/{id}", dto);
-        response.EnsureSuccessStatusCode();
-        return await response.Content.ReadFromJsonAsync<TaskDto>();
+        try
+        {
+            var response = await _http.PutAsJsonAsync($"/tasks/{id}", dto);
+            if (response.IsSuccessStatusCode)
+            {
+                var data = await response.Content.ReadFromJsonAsync<TaskDto>();
+                return Result<TaskDto>.Success(data!);
+            }
+            var err = await response.Content.ReadAsStringAsync();
+            return Result<TaskDto>.Failure(_localizer["Error_UpdateTask", response.StatusCode, err]);
+        }
+        catch (HttpRequestException ex)
+        {
+            return Result<TaskDto>.Failure(_localizer["Error_Network", ex.Message]);
+        }
     }
 
-    public async Task DeleteTaskAsync(Guid id)
+    public async Task<Result> DeleteTaskAsync(Guid id)
     {
-        var response = await _http.DeleteAsync($"/tasks/{id}");
-        response.EnsureSuccessStatusCode();
+        try
+        {
+            var response = await _http.DeleteAsync($"/tasks/{id}");
+            if (response.IsSuccessStatusCode)
+            {
+                return Result.Success();
+            }
+            return Result.Failure(_localizer["Error_DeleteTask", response.StatusCode]);
+        }
+        catch (HttpRequestException ex)
+        {
+            return Result.Failure(_localizer["Error_Network", ex.Message]);
+        }
     }
 
     // ---- Submissions ----
 
-    public async Task<SubmissionResultDto?> SubmitCodeAsync(Guid taskId, string sourceCode, string language = nameof(ProgrammingLanguage.CSharp), CancellationToken ct = default)
+    public async Task<Result<SubmissionResultDto>> SubmitCodeAsync(Guid taskId, string sourceCode, string language = nameof(ProgrammingLanguage.CSharp), CancellationToken ct = default)
     {
-        var payload = new SubmitCodeDto 
-        { 
-            TaskId = taskId, 
-            SourceCode = sourceCode,
-            Language = language
-        };
-        var response = await _http.PostAsJsonAsync("/submissions", payload, ct);
-        response.EnsureSuccessStatusCode();
-        return await response.Content.ReadFromJsonAsync<SubmissionResultDto>();
+        try
+        {
+            var payload = new SubmitCodeDto 
+            { 
+                TaskId = taskId, 
+                SourceCode = sourceCode,
+                Language = language
+            };
+            var response = await _http.PostAsJsonAsync("/submissions", payload, ct);
+            if (response.IsSuccessStatusCode)
+            {
+                var data = await response.Content.ReadFromJsonAsync<SubmissionResultDto>(cancellationToken: ct);
+                return Result<SubmissionResultDto>.Success(data!);
+            }
+            var err = await response.Content.ReadAsStringAsync(ct);
+            return Result<SubmissionResultDto>.Failure(_localizer["Error_SubmitCode", response.StatusCode, err]);
+        }
+        catch (HttpRequestException ex)
+        {
+            return Result<SubmissionResultDto>.Failure(_localizer["Error_Network", ex.Message]);
+        }
     }
 
-    public async Task<SubmissionResultDto?> GetSubmissionByIdAsync(Guid id)
+    public async Task<Result<SubmissionResultDto>> GetSubmissionByIdAsync(Guid id)
     {
-        return await _http.GetFromJsonAsync<SubmissionResultDto>($"/submissions/{id}");
+        try
+        {
+            var response = await _http.GetAsync($"/submissions/{id}");
+            if (response.IsSuccessStatusCode)
+            {
+                var data = await response.Content.ReadFromJsonAsync<SubmissionResultDto>();
+                return Result<SubmissionResultDto>.Success(data!);
+            }
+            return Result<SubmissionResultDto>.Failure(_localizer["Error_FetchSubmission", response.StatusCode]);
+        }
+        catch (HttpRequestException ex)
+        {
+            return Result<SubmissionResultDto>.Failure(_localizer["Error_Network", ex.Message]);
+        }
     }
 }
 

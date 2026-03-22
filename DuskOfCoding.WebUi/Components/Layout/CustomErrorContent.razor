@@ -1,0 +1,74 @@
+@namespace DuskOfCoding.WebUi.Components.Layout
+@using DuskOfCoding.WebUi.Resources
+@inject IStringLocalizer<SharedResource> L
+
+<div class="error-boundary-overlay d-flex flex-column justify-content-center align-items-center">
+    <div class="error-panel text-center p-5 shadow-lg rounded">
+        <div class="error-icon mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="url(#errorGradient)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-alert-triangle">
+                <defs>
+                    <linearGradient id="errorGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#ff4b2b" />
+                        <stop offset="100%" stop-color="#ff416c" />
+                    </linearGradient>
+                </defs>
+                <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/>
+                <path d="M12 9v4"/>
+                <path d="M12 17h.01"/>
+            </svg>
+        </div>
+        <h2 class="text-white fw-bold mb-3">Something went wrong.</h2>
+        <p class="text-muted mb-4">An unexpected error occurred in the application. Please try again.</p>
+        
+        <button class="btn dusk-btn-outline mb-4" @onclick="OnRecover">
+            Try Again
+        </button>
+
+        @if (Exception != null)
+        {
+            <details class="text-start p-3 rounded" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1);">
+                <summary class="text-muted" style="cursor: pointer; font-size: 0.85rem;">Developer Details</summary>
+                <pre class="text-danger mt-2" style="font-size: 0.75rem; white-space: pre-wrap;">@Exception.Message</pre>
+            </details>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public Exception? Exception { get; set; }
+
+    [Parameter]
+    public EventCallback OnRecover { get; set; }
+}
+
+<style>
+    .error-boundary-overlay {
+        min-height: 50vh;
+        width: 100%;
+        animation: fade-in 0.4s ease-out forwards;
+    }
+    .error-panel {
+        background: rgba(15, 23, 42, 0.95);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 75, 43, 0.3);
+        box-shadow: 0 8px 32px rgba(255, 75, 43, 0.15);
+        max-width: 600px;
+        width: 100%;
+        position: relative;
+    }
+    .error-panel::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, #ff4b2b, #ff416c);
+        border-top-left-radius: inherit;
+        border-top-right-radius: inherit;
+    }
+    
+    @@keyframes fade-in {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>

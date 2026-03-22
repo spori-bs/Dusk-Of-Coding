@@ -63,10 +63,12 @@ builder.Services.AddRazorComponents()
     });
 
 // Register typed HttpClient pointing to WebApi via Aspire service discovery
+builder.Services.AddTransient<AuthDelegatingHandler>();
 builder.Services.AddHttpClient<ApiClient>(client =>
 {
     client.BaseAddress = new Uri("http://webapi");
-});
+})
+.AddHttpMessageHandler<AuthDelegatingHandler>();
 
 // ── Controller for culture switching ──────────────────────
 builder.Services.AddControllers();
