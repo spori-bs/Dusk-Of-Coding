@@ -102,4 +102,5 @@ This project was built iteratively using a sequence of specialized AI prompts. C
     - **Goal:** Allow students to rate tasks and submit feedback. Store feedback in the database. Expose admin-facing analytics and feedback summaries.
 11. **How It Was Made (`phase11-how-it-was-made-master-prompt.md` / `phase11-how-it-was-made-context.md`)**
     - **Goal:** A premium storytelling/teaser page at `/how-it-was-made`. Explaining the "vibecoding" philosophy, showing the iterative prompt-driven development, and creating a "wow" experience that showcases the platform's unique AI-driven origin.
-
+12. **Visionary UI/UX Design (`phase12-visionary-design-master-prompt.md`)**
+    - **Goal:** Create a cinematic, state-of-the-art 2026 next-gen aesthetic for the platform. Implement an ethereal cyber-noir theme with glassmorphism, dynamic scroll-driven animations, and interactive WebGL elements to elevate the overall user experience.
