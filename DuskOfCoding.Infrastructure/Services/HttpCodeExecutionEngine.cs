@@ -30,7 +30,7 @@ public class HttpCodeExecutionEngine : ICodeExecutionEngine
             TestBundle = new TestBundleDto
             {
                 Framework = "xunit",
-                ProjectTemplatePath = task.TestBundleReference
+                TestCode = task.TestBundleReference
             },
             Limits = new LimitsDto()
         };

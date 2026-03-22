@@ -23,6 +23,10 @@ public sealed class LlmProviderOptions
     /// <summary>API key for direct OpenAI access.</summary>
     public string? OpenAIApiKey { get; set; }
 
+    // ── Gemini-specific ────────────────────────────────
+    /// <summary>API key for Google Gemini access.</summary>
+    public string? GeminiApiKey { get; set; }
+
     // ── Azure OpenAI-specific ──────────────────────────
     /// <summary>Azure OpenAI resource endpoint (e.g. https://myresource.openai.azure.com/).</summary>
     public string? AzureEndpoint { get; set; }

@@ -3,6 +3,7 @@ using System;
 using DuskOfCoding.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,50 +11,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DuskOfCoding.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260319170701_AddSubmissionStatusEnum")]
+    partial class AddSubmissionStatusEnum
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.4");
-
-            modelBuilder.Entity("DuskOfCoding.Domain.Entities.FeedbackRecord", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("AiReviewRemarks")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("CompilationMessagesJson")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("IsSuccess")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<Guid>("SubmissionId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Summary")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("TestMessagesJson")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SubmissionId")
-                        .IsUnique();
-
-                    b.ToTable("FeedbackRecords");
-                });
 
             modelBuilder.Entity("DuskOfCoding.Domain.Entities.Submission", b =>
                 {
@@ -129,18 +94,9 @@ namespace DuskOfCoding.Infrastructure.Migrations
                             Description = "Write a method that returns the string 'Hello World!'",
                             DifficultyLevel = "Easy",
                             Tags = "[\"fundamentals\"]",
-                            TestBundleReference = "using System;\r\nusing Xunit;\r\n\r\npublic class SolutionTests \r\n{\r\n    [Fact]\r\n    public void TestHelloWorld() \r\n    {\r\n        var result = Solution.GetHelloWorld();\r\n        Assert.Equal(\"Hello World!\", result);\r\n    }\r\n}",
+                            TestBundleReference = "tasks/helloworld/tests.csproj",
                             Title = "Hello World"
                         });
-                });
-
-            modelBuilder.Entity("DuskOfCoding.Domain.Entities.FeedbackRecord", b =>
-                {
-                    b.HasOne("DuskOfCoding.Domain.Entities.Submission", null)
-                        .WithOne("Feedback")
-                        .HasForeignKey("DuskOfCoding.Domain.Entities.FeedbackRecord", "SubmissionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("DuskOfCoding.Domain.Entities.Submission", b =>
@@ -150,11 +106,6 @@ namespace DuskOfCoding.Infrastructure.Migrations
                         .HasForeignKey("TaskId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("DuskOfCoding.Domain.Entities.Submission", b =>
-                {
-                    b.Navigation("Feedback");
                 });
 #pragma warning restore 612, 618
         }

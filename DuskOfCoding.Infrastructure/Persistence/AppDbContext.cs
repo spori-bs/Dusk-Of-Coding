@@ -11,6 +11,7 @@ public class AppDbContext : DbContext
 
     public DbSet<TaskDefinition> Tasks => Set<TaskDefinition>();
     public DbSet<Submission> Submissions => Set<Submission>();
+    public DbSet<FeedbackRecord> FeedbackRecords => Set<FeedbackRecord>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -36,8 +37,16 @@ public class AppDbContext : DbContext
         {
             entity.HasKey(e => e.Id);
             entity.Property(e => e.SourceCode).IsRequired();
-            entity.Property(e => e.Status).IsRequired().HasMaxLength(50);
+            entity.Property(e => e.Status).HasConversion<string>().IsRequired().HasMaxLength(50);
             entity.HasOne<TaskDefinition>().WithMany().HasForeignKey(e => e.TaskId);
+        });
+
+        // FeedbackRecord configuration
+        modelBuilder.Entity<FeedbackRecord>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Summary).IsRequired();
+            entity.HasOne<Submission>().WithOne(s => s.Feedback).HasForeignKey<FeedbackRecord>(e => e.SubmissionId);
         });
 
         // Seed a default task
@@ -48,7 +57,18 @@ public class AppDbContext : DbContext
             Description = "Write a method that returns the string 'Hello World!'",
             DifficultyLevel = "Easy",
             Tags = new List<string> { "fundamentals" },
-            TestBundleReference = "tasks/helloworld/tests.csproj"
+            TestBundleReference = @"using System;
+using Xunit;
+
+public class SolutionTests 
+{
+    [Fact]
+    public void TestHelloWorld() 
+    {
+        var result = Solution.GetHelloWorld();
+        Assert.Equal(""Hello World!"", result);
+    }
+}"
         });
     }
 }

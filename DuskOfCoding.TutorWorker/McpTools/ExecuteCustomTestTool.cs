@@ -36,7 +36,7 @@ public static class ExecuteCustomTestTool
             SourceCode = studentCode,
             Language = "csharp",
             TestBundle = testCode is not null
-                ? new TestBundleDto { Framework = "xunit", ProjectTemplatePath = "inline" }
+                ? new TestBundleDto { Framework = "xunit", TestCode = "inline" }
                 : null,
             Limits = new LimitsDto
             {

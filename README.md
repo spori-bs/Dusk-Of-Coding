@@ -16,7 +16,7 @@ This platform exists at this crossroads, serving as a safe, sandboxed environmen
 
 - **Sandboxed Execution Environment**: Compile and safely execute C# code within an isolated Docker sandbox using the Roslyn compiler.
 - **Automated Testing & Feedback**: Receive detailed, structured feedback via automated unit tests instead of simple pass/fail metrics.
-- **Socratic AI Mentor (TutorWorker)**: Connects to OpenAI and Azure OpenAI via a resilient Polly pipeline to provide real-time, streaming guidance. It teaches the "new literacy" by mentoring users using the Socratic method, ensuring they learn to direct AI rather than rely on it blindly.
+- **Socratic AI Mentor (TutorWorker)**: Connects to OpenAI, Azure OpenAI, or Google Gemini via a resilient Polly pipeline to provide real-time, streaming guidance. It teaches the "new literacy" by mentoring users using the Socratic method, ensuring they learn to direct AI rather than rely on it blindly.
 - **Keycloak IAM**: Centralized authentication and user registration via OpenID Connect, with JWT-secured API access and self-service account creation.
 - **Bilingual Premium UI**: Fully localized in English and Hungarian.
 - **Modern Dark Aesthetic**: A fully redesigned user interface leveraging glassmorphism, responsive micro-animations, and curated vibrant color palettes to provide a dynamic and visually stunning experience.
@@ -35,9 +35,9 @@ This project is built using modern .NET technologies and architectural patterns 
 - **[.NET Aspire](https://learn.microsoft.com/en-us/dotnet/aspire/)** - Orchestration and configuration as code (connecting UI, APIs, AI workers, and DB).
 - **[Blazor Server](https://dotnet.microsoft.com/apps/aspnet/web-apps/blazor)** - Driving the interactive Code Playground and Task Management interfaces.
 - **[Entity Framework Core](https://learn.microsoft.com/en-us/ef/core/)** - ORM for persistence, storing tasks, submissions, and execution results.
-- **[Semantic Kernel / Azure OpenAI](https://learn.microsoft.com/en-us/semantic-kernel/)** - Powering the intelligent, context-aware AI Tutor.
-- **[Polly](https://github.com/App-vNext/Polly)** - Used extensively in the AI pipeline for retries, timeouts, and fallbacks to ensure robust API resilience.
-- **[Docker](https://www.docker.com/)** - Used for the Execution API to safely sandbox external code compilation and testing.
+- **[Microsoft.Extensions.AI](https://learn.microsoft.com/en-us/dotnet/ai/)** - Unified `IChatClient` abstraction powering the AI Tutor with pluggable providers (OpenAI, Azure OpenAI, Google Gemini).
+- **[Polly](https://github.com/App-vNext/Polly)** - Used extensively in the AI and execution pipelines for retries, timeouts, and fallbacks to ensure robust API resilience.
+- **[Podman / Docker](https://podman.io/)** - Container runtime for infrastructure services (Keycloak, RabbitMQ) via Aspire orchestration.
 - **[Roslyn Compiler](https://github.com/dotnet/roslyn)** - Integrated for C# syntax analysis, compilation diagnostics, and execution.
 - **[Keycloak](https://www.keycloak.org/)** - Open-source IAM providing centralized authentication, user registration, and JWT-based authorization via OpenID Connect.
 
@@ -62,8 +62,8 @@ C4Context
         System(keycloak, "Keycloak IAM", "Centralized identity provider with OIDC and user self-registration")
     }
 
-    System_Ext(execution_api, "Execution API (Sandbox)", "Isolated Docker container that safely compiles and runs unit tests")
-    System_Ext(llm_provider, "OpenAI / Azure OpenAI", "External LLM providers for the Socratic AI Mentor")
+    System_Ext(execution_api, "Execution API (Sandbox)", "In-process Roslyn sandbox that safely compiles and runs xUnit tests")
+    System_Ext(llm_provider, "OpenAI / Azure OpenAI / Gemini", "External LLM providers for the Socratic AI Mentor")
 
     Rel(candidate, webui, "Practices coding tasks", "HTTPS")
     Rel(webui, keycloak, "Authenticates users (OIDC)", "HTTPS")
@@ -78,17 +78,28 @@ C4Context
 
 ## 📜 Development History (Prompt Progression)
 
-This project was built iteratively using a sequence of specialized AI prompts located in the `_ArchivePromts` directory. The chronological sequence reflects the evolution of the application:
+This project was built iteratively using a sequence of specialized AI prompts. Completed phases are located in the `_ArchivePrompts` directory, while active or recent prompts remain in the root directory. The chronological sequence reflects the evolution of the application:
 
-1. **Master (`master promt.md` / `context.md` / `PHASE1-Architecture.md`)**
+1. **Master (`phase1-architecture-master-prompt.md` / `phase1-architecture-context.md` / `phase1-architecture.md`)**
    - **Goal:** Initial application scaffolding. Setting up the Blazor Server UI, the Core WebAPI, Entity Framework database connection, and the basic structure of the Modular Monolith architecture.
-2. **Advanced (`advanced-master-promt.md` / `advanced-context.md`)**
+2. **Advanced (`phase2-advanced-master-prompt.md` / `phase2-advanced-context.md`)**
    - **Goal:** Complex backend features. Introduced the isolated Docker/Roslyn code execution sandbox, as well as the background AI `TutorWorker` integrating OpenAI/Azure OpenAI with Polly resilience pipelines.
-3. **Localization (`localization-master-promt.md` / `localization-context.md`)**
+3. **Localization (`phase3-localization-master-prompt.md` / `phase3-localization-context.md`)**
    - **Goal:** Bilingual support (English & Hungarian). Implementing the resource `.resx` files and the Blazor globalization services.
-4. **Rebrand (`rebrand-master-promt.md` / `rebrand-context.md`)**
+4. **Rebrand (`phase4-rebrand-master-prompt.md` / `phase4-rebrand-context.md`)**
    - **Goal:** Structural identity change. Transitioning the generic project name to **Dusk of Coding**, migrating away from the old sidebar layout to a new horizontal top navigation bar.
-5. **Rebrand Page Modification (`rebrand-page-modification-master-prompt.md` / `rebrand-page-modification-context.md` / `landing-page.md`)**
+5. **Rebrand Page Modification (`phase5-rebrand-page-modification-master-prompt.md` / `phase5-rebrand-page-modification-context.md` / `phase5-landing-page.md`)**
    - **Goal:** Premium UI Overhaul. Redesigning the visual identity to feature the dark mode glassmorphism aesthetic, building out the premium Landing Page, and fixing UX/UI contrast issues across the app.
-6. **Keycloak (`keycloak-master-prompt.md` / `keycloak-context.md`)**
+6. **Keycloak (`phase6-keycloak-master-prompt.md` / `phase6-keycloak-context.md`)**
    - **Goal:** Centralized IAM with Keycloak. Setting up a Keycloak container in Aspire, securing the WebApi with JWT Bearer tokens, implementing OpenID Connect authentication in Blazor, adding user self-registration, and connecting the Landing Page "Get Started" flow to the Keycloak registration page.
+7. **Phase 2: Execution & Persistence (`phase7-execution-persistence-master-prompt.md` / `phase7-execution-persistence-context.md`)**
+   - **Goal:** Real execution engine and feedback persistence. Hardened the domain model with enums and immutability. Persisted feedback records via EF Core. Built the in-process Roslyn sandbox with `SecureCompilationService` (syntax analysis, safety rewriting) and `SandboxExecutionService` (collectible ALC, 5s timeout, memory limits). Wired Polly resilience to the Execution API HTTP client. Enhanced the Socratic Tutor prompt. Added Google Gemini as a third LLM provider via the OpenAI API compatibility layer.
+8. **Error Handling & Resilience (`phase8-error-handling-master-prompt.md` / `phase8-error-handling-context.md`)**
+   - **Goal:** Replace the default Blazor error bar with a premium branded `<ErrorBoundary>`. Implement a custom `AuthDelegatingHandler` for graceful 401/403 handling. Create a branded "Access Denied" page.
+9. **RBAC & Identity UX (`phase9-rbac-identity-master-prompt.md` / `phase9-rbac-identity-context.md`)**
+   - **Goal:** Introduce `admin` and `student` Keycloak roles with proper JWT claim mapping. Refactor the Landing Page and Navigation with `<AuthorizeView>`. Build an Admin Dashboard with aggregate student analytics.
+10. **User Feedback System (`phase10-feedback-system-master-prompt.md` / `phase10-feedback-system-context.md`)**
+    - **Goal:** Allow students to rate tasks and submit feedback. Store feedback in the database. Expose admin-facing analytics and feedback summaries.
+11. **How It Was Made (`phase11-how-it-was-made-master-prompt.md` / `phase11-how-it-was-made-context.md`)**
+    - **Goal:** A premium storytelling/teaser page at `/how-it-was-made`. Explaining the "vibecoding" philosophy, showing the iterative prompt-driven development, and creating a "wow" experience that showcases the platform's unique AI-driven origin.
+

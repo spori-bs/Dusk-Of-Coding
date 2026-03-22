@@ -1,12 +1,16 @@
 using DuskOfCoding.Execution.Contracts.DTOs;
 using Scalar.AspNetCore;
 
+using DuskOfCoding.ExecutionApi.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 
 // Add services to the container.
 builder.Services.AddOpenApi();
+builder.Services.AddSingleton<SecureCompilationService>();
+builder.Services.AddSingleton<SandboxExecutionService>();
 
 var app = builder.Build();
 
@@ -24,21 +28,37 @@ else
 }
 
 // Execution API boundary
-app.MapPost("/api/executions", (ExecutionRequest request) =>
+app.MapPost("/api/executions", async (
+    ExecutionRequest request, 
+    SecureCompilationService compiler, 
+    SandboxExecutionService executor, 
+    CancellationToken ct) =>
 {
-    // For POC scaffolding, just return a simulated successful response
-    return Results.Ok(new ExecutionResponse
+    if (request.TestBundle == null || string.IsNullOrWhiteSpace(request.TestBundle.TestCode))
     {
-        SubmissionId = request.SubmissionId,
-        Status = "Completed",
-        Compilation = new CompilationResultDto { Succeeded = true, Errors = Array.Empty<string>() },
-        Tests = new[]
+        return Results.BadRequest("TestCode is required in the TestBundle.");
+    }
+
+    var (isValid, errors, compilation) = compiler.Compile(request.SourceCode, request.TestBundle.TestCode);
+
+    if (!isValid || compilation == null)
+    {
+        return Results.Ok(new ExecutionResponse
         {
-            new TestResultDto { Name = "SimulatedTest", Passed = true, DurationMs = 15 }
-        },
-        Runtime = new RuntimeMetricsDto { TotalDurationMs = 120 },
-        Errors = Array.Empty<string>()
-    });
+            SubmissionId = request.SubmissionId,
+            Status = "CompilationFailed",
+            Compilation = new CompilationResultDto
+            {
+                Succeeded = false,
+                Errors = errors
+            }
+        });
+    }
+
+    // Pass the host's cancellation token down
+    var result = await executor.ExecuteAsync(request.SubmissionId, compilation, ct);
+    
+    return Results.Ok(result);
 })
 .WithName("ExecuteCode");
 

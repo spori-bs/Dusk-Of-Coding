@@ -3,6 +3,7 @@ using System;
 using DuskOfCoding.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DuskOfCoding.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260319171539_AddFeedbackRecord")]
+    partial class AddFeedbackRecord
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.4");
@@ -129,7 +132,7 @@ namespace DuskOfCoding.Infrastructure.Migrations
                             Description = "Write a method that returns the string 'Hello World!'",
                             DifficultyLevel = "Easy",
                             Tags = "[\"fundamentals\"]",
-                            TestBundleReference = "using System;\r\nusing Xunit;\r\n\r\npublic class SolutionTests \r\n{\r\n    [Fact]\r\n    public void TestHelloWorld() \r\n    {\r\n        var result = Solution.GetHelloWorld();\r\n        Assert.Equal(\"Hello World!\", result);\r\n    }\r\n}",
+                            TestBundleReference = "tasks/helloworld/tests.csproj",
                             Title = "Hello World"
                         });
                 });

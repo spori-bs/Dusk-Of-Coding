@@ -23,7 +23,7 @@ public class EfSubmissionRepository : ISubmissionRepository
 
     public async Task<Submission?> GetByIdAsync(Guid id, CancellationToken ct = default)
     {
-        return await _db.Submissions.FirstOrDefaultAsync(s => s.Id == id, ct);
+        return await _db.Submissions.Include(s => s.Feedback).FirstOrDefaultAsync(s => s.Id == id, ct);
     }
 
     public async Task UpdateAsync(Submission submission, CancellationToken ct = default)

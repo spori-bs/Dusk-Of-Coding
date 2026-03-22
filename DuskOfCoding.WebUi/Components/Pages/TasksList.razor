@@ -76,9 +76,13 @@ else
 @code {
     private List<TaskDto>? _tasks;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        await LoadTasks();
+        if (firstRender)
+        {
+            await LoadTasks();
+            StateHasChanged();
+        }
     }
 
     private async Task LoadTasks()
