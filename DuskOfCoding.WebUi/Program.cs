@@ -29,6 +29,15 @@ if (builder.Environment.IsDevelopment())
     });
 }
 
+// ── Server-side Session Cache ──────────────────────────────
+builder.Services.AddMemoryCache();
+builder.Services.AddSingleton<ITicketStore, MemoryCacheTicketStore>();
+builder.Services.AddOptions<CookieAuthenticationOptions>(CookieAuthenticationDefaults.AuthenticationScheme)
+    .Configure<ITicketStore>((options, store) =>
+    {
+        options.SessionStore = store;
+    });
+
 // ── Authentication (Keycloak OIDC) ───────────────────────────
 builder.Services.AddAuthentication(options =>
 {
@@ -39,6 +48,7 @@ builder.Services.AddAuthentication(options =>
 {
     options.Cookie.SameSite = SameSiteMode.None;
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    // Chunking is less necessary now with ITicketStore, but safe to keep
     options.CookieManager = new ChunkingCookieManager();
 })
 .AddKeycloakOpenIdConnect(
@@ -57,6 +67,30 @@ builder.Services.AddAuthentication(options =>
         options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
         {
             RoleClaimType = "roles"
+        };
+
+        // NEW: Permanent fix for HTTP 431 Error (Cookie Bloat)
+        options.Events = new OpenIdConnectEvents
+        {
+            OnRedirectToIdentityProvider = context =>
+            {
+                // Delete stale correlation and nonce cookies to prevent header size from exceeding limits
+                foreach (var cookie in context.Request.Cookies.Keys)
+                {
+                    if (cookie.StartsWith(".AspNetCore.Correlation.") || cookie.StartsWith("OpenIdConnect.Nonce."))
+                    {
+                        context.Response.Cookies.Delete(cookie);
+                    }
+                }
+                return Task.CompletedTask;
+            },
+            OnRemoteFailure = context =>
+            {
+                // Prevent infinite redirect loops on correlation failure by redirecting to home
+                context.Response.Redirect("/");
+                context.HandleResponse();
+                return Task.CompletedTask;
+            }
         };
     });
 

@@ -42,9 +42,9 @@ Switch the platform from a hardcoded English-only application to a fully localiz
 
 ## Technical Checklist
 
-- [ ] Add `AddLocalization()` to `ServiceDefaults`.
-- [ ] Create `App.en.resx` and `App.hu.resx` in `WebUi`.
-- [ ] Create `Messages.en.resx` and `Messages.hu.resx` in `Application`.
-- [ ] Update `MainLayout.razor` with a Language Switcher.
-- [ ] Replace all static text in `Practice.razor` and `TutorTerminal.razor` with `Localizer["Key"]`.
-- [ ] Verify Hungarian character encoding (UTF-8) is handled correctly.
+- [x] Add `AddLocalization()` to `ServiceDefaults`.
+- [x] Create `App.en.resx` and `App.hu.resx` in `WebUi`.
+- [x] Create `Messages.en.resx` and `Messages.hu.resx` in `Application`.
+- [x] Update `MainLayout.razor` with a Language Switcher.
+- [x] Replace all static text in `Practice.razor` and `TutorTerminal.razor` with `Localizer["Key"]`.
+- [x] Verify Hungarian character encoding (UTF-8) is handled correctly.

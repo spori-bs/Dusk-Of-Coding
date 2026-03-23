@@ -98,9 +98,11 @@ This project was built iteratively using a sequence of specialized AI prompts. C
    - **Goal:** Replace the default Blazor error bar with a premium branded `<ErrorBoundary>`. Implement a custom `AuthDelegatingHandler` for graceful 401/403 handling. Create a branded "Access Denied" page.
 9. **RBAC & Identity UX (`phase9-rbac-identity-master-prompt.md` / `phase9-rbac-identity-context.md`)**
    - **Goal:** Introduce `admin` and `student` Keycloak roles with proper JWT claim mapping. Refactor the Landing Page and Navigation with `<AuthorizeView>`. Build an Admin Dashboard with aggregate student analytics.
-10. **User Feedback System (`phase10-feedback-system-master-prompt.md` / `phase10-feedback-system-context.md`)**
+10. **HTTP 431 Resolution (`phase10-http-431-resolution-master-prompt.md`)**
+    - **Goal:** Permanently resolve the "HTTP 431 Request Header Fields Too Large" error. Implement a memory-based `ITicketStore` for the Web UI to prevent `SaveTokens = true` from chunking immense OIDC token cookies, and proactively clear stale correlation and nonce cookies during identity provider redirect loops.
+11. **User Feedback System (`phase11-feedback-system-master-prompt.md` / `phase11-feedback-system-context.md`)**
     - **Goal:** Allow students to rate tasks and submit feedback. Store feedback in the database. Expose admin-facing analytics and feedback summaries.
-11. **How It Was Made (`phase11-how-it-was-made-master-prompt.md` / `phase11-how-it-was-made-context.md`)**
+12. **How It Was Made (`phase12-how-it-was-made-master-prompt.md` / `phase12-how-it-was-made-context.md`)**
     - **Goal:** A premium storytelling/teaser page at `/how-it-was-made`. Explaining the "vibecoding" philosophy, showing the iterative prompt-driven development, and creating a "wow" experience that showcases the platform's unique AI-driven origin.
-12. **Visionary UI/UX Design (`phase12-visionary-design-master-prompt.md`)**
+13. **Visionary UI/UX Design (`phase13-visionary-design-master-prompt.md` / `phase13-visionary-design-context.md`)**
     - **Goal:** Create a cinematic, state-of-the-art 2026 next-gen aesthetic for the platform. Implement an ethereal cyber-noir theme with glassmorphism, dynamic scroll-driven animations, and interactive WebGL elements to elevate the overall user experience.
