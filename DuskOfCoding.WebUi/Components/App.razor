@@ -28,12 +28,34 @@
 
 </html>
 
+@implements IDisposable
+@inject PersistentComponentState ApplicationState
+
 @code {
+    private PersistingComponentStateSubscription _subscription;
+    private string? _token;
+
     protected override async Task OnInitializedAsync()
     {
+        _subscription = ApplicationState.RegisterOnPersisting(PersistToken);
         if (HttpContextAccessor.HttpContext != null)
         {
-            TokenProvider.AccessToken = await HttpContextAccessor.HttpContext.GetTokenAsync("access_token");
+            _token = await HttpContextAccessor.HttpContext.GetTokenAsync("access_token");
+            TokenProvider.AccessToken = _token;
         }
+    }
+
+    private Task PersistToken()
+    {
+        if (!string.IsNullOrEmpty(_token))
+        {
+            ApplicationState.PersistAsJson("AccessToken", _token);
+        }
+        return Task.CompletedTask;
+    }
+
+    public void Dispose()
+    {
+        _subscription.Dispose();
     }
 }

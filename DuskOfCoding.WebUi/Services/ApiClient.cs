@@ -21,8 +21,11 @@ public class ApiClient
         _tokenProvider = tokenProvider;
         _localizer = localizer;
         _nav = nav;
-        
-        if (!string.IsNullOrEmpty(_tokenProvider.AccessToken))
+    }
+
+    private void EnsureAuthHeader()
+    {
+        if (!string.IsNullOrEmpty(_tokenProvider.AccessToken) && _http.DefaultRequestHeaders.Authorization == null)
         {
             _http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _tokenProvider.AccessToken);
         }
@@ -57,6 +60,7 @@ public class ApiClient
     {
         try
         {
+            EnsureAuthHeader();
             var response = await _http.GetAsync("/tasks");
             if (HandleAuthErrors(response)) return Result<List<TaskDto>>.Failure(string.Empty);
             
@@ -77,6 +81,7 @@ public class ApiClient
     {
         try
         {
+            EnsureAuthHeader();
             var response = await _http.GetAsync($"/tasks/{id}");
             if (HandleAuthErrors(response)) return Result<TaskDto>.Failure(string.Empty);
 
@@ -100,6 +105,7 @@ public class ApiClient
     {
         try
         {
+            EnsureAuthHeader();
             var response = await _http.PostAsJsonAsync("/tasks", dto);
             if (HandleAuthErrors(response)) return Result<TaskDto>.Failure(string.Empty);
 
@@ -121,6 +127,7 @@ public class ApiClient
     {
         try
         {
+            EnsureAuthHeader();
             var response = await _http.PutAsJsonAsync($"/tasks/{id}", dto);
             if (HandleAuthErrors(response)) return Result<TaskDto>.Failure(string.Empty);
 
@@ -142,6 +149,7 @@ public class ApiClient
     {
         try
         {
+            EnsureAuthHeader();
             var response = await _http.DeleteAsync($"/tasks/{id}");
             if (HandleAuthErrors(response)) return Result.Failure(string.Empty);
 
@@ -163,6 +171,7 @@ public class ApiClient
     {
         try
         {
+            EnsureAuthHeader();
             var payload = new SubmitCodeDto 
             { 
                 TaskId = taskId, 
@@ -190,6 +199,7 @@ public class ApiClient
     {
         try
         {
+            EnsureAuthHeader();
             var response = await _http.GetAsync($"/submissions/{id}");
             if (HandleAuthErrors(response)) return Result<SubmissionResultDto>.Failure(string.Empty);
 
@@ -219,6 +229,7 @@ public class ApiClient
     {
         try
         {
+            EnsureAuthHeader();
             var response = await _http.GetAsync("/admin/stats");
             if (HandleAuthErrors(response)) return Result<AdminStatsDto>.Failure(string.Empty);
 
@@ -232,6 +243,72 @@ public class ApiClient
         catch (HttpRequestException ex)
         {
             return Result<AdminStatsDto>.Failure(_localizer["Error_Network", ex.Message]);
+        }
+    }
+
+    // ---- Feedback ----
+
+    public async Task<Result<object>> SubmitFeedbackAsync(CreateFeedbackDto dto, CancellationToken ct = default)
+    {
+        try
+        {
+            EnsureAuthHeader();
+            var response = await _http.PostAsJsonAsync("/feedback", dto, ct);
+            if (HandleAuthErrors(response)) return Result<object>.Failure(string.Empty);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var data = await response.Content.ReadFromJsonAsync<object>(cancellationToken: ct);
+                return Result<object>.Success(data!);
+            }
+            var err = await response.Content.ReadAsStringAsync(ct);
+            return Result<object>.Failure($"Failed to submit feedback: {response.StatusCode} - {err}");
+        }
+        catch (HttpRequestException ex)
+        {
+            return Result<object>.Failure(_localizer["Error_Network", ex.Message]);
+        }
+    }
+
+    public async Task<Result<FeedbackSummaryDto>> GetFeedbackSummaryAsync(Guid taskId, CancellationToken ct = default)
+    {
+        try
+        {
+            EnsureAuthHeader();
+            var response = await _http.GetAsync($"/feedback/task/{taskId}/summary", ct);
+            if (HandleAuthErrors(response)) return Result<FeedbackSummaryDto>.Failure(string.Empty);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var data = await response.Content.ReadFromJsonAsync<FeedbackSummaryDto>(cancellationToken: ct);
+                return Result<FeedbackSummaryDto>.Success(data!);
+            }
+            return Result<FeedbackSummaryDto>.Failure($"Failed to load feedback summary: {response.StatusCode}");
+        }
+        catch (HttpRequestException ex)
+        {
+            return Result<FeedbackSummaryDto>.Failure(_localizer["Error_Network", ex.Message]);
+        }
+    }
+
+    public async Task<Result<List<TaskFeedbackOverviewDto>>> GetAdminFeedbackOverviewAsync(CancellationToken ct = default)
+    {
+        try
+        {
+            EnsureAuthHeader();
+            var response = await _http.GetAsync("/feedback/overview", ct);
+            if (HandleAuthErrors(response)) return Result<List<TaskFeedbackOverviewDto>>.Failure(string.Empty);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var data = await response.Content.ReadFromJsonAsync<List<TaskFeedbackOverviewDto>>(cancellationToken: ct) ?? new();
+                return Result<List<TaskFeedbackOverviewDto>>.Success(data);
+            }
+            return Result<List<TaskFeedbackOverviewDto>>.Failure($"Failed to load overview: {response.StatusCode}");
+        }
+        catch (HttpRequestException ex)
+        {
+            return Result<List<TaskFeedbackOverviewDto>>.Failure(_localizer["Error_Network", ex.Message]);
         }
     }
 }
@@ -289,4 +366,38 @@ public class FeedbackDto
     public List<string>? CompilationMessages { get; set; }
     public List<string>? TestMessages { get; set; }
     public string? AiReviewRemarks { get; set; }
+}
+
+public class CreateFeedbackDto
+{
+    public Guid TaskId { get; set; }
+    public int Rating { get; set; }
+    public string? Comment { get; set; }
+    public string FeedbackType { get; set; } = "rating";
+}
+
+public class FeedbackSummaryDto
+{
+    public Guid TaskId { get; set; }
+    public double AverageRating { get; set; }
+    public int TotalFeedbackCount { get; set; }
+    public Dictionary<int, int> RatingDistribution { get; set; } = new();
+    public List<FeedbackCommentDto> RecentComments { get; set; } = new();
+}
+
+public class FeedbackCommentDto
+{
+    public int Rating { get; set; }
+    public string? Comment { get; set; }
+    public string FeedbackType { get; set; } = string.Empty;
+    public DateTime CreatedAt { get; set; }
+}
+
+public class TaskFeedbackOverviewDto
+{
+    public Guid TaskId { get; set; }
+    public string TaskTitle { get; set; } = string.Empty;
+    public double AverageRating { get; set; }
+    public int FeedbackCount { get; set; }
+    public DateTime LatestFeedbackDate { get; set; }
 }

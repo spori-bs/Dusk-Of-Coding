@@ -236,6 +236,45 @@ submissionsGroup.MapGet("/{id:guid}", async (Guid id, Microsoft.AspNetCore.Http.
     return Results.Ok(result);
 });
 
+var feedbackGroup = app.MapGroup("/feedback").WithTags("Feedback").RequireAuthorization();
+
+feedbackGroup.MapPost("/", async (
+    [FromBody] DuskOfCoding.Application.DTOs.CreateFeedbackDto request,
+    Microsoft.AspNetCore.Http.HttpContext httpContext,
+    IFeedbackService feedbackService,
+    CancellationToken ct) =>
+{
+    var userIdClaim = httpContext.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+    if (userIdClaim == null || !Guid.TryParse(userIdClaim, out var userId))
+        return Results.Unauthorized();
+
+    if (request.Rating < 0 || request.Rating > 5)
+        return Results.BadRequest(new { error = "Rating must be between 0 and 5." });
+
+    if (request.Comment?.Length > 2000)
+        return Results.BadRequest(new { error = "Comment cannot exceed 2000 characters." });
+
+    var feedback = await feedbackService.SubmitFeedbackAsync(userId, request, ct);
+    return Results.Ok(feedback);
+});
+
+feedbackGroup.MapGet("/task/{taskId:guid}/summary", [Microsoft.AspNetCore.Authorization.Authorize(Roles = "admin")] async (
+    Guid taskId,
+    IFeedbackService feedbackService,
+    CancellationToken ct) =>
+{
+    var summary = await feedbackService.GetTaskFeedbackSummaryAsync(taskId, ct);
+    return Results.Ok(summary);
+});
+
+feedbackGroup.MapGet("/overview", [Microsoft.AspNetCore.Authorization.Authorize(Roles = "admin")] async (
+    IFeedbackService feedbackService,
+    CancellationToken ct) =>
+{
+    var overview = await feedbackService.GetPlatformFeedbackOverviewAsync(ct);
+    return Results.Ok(overview);
+});
+
 // SignalR hub for real-time tutor responses
 app.MapHub<TutorHub>("/hubs/tutor");
 

@@ -47,7 +47,9 @@ builder.Services.AddAuthentication(options =>
 .AddCookie(options =>
 {
     options.Cookie.SameSite = SameSiteMode.None;
-    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    options.Cookie.SecurePolicy = builder.Environment.IsDevelopment() 
+    ? CookieSecurePolicy.SameAsRequest 
+    : CookieSecurePolicy.Always;
     // Chunking is less necessary now with ITicketStore, but safe to keep
     options.CookieManager = new ChunkingCookieManager();
 })

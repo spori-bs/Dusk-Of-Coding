@@ -1,4 +1,8 @@
 @using Microsoft.AspNetCore.Components.Authorization
+@inject PersistentComponentState ApplicationState
+@inject DuskOfCoding.WebUi.Services.TokenProvider TokenProvider
+@implements IDisposable
+
 <CascadingAuthenticationState>
     <Router AppAssembly="typeof(DuskOfCoding.WebUi.Components.Routes).Assembly">
         <Found Context="routeData">
@@ -13,3 +17,30 @@
         </NotFound>
     </Router>
 </CascadingAuthenticationState>
+
+@code {
+    private PersistingComponentStateSubscription _subscription;
+
+    protected override void OnInitialized()
+    {
+        _subscription = ApplicationState.RegisterOnPersisting(PersistToken);
+        if (ApplicationState.TryTakeFromJson<string>("AccessToken", out var token))
+        {
+            TokenProvider.AccessToken = token;
+        }
+    }
+
+    private Task PersistToken()
+    {
+        if (!string.IsNullOrEmpty(TokenProvider.AccessToken))
+        {
+            ApplicationState.PersistAsJson("AccessToken", TokenProvider.AccessToken);
+        }
+        return Task.CompletedTask;
+    }
+
+    public void Dispose()
+    {
+        _subscription.Dispose();
+    }
+}

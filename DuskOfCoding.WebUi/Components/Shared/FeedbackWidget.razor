@@ -1,0 +1,149 @@
+@using DuskOfCoding.WebUi.Services
+@using DuskOfCoding.WebUi.Resources
+@using Microsoft.Extensions.Localization
+@inject ApiClient Api
+@inject IStringLocalizer<SharedResource> L
+
+<div class="feedback-widget dusk-glass-panel p-4 mt-4 @(_isVisible ? "visible" : "")">
+    @if (_isSuccess)
+    {
+        <div class="text-center py-4">
+            <i class="bi bi-check-circle text-success display-4 mb-3 d-block"></i>
+            <h5 class="text-white fw-bold">@L["Feedback_Success"]</h5>
+        </div>
+    }
+    else
+    {
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="text-white fw-bold mb-0">@L["Feedback_Title"]</h5>
+            <div class="star-rating">
+                @for (int i = 1; i <= 5; i++)
+                {
+                    int starValue = i;
+                    <i class="bi @(starValue <= _rating ? "bi-star-fill text-warning" : "bi-star text-secondary") cursor-pointer ms-1 fs-5" 
+                       @onclick="() => SetRating(starValue)"></i>
+                }
+            </div>
+        </div>
+
+        @if (!string.IsNullOrEmpty(_errorMessage))
+        {
+            <div class="alert alert-danger py-2 px-3 small mb-3">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i> @_errorMessage
+            </div>
+        }
+
+        <div class="row g-2 mb-3">
+            <div class="col-md-4">
+                <select class="form-select dusk-input small" @bind="_feedbackType">
+                    <option value="rating">@L["Feedback_Title"]</option>
+                    <option value="bug_report">@L["Feedback_ReportBug"]</option>
+                    <option value="suggestion">@L["Feedback_Suggestion"]</option>
+                </select>
+            </div>
+            <div class="col-md-8">
+                <textarea class="form-control dusk-input flex-grow-1" rows="2" 
+                          placeholder="@L["Feedback_CommentPlaceholder"]" 
+                          @bind="_comment"></textarea>
+            </div>
+        </div>
+
+        <div class="text-end">
+            <button class="btn btn-outline-primary btn-sm px-4 fw-bold" 
+                    @onclick="SubmitFeedback" disabled="@_isSubmitting">
+                @if (_isSubmitting)
+                {
+                    <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                }
+                else
+                {
+                    <i class="bi bi-send me-2"></i>
+                }
+                @L["Feedback_Submit"]
+            </button>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public Guid TaskId { get; set; }
+
+    private bool _isVisible = false;
+    private int _rating = 0;
+    private string _comment = string.Empty;
+    private string _feedbackType = "rating";
+    private bool _isSubmitting = false;
+    private bool _isSuccess = false;
+    private string? _errorMessage;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Trigger the CSS slide-up transition
+            await Task.Delay(50);
+            _isVisible = true;
+            StateHasChanged();
+        }
+    }
+
+    private void SetRating(int rating)
+    {
+        _rating = rating;
+    }
+
+    private async Task SubmitFeedback()
+    {
+        if (_rating == 0 && string.IsNullOrWhiteSpace(_comment))
+        {
+            return; // Don't submit completely empty feedback
+        }
+
+        _isSubmitting = true;
+        _errorMessage = null;
+
+        var dto = new CreateFeedbackDto
+        {
+            TaskId = TaskId,
+            Rating = _rating,
+            Comment = _comment,
+            FeedbackType = _feedbackType
+        };
+
+        var result = await Api.SubmitFeedbackAsync(dto);
+        if (result.IsSuccess)
+        {
+            _isSuccess = true;
+        }
+        else
+        {
+            _errorMessage = result.ErrorMessage ?? L["Feedback_Error"];
+        }
+
+        _isSubmitting = false;
+    }
+}
+
+<style>
+    .feedback-widget {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.5s ease, transform 0.5s ease;
+        border-top: 2px solid rgba(255, 193, 7, 0.3); /* Subtle yellow/warning hint */
+    }
+    
+    .feedback-widget.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .cursor-pointer {
+        cursor: pointer;
+    }
+
+    .star-rating i:hover {
+        transform: scale(1.1);
+        transition: transform 0.2s ease;
+    }
+</style>
