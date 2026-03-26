@@ -153,5 +153,36 @@
   <data name="Landing_ManageTasks" xml:space="preserve"><value>Feladatok kezelése</value></data>
   <data name="Landing_WatchDemo" xml:space="preserve"><value>Bemutató</value></data>
   <data name="Landing_GetStarted" xml:space="preserve"><value>Kezdés</value></data>
+  <!-- API Errors -->
+  <data name="Error_FetchTasks" xml:space="preserve"><value>Failed to fetch tasks: {0}</value></data>
+  <data name="Error_Network" xml:space="preserve"><value>Network error: {0}</value></data>
+  <data name="Error_TaskNotFound" xml:space="preserve"><value>Task not found.</value></data>
+  <data name="Error_FetchTask" xml:space="preserve"><value>Failed to fetch task: {0}</value></data>
+  <data name="Error_CreateTask" xml:space="preserve"><value>Failed to create task: {0}. {1}</value></data>
+  <data name="Error_UpdateTask" xml:space="preserve"><value>Failed to update task: {0}. {1}</value></data>
+  <data name="Error_DeleteTask" xml:space="preserve"><value>Failed to delete task: {0}</value></data>
+  <data name="Error_SubmitCode" xml:space="preserve"><value>Submission failed: {0}. {1}</value></data>
+  <data name="Error_FetchSubmission" xml:space="preserve"><value>Failed to fetch submission: {0}</value></data>
+
+  <!-- Feedback Widget -->
+  <data name="Feedback_Title" xml:space="preserve"><value>Rate this task</value></data>
+  <data name="Feedback_ReportBug" xml:space="preserve"><value>Report a bug</value></data>
+  <data name="Feedback_Suggestion" xml:space="preserve"><value>Suggestion</value></data>
+  <data name="Feedback_CommentPlaceholder" xml:space="preserve"><value>Optional comments or feedback...</value></data>
+  <data name="Feedback_Submit" xml:space="preserve"><value>Submit Feedback</value></data>
+  <data name="Feedback_Success" xml:space="preserve"><value>Thank you for your feedback!</value></data>
+  <data name="Feedback_Error" xml:space="preserve"><value>Failed to submit feedback.</value></data>
+
+  <!-- Auth UI -->
+  <data name="Auth_Login" xml:space="preserve"><value>Bejelentkezés</value></data>
+  <data name="Auth_Logout" xml:space="preserve"><value>Kijelentkezés</value></data>
+  <data name="Auth_AdminBadge" xml:space="preserve"><value>Admin</value></data>
+  <data name="Nav_Dashboard" xml:space="preserve"><value>Irányítópult</value></data>
+
+  <!-- Access Denied -->
+  <data name="AccessDenied_Title" xml:space="preserve"><value>Hozzáférés megtagadva</value></data>
+  <data name="AccessDenied_Heading" xml:space="preserve"><value>Hozzáférés megtagadva</value></data>
+  <data name="AccessDenied_Message" xml:space="preserve"><value>Nincs jogosultságod az oldal megtekintéséhez.</value></data>
+  <data name="AccessDenied_GoHome" xml:space="preserve"><value>Vissza a főoldalra</value></data>
 </root>
 

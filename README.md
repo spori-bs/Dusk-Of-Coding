@@ -98,8 +98,15 @@ This project was built iteratively using a sequence of specialized AI prompts. C
    - **Goal:** Replace the default Blazor error bar with a premium branded `<ErrorBoundary>`. Implement a custom `AuthDelegatingHandler` for graceful 401/403 handling. Create a branded "Access Denied" page.
 9. **RBAC & Identity UX (`phase9-rbac-identity-master-prompt.md` / `phase9-rbac-identity-context.md`)**
    - **Goal:** Introduce `admin` and `student` Keycloak roles with proper JWT claim mapping. Refactor the Landing Page and Navigation with `<AuthorizeView>`. Build an Admin Dashboard with aggregate student analytics.
-10. **User Feedback System (`phase10-feedback-system-master-prompt.md` / `phase10-feedback-system-context.md`)**
-    - **Goal:** Allow students to rate tasks and submit feedback. Store feedback in the database. Expose admin-facing analytics and feedback summaries.
-11. **How It Was Made (`phase11-how-it-was-made-master-prompt.md` / `phase11-how-it-was-made-context.md`)**
-    - **Goal:** A premium storytelling/teaser page at `/how-it-was-made`. Explaining the "vibecoding" philosophy, showing the iterative prompt-driven development, and creating a "wow" experience that showcases the platform's unique AI-driven origin.
-
+10. **HTTP 431 Resolution (`phase10-http-431-resolution-master-prompt.md`)**
+    - **Goal:** Permanently resolve "Request Header Too Large" errors by implementing memory-based `ITicketStore` for OIDC tokens and proactive cookie cleanup.
+11. **User Feedback System (`phase11-feedback-system-master-prompt.md` / `phase11-feedback-system-context.md`)**
+    - **Goal:** Comprehensive student feedback management, allowing task ratings and comments with admin-facing aggregate analytics.
+12. **Keycloak Hardening & Security Audit (`_ArchivePrompts/phase12-*`)**
+    - **Phase 12.1 - Root Cause Analysis:** Deep-dive into OIDC correlation failures, issuer mismatches, and Blazor circuit-to-SSR state transitions.
+    - **Phase 12.2 - Pipeline Fix:** Systematic repair of the authentication pipeline, addressing WebSocket state issues and multi-network trust chains.
+    - **Phase 12.3 - Principal Security Audit:** Implementation of OIDC role mapping standardization (`roles` claim), securing sensitive tokens (erasing `PersistentComponentState` leaks), enforcing `Confidential Client` secrets, and conditional dev-cert validation logic.
+13. **How It Was Made (`phase13-how-it-was-made-master-prompt.md`)**
+    - **Goal:** A premium storytelling/teaser page at `/how-it-was-made`. Explaining the "vibecoding" philosophy and demonstrating the iterative prompt-driven development.
+14. **Visionary UI/UX Design (`phase14-visionary-design-master-prompt.md`)**
+    - **Goal:** Cinematic next-gen aesthetic with glassmorphism, dynamic animations, and WebGL integration to elevate the overall user experience.

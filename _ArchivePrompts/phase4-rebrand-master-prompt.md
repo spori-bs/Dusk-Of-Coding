@@ -78,19 +78,19 @@ Update the README to reflect:
 
 All instances of "PracticePlatform" must be identified and updated across:
 
-- [ ] Solution and project names (`.slnx`, `.csproj`)
-- [ ] Namespaces throughout all C# files
-- [ ] Assembly names and metadata
-- [ ] Aspire AppHost configuration and service names
-- [ ] Docker container names and configurations
-- [ ] Database connection strings and context names
-- [ ] API route prefixes and Swagger/Scalar documentation titles
-- [ ] Blazor page titles, navigation labels, and layout components
-- [ ] Localization resources (`.resx` files) and bilingual text (EN/HU)
-- [ ] Environment variables and configuration files (`appsettings.json` for WebAPI and TutorWorker)
-- [ ] CI/CD pipeline references (if any)
-- [ ] README.md and all documentation files
-- [ ] Landing page content and branding
+- [x] Solution and project names (`.slnx`, `.csproj`)
+- [x] Namespaces throughout all C# files
+- [x] Assembly names and metadata
+- [x] Aspire AppHost configuration and service names
+- [x] Docker container names and configurations
+- [x] Database connection strings and context names
+- [x] API route prefixes and Swagger/Scalar documentation titles
+- [x] Blazor page titles, navigation labels, and layout components
+- [x] Localization resources (`.resx` files) and bilingual text (EN/HU)
+- [x] Environment variables and configuration files (`appsettings.json` for WebAPI and TutorWorker)
+- [x] CI/CD pipeline references (if any)
+- [x] README.md and all documentation files
+- [x] Landing page content and branding
 
 ---
 

@@ -1,7 +1,9 @@
 @using DuskOfCoding.WebUi.Resources
 @inject IStringLocalizer<SharedResource> L
 
-<section id="get-started" class="lead-form-section py-5 text-center position-relative">
+<AuthorizeView>
+    <NotAuthorized>
+        <section id="get-started" class="lead-form-section py-5 text-center position-relative">
     <div class="container py-5 position-relative z-1">
         <h2 class="display-5 fw-bold text-white mb-3">@L["Lead_Heading"]</h2>
         <p class="lead text-white-50 mb-5 mx-auto" style="max-width: 600px;">@L["Lead_Subheading"]</p>
@@ -44,7 +46,9 @@
             </div>
         </div>
     </div>
-</section>
+        </section>
+    </NotAuthorized>
+</AuthorizeView>
 
 <style>
     .lead-form-section {

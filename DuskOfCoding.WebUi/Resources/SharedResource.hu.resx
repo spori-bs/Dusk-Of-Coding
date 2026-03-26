@@ -154,5 +154,36 @@
   <data name="Landing_ManageTasks" xml:space="preserve"><value>Feladatok kezelése</value></data>
   <data name="Landing_WatchDemo" xml:space="preserve"><value>Bemutató</value></data>
   <data name="Landing_GetStarted" xml:space="preserve"><value>Kezdés</value></data>
+  <!-- API Errors -->
+  <data name="Error_FetchTasks" xml:space="preserve"><value>A feladatlista betöltése váratlan akadályba ütközött. (Hibakód: {0})</value></data>
+  <data name="Error_Network" xml:space="preserve"><value>Hálózati hiba történt. Kérjük, ellenőrizze az internetkapcsolatot. ({0})</value></data>
+  <data name="Error_TaskNotFound" xml:space="preserve"><value>A keresett feladat már nem érhető el, vagy esetleg törölték a rendszerből.</value></data>
+  <data name="Error_FetchTask" xml:space="preserve"><value>Ennek a feladatnak a betöltése jelenleg nem lehetséges. (Hibakód: {0})</value></data>
+  <data name="Error_CreateTask" xml:space="preserve"><value>A feladat létrehozása közben hiba lépett fel. ({0}: {1})</value></data>
+  <data name="Error_UpdateTask" xml:space="preserve"><value>A módosítások mentése sikertelen volt. ({0}: {1})</value></data>
+  <data name="Error_DeleteTask" xml:space="preserve"><value>A feladat végleges törlését a rendszer váratlanul megtagadta. (Hibakód: {0})</value></data>
+  <data name="Error_SubmitCode" xml:space="preserve"><value>A megoldás kiértékelésre való elküldése megszakadt. ({0}: {1})</value></data>
+  <data name="Error_FetchSubmission" xml:space="preserve"><value>A korábbi kiértékelés eredményét jelenleg nem tudjuk megjeleníteni. (Hibakód: {0})</value></data>
+
+  <!-- Feedback Widget -->
+  <data name="Feedback_Title" xml:space="preserve"><value>Értékeld a feladatot</value></data>
+  <data name="Feedback_ReportBug" xml:space="preserve"><value>Hiba bejelentése</value></data>
+  <data name="Feedback_Suggestion" xml:space="preserve"><value>Javaslat</value></data>
+  <data name="Feedback_CommentPlaceholder" xml:space="preserve"><value>Opcionális megjegyzés vagy visszajelzés...</value></data>
+  <data name="Feedback_Submit" xml:space="preserve"><value>Visszajelzés küldése</value></data>
+  <data name="Feedback_Success" xml:space="preserve"><value>Köszönjük a visszajelzésedet!</value></data>
+  <data name="Feedback_Error" xml:space="preserve"><value>Nem sikerült elküldeni a visszajelzést.</value></data>
+
+  <!-- Auth UI -->
+  <data name="Auth_Login" xml:space="preserve"><value>Bejelentkezés</value></data>
+  <data name="Auth_Logout" xml:space="preserve"><value>Kijelentkezés</value></data>
+  <data name="Auth_AdminBadge" xml:space="preserve"><value>Admin</value></data>
+  <data name="Nav_Dashboard" xml:space="preserve"><value>Irányítópult</value></data>
+
+  <!-- Access Denied -->
+  <data name="AccessDenied_Title" xml:space="preserve"><value>Hozzáférés megtagadva</value></data>
+  <data name="AccessDenied_Heading" xml:space="preserve"><value>Hozzáférés megtagadva</value></data>
+  <data name="AccessDenied_Message" xml:space="preserve"><value>Nincs jogosultságod az oldal megtekintéséhez.</value></data>
+  <data name="AccessDenied_GoHome" xml:space="preserve"><value>Vissza a főoldalra</value></data>
 </root>
 

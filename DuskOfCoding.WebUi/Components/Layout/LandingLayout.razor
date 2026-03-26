@@ -1,16 +1,45 @@
 @inherits LayoutComponentBase
 @using DuskOfCoding.WebUi.Resources
 @inject IStringLocalizer<SharedResource> L
+@inject NavigationManager NavigationManager
 
 <div class="landing-page-wrapper">
     <header class="landing-header">
         <a href="" class="landing-logo">@L["AppTitle"]</a>
-        <!-- Distraction-free: No complex navigation links -->
         <div class="d-flex align-items-center">
-            <a href="/practice" class="btn btn-link dusk-nav-link text-decoration-none me-4">@L["Landing_Practice"]</a>
-            <a href="/tasks" class="btn btn-link dusk-nav-link text-decoration-none me-4">@L["Landing_ManageTasks"]</a>
+            <AuthorizeView>
+                <Authorized>
+                    <a href="/practice" class="btn btn-link dusk-nav-link text-decoration-none me-4">@L["Landing_Practice"]</a>
+                    <AuthorizeView Roles="admin">
+                        <Authorized Context="adminCtx">
+                            <a href="/tasks" class="btn btn-link dusk-nav-link text-decoration-none me-4">@L["Landing_ManageTasks"]</a>
+                        </Authorized>
+                    </AuthorizeView>
+                </Authorized>
+            </AuthorizeView>
             <a href="#demo" class="btn btn-outline-light btn-sm me-3 dusk-btn-outline">@L["Landing_WatchDemo"]</a>
-            <a href="/register" class="btn btn-primary btn-sm me-4 px-4">@L["Landing_GetStarted"]</a>
+            <AuthorizeView>
+                <Authorized>
+                    <span class="text-white me-3 d-none d-md-inline" style="font-size: 0.9rem;">
+                        <i class="bi bi-person-circle me-1"></i> @context.User.Identity?.Name
+                    </span>
+                    <AuthorizeView Roles="admin">
+                        <Authorized Context="adminCtx2">
+                            <span class="badge bg-warning text-dark me-3 px-2 py-1" style="font-size: 0.75rem;">
+                                <i class="bi bi-shield-lock-fill me-1"></i>@L["Auth_AdminBadge"]
+                            </span>
+                        </Authorized>
+                    </AuthorizeView>
+                    <form action="logout" method="post" class="m-0 me-3">
+                        <AntiforgeryToken />
+                        <button type="submit" class="btn btn-sm dusk-btn-outline">@L["Auth_Logout"]</button>
+                    </form>
+                </Authorized>
+                <NotAuthorized>
+                    <a href="login?returnUrl=%2Fpractice" class="btn btn-sm dusk-btn-outline me-3">@L["Auth_Login"]</a>
+                    <a href="/register" class="btn btn-primary btn-sm me-3 px-4">@L["Landing_GetStarted"]</a>
+                </NotAuthorized>
+            </AuthorizeView>
             <LanguageSelector />
         </div>
     </header>

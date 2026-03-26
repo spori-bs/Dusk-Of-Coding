@@ -12,9 +12,15 @@ using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.Limits.MaxRequestHeadersTotalSize = 131072; // 128KB
+});
+
 builder.AddServiceDefaults();
 
 // ── Dev certificate trust (Aspire service-to-service) ─────
+// Disabling DangerousAcceptAnyServerCertificateValidator using standard Aspire dev-certs.
 if (builder.Environment.IsDevelopment())
 {
     builder.Services.ConfigureHttpClientDefaults(http =>
@@ -44,9 +50,28 @@ builder.Services.AddAuthentication()
        .AddKeycloakJwtBearer("keycloak", realm: "DuskOfCoding", options =>
        {
            options.RequireHttpsMetadata = false;
-           options.BackchannelHttpHandler = new HttpClientHandler
+           if (builder.Environment.IsDevelopment())
            {
-               ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+               options.BackchannelHttpHandler = new HttpClientHandler
+               {
+                   ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+               };
+           }
+           else
+           {
+               options.BackchannelHttpHandler = new HttpClientHandler(); 
+           }
+           options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+           {
+               RoleClaimType = "roles",
+               ValidateAudience = false, // We rely on ValidIssuers in this POC, Audience mapper handles it in prod.
+               ValidateIssuer = true,
+               ValidIssuers = new[]
+               {
+                   "http://localhost:8080/realms/DuskOfCoding",
+                   "https+http://keycloak/realms/DuskOfCoding",
+                   "http://keycloak:8080/realms/DuskOfCoding"
+               }
            };
        });
 builder.Services.AddAuthorization();
@@ -98,19 +123,19 @@ tasksGroup.MapGet("/{id:guid}", async (Guid id, ITaskService taskService, Cancel
     return task is not null ? Results.Ok(task) : Results.NotFound();
 });
 
-tasksGroup.MapPost("/", async ([FromBody] DuskOfCoding.Application.DTOs.CreateTaskDto dto, ITaskService taskService, CancellationToken ct) =>
+tasksGroup.MapPost("/", [Microsoft.AspNetCore.Authorization.Authorize(Roles = "admin")] async ([FromBody] DuskOfCoding.Application.DTOs.CreateTaskDto dto, ITaskService taskService, CancellationToken ct) =>
 {
     var task = await taskService.CreateTaskAsync(dto, ct);
     return Results.Created($"/tasks/{task.Id}", task);
 });
 
-tasksGroup.MapPut("/{id:guid}", async (Guid id, [FromBody] DuskOfCoding.Application.DTOs.UpdateTaskDto dto, ITaskService taskService, CancellationToken ct) =>
+tasksGroup.MapPut("/{id:guid}", [Microsoft.AspNetCore.Authorization.Authorize(Roles = "admin")] async (Guid id, [FromBody] DuskOfCoding.Application.DTOs.UpdateTaskDto dto, ITaskService taskService, CancellationToken ct) =>
 {
     var task = await taskService.UpdateTaskAsync(id, dto, ct);
     return task is not null ? Results.Ok(task) : Results.NotFound();
 });
 
-tasksGroup.MapDelete("/{id:guid}", async (Guid id, ITaskService taskService, CancellationToken ct) =>
+tasksGroup.MapDelete("/{id:guid}", [Microsoft.AspNetCore.Authorization.Authorize(Roles = "admin")] async (Guid id, ITaskService taskService, CancellationToken ct) =>
 {
     var success = await taskService.DeleteTaskAsync(id, ct);
     return success ? Results.NoContent() : Results.NotFound();
@@ -137,6 +162,25 @@ tasksGroup.MapGet("/{id:guid}/stats", async (Guid id, DuskOfCoding.Infrastructur
         TotalSubmissions = totalTries, 
         AverageTries = Math.Round(averageTries, 1),
         SuccessRate = Math.Round((double)successfulUsers / totalUsers * 100, 1)
+    });
+});
+
+var adminGroup = app.MapGroup("/admin").WithTags("Admin").RequireAuthorization(new Microsoft.AspNetCore.Authorization.AuthorizeAttribute { Roles = "admin" });
+
+adminGroup.MapGet("/stats", async (DuskOfCoding.Infrastructure.Persistence.AppDbContext db, CancellationToken ct) => 
+{
+    var totalStudents = await db.Submissions.Where(s => s.UserId != null).Select(s => s.UserId).Distinct().CountAsync(ct);
+    var totalSubmissions = await db.Submissions.CountAsync(ct);
+    var totalTasks = await db.Tasks.CountAsync(ct);
+    var successfulSubmissions = await db.Submissions.CountAsync(s => s.Status == DuskOfCoding.Domain.Enums.SubmissionStatus.Success, ct);
+
+    double successRate = totalSubmissions > 0 ? ((double)successfulSubmissions / totalSubmissions) * 100 : 0;
+
+    return Results.Ok(new {
+        TotalStudents = totalStudents,
+        TotalTasks = totalTasks,
+        TotalSubmissions = totalSubmissions,
+        SuccessRate = Math.Round(successRate, 1)
     });
 });
 
@@ -206,6 +250,45 @@ submissionsGroup.MapGet("/{id:guid}", async (Guid id, Microsoft.AspNetCore.Http.
     }
 
     return Results.Ok(result);
+});
+
+var feedbackGroup = app.MapGroup("/feedback").WithTags("Feedback").RequireAuthorization();
+
+feedbackGroup.MapPost("/", async (
+    [FromBody] DuskOfCoding.Application.DTOs.CreateFeedbackDto request,
+    Microsoft.AspNetCore.Http.HttpContext httpContext,
+    IFeedbackService feedbackService,
+    CancellationToken ct) =>
+{
+    var userIdClaim = httpContext.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+    if (userIdClaim == null || !Guid.TryParse(userIdClaim, out var userId))
+        return Results.Unauthorized();
+
+    if (request.Rating < 0 || request.Rating > 5)
+        return Results.BadRequest(new { error = "Rating must be between 0 and 5." });
+
+    if (request.Comment?.Length > 2000)
+        return Results.BadRequest(new { error = "Comment cannot exceed 2000 characters." });
+
+    var feedback = await feedbackService.SubmitFeedbackAsync(userId, request, ct);
+    return Results.Ok(feedback);
+});
+
+feedbackGroup.MapGet("/task/{taskId:guid}/summary", [Microsoft.AspNetCore.Authorization.Authorize(Roles = "admin")] async (
+    Guid taskId,
+    IFeedbackService feedbackService,
+    CancellationToken ct) =>
+{
+    var summary = await feedbackService.GetTaskFeedbackSummaryAsync(taskId, ct);
+    return Results.Ok(summary);
+});
+
+feedbackGroup.MapGet("/overview", [Microsoft.AspNetCore.Authorization.Authorize(Roles = "admin")] async (
+    IFeedbackService feedbackService,
+    CancellationToken ct) =>
+{
+    var overview = await feedbackService.GetPlatformFeedbackOverviewAsync(ct);
+    return Results.Ok(overview);
 });
 
 // SignalR hub for real-time tutor responses

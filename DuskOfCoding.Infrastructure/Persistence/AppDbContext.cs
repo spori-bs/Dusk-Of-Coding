@@ -12,6 +12,7 @@ public class AppDbContext : DbContext
     public DbSet<TaskDefinition> Tasks => Set<TaskDefinition>();
     public DbSet<Submission> Submissions => Set<Submission>();
     public DbSet<FeedbackRecord> FeedbackRecords => Set<FeedbackRecord>();
+    public DbSet<UserFeedback> UserFeedbacks => Set<UserFeedback>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -47,6 +48,17 @@ public class AppDbContext : DbContext
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Summary).IsRequired();
             entity.HasOne<Submission>().WithOne(s => s.Feedback).HasForeignKey<FeedbackRecord>(e => e.SubmissionId);
+        });
+
+        // UserFeedback configuration
+        modelBuilder.Entity<UserFeedback>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.FeedbackType).IsRequired().HasMaxLength(50);
+            entity.Property(e => e.Comment).HasMaxLength(2000);
+            
+            // Index for efficient per-task, per-user queries and aggregation
+            entity.HasIndex(e => new { e.TaskId, e.UserId });
         });
 
         // Seed a default task

@@ -29,11 +29,10 @@
 </html>
 
 @code {
-    protected override async Task OnInitializedAsync()
+    protected override Task OnInitializedAsync()
     {
-        if (HttpContextAccessor.HttpContext != null)
-        {
-            TokenProvider.AccessToken = await HttpContextAccessor.HttpContext.GetTokenAsync("access_token");
-        }
+        // Token passing to interactive circuit is now handled securely
+        // via ServerAuthenticationStateProvider + ClaimsPrincipal
+        return Task.CompletedTask;
     }
 }

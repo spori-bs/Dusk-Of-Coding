@@ -8,17 +8,37 @@
         </NavLink>
     </div>
 
-    <div class="nav-item me-3">
-        <NavLink class="nav-link dusk-nav-link fw-semibold" href="practice">
-            <i class="bi bi-code-slash me-1"></i> @L["Nav_Practice"]
-        </NavLink>
-    </div>
+    <AuthorizeView>
+        <Authorized>
+            <div class="nav-item me-3">
+                <NavLink class="nav-link dusk-nav-link fw-semibold" href="practice">
+                    <i class="bi bi-code-slash me-1"></i> @L["Nav_Practice"]
+                </NavLink>
+            </div>
+        </Authorized>
+        <NotAuthorized>
+            <div class="nav-item me-3">
+                <NavLink class="nav-link dusk-nav-link fw-semibold" href="login">
+                    <i class="bi bi-box-arrow-in-right me-1"></i> @L["Auth_Login"]
+                </NavLink>
+            </div>
+        </NotAuthorized>
+    </AuthorizeView>
 
-    <div class="nav-item">
-        <NavLink class="nav-link dusk-nav-link fw-semibold" href="tasks">
-            <i class="bi bi-list-task me-1"></i> @L["Nav_ManageTasks"]
-        </NavLink>
-    </div>
+    <AuthorizeView Roles="admin">
+        <Authorized>
+            <div class="nav-item me-3">
+                <NavLink class="nav-link dusk-nav-link fw-semibold text-warning" href="admin">
+                    <i class="bi bi-speedometer2 me-1"></i> @L["Nav_Dashboard"]
+                </NavLink>
+            </div>
+            <div class="nav-item">
+                <NavLink class="nav-link dusk-nav-link fw-semibold" href="tasks">
+                    <i class="bi bi-list-task me-1"></i> @L["Nav_ManageTasks"]
+                </NavLink>
+            </div>
+        </Authorized>
+    </AuthorizeView>
     
     <div class="ms-4 border-start border-secondary opacity-50 ps-4">
         <LoginDisplay />

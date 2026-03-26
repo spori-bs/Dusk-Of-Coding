@@ -19,6 +19,13 @@
     <h2 class="display-6 fw-bold text-white mb-0">@Title</h2>
 </div>
 
+@if (!string.IsNullOrEmpty(_errorMessage))
+{
+    <div class="alert alert-danger dusk-glass-panel border-danger shadow-sm mb-4">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i> @_errorMessage
+    </div>
+}
+
 @if (_isLoading)
 {
     <p><em>@L["Loading"]</em></p>
@@ -81,6 +88,7 @@ else
     private CreateTaskDto _model = new();
     private string _tagsInput = "";
     private bool _isLoading = false;
+    private string? _errorMessage;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -88,14 +96,19 @@ else
         {
             _isLoading = true;
             StateHasChanged();
-            var task = await Api.GetTaskByIdAsync(Id!.Value);
-            if (task != null)
+            var result = await Api.GetTaskByIdAsync(Id!.Value);
+            if (result.IsSuccess && result.Value != null)
             {
+                var task = result.Value;
                 _model.Title = task.Title;
                 _model.Description = task.Description;
                 _model.DifficultyLevel = task.DifficultyLevel;
                 _model.TestBundleReference = task.TestBundleReference;
                 _tagsInput = string.Join(", ", task.Tags);
+            }
+            else
+            {
+                _errorMessage = result.ErrorMessage;
             }
             _isLoading = false;
             StateHasChanged();
@@ -104,6 +117,7 @@ else
 
     private async Task HandleValidSubmit()
     {
+        _errorMessage = null;
         _model.Tags = _tagsInput.Split(',', StringSplitOptions.RemoveEmptyEntries)
                                 .Select(t => t.Trim())
                                 .ToList();
@@ -118,11 +132,21 @@ else
                 Tags = _model.Tags,
                 TestBundleReference = _model.TestBundleReference
             };
-            await Api.UpdateTaskAsync(Id!.Value, updateDto);
+            var result = await Api.UpdateTaskAsync(Id!.Value, updateDto);
+            if (!result.IsSuccess)
+            {
+                _errorMessage = result.ErrorMessage;
+                return;
+            }
         }
         else
         {
-            await Api.CreateTaskAsync(_model);
+            var result = await Api.CreateTaskAsync(_model);
+            if (!result.IsSuccess)
+            {
+                _errorMessage = result.ErrorMessage;
+                return;
+            }
         }
 
         Nav.NavigateTo("/tasks");

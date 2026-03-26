@@ -22,6 +22,13 @@
     </a>
 </div>
 
+@if (!string.IsNullOrEmpty(_errorMessage))
+{
+    <div class="alert alert-danger dusk-glass-panel border-danger shadow-sm mb-4">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i> @_errorMessage
+    </div>
+}
+
 @if (_tasks == null)
 {
     <p><em>@L["Loading"]</em></p>
@@ -75,6 +82,7 @@ else
 
 @code {
     private List<TaskDto>? _tasks;
+    private string? _errorMessage;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -87,13 +95,30 @@ else
 
     private async Task LoadTasks()
     {
-        _tasks = await Api.GetTasksAsync();
+        _errorMessage = null;
+        var result = await Api.GetTasksAsync();
+        if (result.IsSuccess)
+        {
+            _tasks = result.Value;
+        }
+        else
+        {
+            _errorMessage = result.ErrorMessage;
+            _tasks = new List<TaskDto>();
+        }
     }
 
     private async Task DeleteTask(Guid id)
     {
-        await Api.DeleteTaskAsync(id);
-        await LoadTasks();
+        var result = await Api.DeleteTaskAsync(id);
+        if (!result.IsSuccess)
+        {
+            _errorMessage = result.ErrorMessage;
+        }
+        else
+        {
+            await LoadTasks();
+        }
     }
 }
 
