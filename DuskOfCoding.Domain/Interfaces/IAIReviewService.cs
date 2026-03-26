@@ -9,5 +9,6 @@ public interface IAIReviewService
         TaskDefinition task,
         Submission submission,
         ExecutionResult executionResult,
+        string? preferredLanguage = null,
         CancellationToken ct = default);
 }

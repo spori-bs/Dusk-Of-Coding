@@ -1,17 +1,15 @@
 using System.ClientModel;
 using Azure.AI.OpenAI;
 using Microsoft.Extensions.AI;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using OpenAI;
-using DuskOfCoding.TutorWorker.Configuration;
+using DuskOfCoding.Infrastructure.Configuration;
 
-namespace DuskOfCoding.TutorWorker.LlmClient;
+namespace DuskOfCoding.Infrastructure;
 
-/// <summary>
-/// Registers the correct IChatClient implementation based on configuration.
-/// Supports switching between OpenAI and Azure OpenAI via appsettings.json.
-/// </summary>
-public static class ChatClientRegistration
+public static class InfrastructureAiExtensions
 {
     public static IServiceCollection AddConfigurableChatClient(this IServiceCollection services)
     {
@@ -29,10 +27,7 @@ public static class ChatClientRegistration
                     $"Unknown LLM provider '{options.Provider}'. Supported: 'OpenAI', 'AzureOpenAI', 'Gemini'.")
             };
 
-            // Wrap with function-calling support for MCP tools
-            // and logging for observability
             return new ChatClientBuilder(innerClient)
-                .UseFunctionInvocation()
                 .UseLogging(logger)
                 .Build();
         });
@@ -43,50 +38,45 @@ public static class ChatClientRegistration
     private static IChatClient CreateOpenAIClient(LlmProviderOptions options)
     {
         if (string.IsNullOrWhiteSpace(options.OpenAIApiKey))
-            throw new InvalidOperationException(
-                "OpenAI API key is required. Set LlmProvider:OpenAIApiKey in configuration.");
+            throw new InvalidOperationException($"OpenAI API key is required when provider is set to '{options.Provider}'.");
 
-        var client = new OpenAIClient(new ApiKeyCredential(options.OpenAIApiKey));
+        // Use the official OpenAI library explicitly
+        var client = new global::OpenAI.OpenAIClient(new ApiKeyCredential(options.OpenAIApiKey));
         return client.GetChatClient(options.ModelId).AsIChatClient();
     }
 
     private static IChatClient CreateGeminiClient(LlmProviderOptions options)
     {
         if (string.IsNullOrWhiteSpace(options.GeminiApiKey))
-            throw new InvalidOperationException(
-                "Gemini API key is required. Set LlmProvider:GeminiApiKey in configuration.");
+            throw new InvalidOperationException($"Gemini API key is required when provider is set to '{options.Provider}'.");
 
-        // Gemini natively supports the OpenAI API contract.
-        var clientOptions = new OpenAIClientOptions
+        // Gemini's OpenAI-compatible endpoint. 
+        // Note: Some clients are sensitive to the trailing slash or the way the model is appended.
+        var clientOptions = new global::OpenAI.OpenAIClientOptions
         {
             Endpoint = new Uri("https://generativelanguage.googleapis.com/v1beta/openai/")
         };
         
-        var client = new OpenAIClient(new ApiKeyCredential(options.GeminiApiKey), clientOptions);
+        var client = new global::OpenAI.OpenAIClient(new ApiKeyCredential(options.GeminiApiKey), clientOptions);
+        
+        // Return the client directly using the extension method
         return client.GetChatClient(options.ModelId).AsIChatClient();
     }
 
     private static IChatClient CreateAzureOpenAIClient(LlmProviderOptions options)
     {
         if (string.IsNullOrWhiteSpace(options.AzureEndpoint))
-            throw new InvalidOperationException(
-                "Azure OpenAI endpoint is required. Set LlmProvider:AzureEndpoint in configuration.");
+            throw new InvalidOperationException($"Azure OpenAI endpoint is required when provider is set to '{options.Provider}'.");
 
-        AzureOpenAIClient azureClient;
-
+        // Use Azure.AI.OpenAI explicitly
+        global::Azure.AI.OpenAI.AzureOpenAIClient azureClient;
         if (!string.IsNullOrWhiteSpace(options.AzureApiKey))
         {
-            // API key auth
-            azureClient = new AzureOpenAIClient(
-                new Uri(options.AzureEndpoint),
-                new ApiKeyCredential(options.AzureApiKey));
+            azureClient = new global::Azure.AI.OpenAI.AzureOpenAIClient(new Uri(options.AzureEndpoint), new ApiKeyCredential(options.AzureApiKey));
         }
         else
         {
-            // DefaultAzureCredential (Managed Identity, etc.)
-            azureClient = new AzureOpenAIClient(
-                new Uri(options.AzureEndpoint),
-                new Azure.Identity.DefaultAzureCredential());
+            azureClient = new global::Azure.AI.OpenAI.AzureOpenAIClient(new Uri(options.AzureEndpoint), new global::Azure.Identity.DefaultAzureCredential());
         }
 
         return azureClient.GetChatClient(options.ModelId).AsIChatClient();

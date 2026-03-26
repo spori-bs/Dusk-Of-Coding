@@ -25,10 +25,10 @@
         </NotAuthorized>
     </AuthorizeView>
 
-    <AuthorizeView Roles="admin">
+    <AuthorizeView Roles="tutor,admin">
         <Authorized>
             <div class="nav-item me-3">
-                <NavLink class="nav-link dusk-nav-link fw-semibold text-warning" href="admin">
+                <NavLink class="nav-link dusk-nav-link fw-semibold text-warning" href="tutor">
                     <i class="bi bi-speedometer2 me-1"></i> @L["Nav_Dashboard"]
                 </NavLink>
             </div>
@@ -44,6 +44,18 @@
         <LoginDisplay />
     </div>
 </nav>
+
+@using System.Security.Claims
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<div class="small text-muted opacity-25" style="position: fixed; bottom: 0; right: 0; padding: 5px; z-index: 9999;">
+    <AuthorizeView>
+        <Authorized>
+            Roles: @(string.Join(", ", context.User.FindAll("roles").Select(c => c.Value))) |
+            HasTutor: @context.User.IsInRole("tutor")
+        </Authorized>
+    </AuthorizeView>
+</div>
 
 <style>
     .dusk-nav-link {

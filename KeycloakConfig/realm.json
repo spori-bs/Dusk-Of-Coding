@@ -6,7 +6,7 @@
   "roles": {
     "realm": [
       {
-        "name": "admin",
+        "name": "tutor",
         "description": "Administrator role"
       },
       {
@@ -33,7 +33,7 @@
       "username": "dusk-admin",
       "email": "admin@example.com",
       "enabled": true,
-      "realmRoles": [ "admin" ],
+      "realmRoles": [ "tutor" ],
       "credentials": [
         {
           "type": "password",

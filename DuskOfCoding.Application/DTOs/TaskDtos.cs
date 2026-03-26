@@ -19,5 +19,6 @@ public record UpdateTaskDto(
 public record SubmitCodeDto(
     Guid TaskId,
     string SourceCode,
-    Guid? UserId = null
+    Guid? UserId = null,
+    string? PreferredLanguage = null
 );

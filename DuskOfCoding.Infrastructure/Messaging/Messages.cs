@@ -12,6 +12,7 @@ public sealed record SubmissionMessage
     public required Guid SubmissionId { get; init; }
     public required string SourceCode { get; init; }
     public required string Language { get; init; }
+    public string? PreferredLanguage { get; init; }
     public DateTime Timestamp { get; init; } = DateTime.UtcNow;
 }
 

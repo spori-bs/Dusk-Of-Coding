@@ -1,8 +1,9 @@
-@page "/admin"
-@attribute [Microsoft.AspNetCore.Authorization.Authorize(Roles = "admin")]
+@page "/tutor"
+@attribute [Microsoft.AspNetCore.Authorization.Authorize(Roles = "tutor")]
 @inject DuskOfCoding.WebUi.Services.ApiClient Api
+@using DuskOfCoding.WebUi.DTOs
 
-<PageTitle>Admin Dashboard — DuskOfCoding</PageTitle>
+<PageTitle>Tutor Dashboard — DuskOfCoding</PageTitle>
 
 <div class="d-flex justify-content-between align-items-center mb-5">
     <div>
@@ -104,15 +105,15 @@ else if (_stats != null)
 @code {
     private bool _isLoading = true;
     private string? _errorMessage;
-    private DuskOfCoding.WebUi.Services.ApiClient.AdminStatsDto? _stats;
-    private List<DuskOfCoding.WebUi.Services.TaskFeedbackOverviewDto>? _feedbackOverview;
+    private TutorStatsDto? _stats;
+    private List<TaskFeedbackOverviewDto>? _feedbackOverview;
 
     protected override async Task OnInitializedAsync()
     {
         _isLoading = true;
         try
         {
-            var result = await Api.GetAdminStatsAsync();
+            var result = await Api.GetTutorStatsAsync();
             if (result.IsSuccess)
             {
                 _stats = result.Value;
@@ -122,7 +123,7 @@ else if (_stats != null)
                 _errorMessage = result.ErrorMessage;
             }
 
-            var feedbackResult = await Api.GetAdminFeedbackOverviewAsync();
+            var feedbackResult = await Api.GetTutorFeedbackOverviewAsync();
             if (feedbackResult.IsSuccess)
             {
                 _feedbackOverview = feedbackResult.Value;

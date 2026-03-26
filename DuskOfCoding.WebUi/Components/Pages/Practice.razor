@@ -1,5 +1,6 @@
 @page "/practice"
 @using DuskOfCoding.WebUi.Services
+@using DuskOfCoding.WebUi.DTOs
 @using DuskOfCoding.WebUi.Resources
 @using DuskOfCoding.Domain.Enums
 @using Microsoft.CodeAnalysis
@@ -156,7 +157,7 @@ else
     }
 }
 
-<TutorTerminal @ref="tutorTerminal" />
+<TutorTerminal @ref="tutorTerminal" OnEvaluationReceived="RefreshSubmission" />
 
 @code {
     private List<TaskDto>? tasks;
@@ -264,7 +265,7 @@ else
         _errorMessage = null;
         try
         {
-            var result = await Api.SubmitCodeAsync(selectedTask.Id, sourceCode, selectedLanguage);
+            var result = await Api.SubmitCodeAsync(selectedTask.Id, sourceCode, selectedLanguage, System.Globalization.CultureInfo.CurrentUICulture.Name);
             if (!result.IsSuccess)
             {
                 submissionResult = new SubmissionResultDto
@@ -292,6 +293,18 @@ else
         finally
         {
             isSubmitting = false;
+        }
+    }
+
+    private async Task RefreshSubmission(Guid submissionId)
+    {
+        if (selectedTask == null) return;
+        
+        var result = await Api.GetSubmissionByIdAsync(submissionId);
+        if (result.IsSuccess)
+        {
+            submissionResult = result.Value;
+            StateHasChanged();
         }
     }
 }

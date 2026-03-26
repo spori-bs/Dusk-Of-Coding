@@ -7,6 +7,7 @@ using DuskOfCoding.Infrastructure.Messaging;
 using DuskOfCoding.Infrastructure.Persistence;
 using DuskOfCoding.WebApi.Hubs;
 using DuskOfCoding.WebApi.Services;
+using DuskOfCoding.Infrastructure.Configuration;
 using Scalar.AspNetCore;
 using Microsoft.Extensions.Hosting;
 
@@ -39,7 +40,11 @@ builder.Services.AddHealthChecks()
 
 // Register Clean Architecture layers
 builder.Services.AddApplicationServices();
-builder.Services.AddInfrastructureServices();
+builder.Services.AddInfrastructureServices(builder.Configuration.GetConnectionString("DefaultConnection"));
+
+// LLM Provider Configuration
+builder.Services.Configure<LlmProviderOptions>(
+    builder.Configuration.GetSection(LlmProviderOptions.SectionName));
 
 // Register RabbitMQ via Aspire client integration + messaging services
 builder.AddRabbitMQClient("messaging");
@@ -123,19 +128,19 @@ tasksGroup.MapGet("/{id:guid}", async (Guid id, ITaskService taskService, Cancel
     return task is not null ? Results.Ok(task) : Results.NotFound();
 });
 
-tasksGroup.MapPost("/", [Microsoft.AspNetCore.Authorization.Authorize(Roles = "admin")] async ([FromBody] DuskOfCoding.Application.DTOs.CreateTaskDto dto, ITaskService taskService, CancellationToken ct) =>
+tasksGroup.MapPost("/", [Microsoft.AspNetCore.Authorization.Authorize(Roles = "tutor,admin")] async ([FromBody] DuskOfCoding.Application.DTOs.CreateTaskDto dto, ITaskService taskService, CancellationToken ct) =>
 {
     var task = await taskService.CreateTaskAsync(dto, ct);
     return Results.Created($"/tasks/{task.Id}", task);
 });
 
-tasksGroup.MapPut("/{id:guid}", [Microsoft.AspNetCore.Authorization.Authorize(Roles = "admin")] async (Guid id, [FromBody] DuskOfCoding.Application.DTOs.UpdateTaskDto dto, ITaskService taskService, CancellationToken ct) =>
+tasksGroup.MapPut("/{id:guid}", [Microsoft.AspNetCore.Authorization.Authorize(Roles = "tutor,admin")] async (Guid id, [FromBody] DuskOfCoding.Application.DTOs.UpdateTaskDto dto, ITaskService taskService, CancellationToken ct) =>
 {
     var task = await taskService.UpdateTaskAsync(id, dto, ct);
     return task is not null ? Results.Ok(task) : Results.NotFound();
 });
 
-tasksGroup.MapDelete("/{id:guid}", [Microsoft.AspNetCore.Authorization.Authorize(Roles = "admin")] async (Guid id, ITaskService taskService, CancellationToken ct) =>
+tasksGroup.MapDelete("/{id:guid}", [Microsoft.AspNetCore.Authorization.Authorize(Roles = "tutor,admin")] async (Guid id, ITaskService taskService, CancellationToken ct) =>
 {
     var success = await taskService.DeleteTaskAsync(id, ct);
     return success ? Results.NoContent() : Results.NotFound();
@@ -165,9 +170,9 @@ tasksGroup.MapGet("/{id:guid}/stats", async (Guid id, DuskOfCoding.Infrastructur
     });
 });
 
-var adminGroup = app.MapGroup("/admin").WithTags("Admin").RequireAuthorization(new Microsoft.AspNetCore.Authorization.AuthorizeAttribute { Roles = "admin" });
+var tutorGroup = app.MapGroup("/tutor").WithTags("Tutor").RequireAuthorization(new Microsoft.AspNetCore.Authorization.AuthorizeAttribute { Roles = "tutor,admin" });
 
-adminGroup.MapGet("/stats", async (DuskOfCoding.Infrastructure.Persistence.AppDbContext db, CancellationToken ct) => 
+tutorGroup.MapGet("/stats", async (DuskOfCoding.Infrastructure.Persistence.AppDbContext db, CancellationToken ct) => 
 {
     var totalStudents = await db.Submissions.Where(s => s.UserId != null).Select(s => s.UserId).Distinct().CountAsync(ct);
     var totalSubmissions = await db.Submissions.CountAsync(ct);
@@ -203,7 +208,7 @@ submissionsGroup.MapPost("/", async (
     if (request.SourceCode.Length > 50_000)
         return Results.BadRequest(new { error = "Source code exceeds the maximum allowed length of 50,000 characters." });
 
-    var result = await submissionService.SubmitCodeAsync(request.TaskId, request.SourceCode, userId, ct);
+    var result = await submissionService.SubmitCodeAsync(request.TaskId, request.SourceCode, userId, request.PreferredLanguage, ct);
 
     // Phase 6: Publish to RabbitMQ so the TutorWorker picks up the submission
     try
@@ -215,7 +220,8 @@ submissionsGroup.MapPost("/", async (
             TaskId = request.TaskId,
             SubmissionId = result.Submission.Id,
             SourceCode = request.SourceCode,
-            Language = "csharp"
+            Language = "csharp",
+            PreferredLanguage = request.PreferredLanguage
         };
 
         await rabbitMqService.PublishAsync(
@@ -274,7 +280,7 @@ feedbackGroup.MapPost("/", async (
     return Results.Ok(feedback);
 });
 
-feedbackGroup.MapGet("/task/{taskId:guid}/summary", [Microsoft.AspNetCore.Authorization.Authorize(Roles = "admin")] async (
+feedbackGroup.MapGet("/task/{taskId:guid}/summary", [Microsoft.AspNetCore.Authorization.Authorize(Roles = "tutor,admin")] async (
     Guid taskId,
     IFeedbackService feedbackService,
     CancellationToken ct) =>
@@ -283,7 +289,7 @@ feedbackGroup.MapGet("/task/{taskId:guid}/summary", [Microsoft.AspNetCore.Author
     return Results.Ok(summary);
 });
 
-feedbackGroup.MapGet("/overview", [Microsoft.AspNetCore.Authorization.Authorize(Roles = "admin")] async (
+feedbackGroup.MapGet("/overview", [Microsoft.AspNetCore.Authorization.Authorize(Roles = "tutor,admin")] async (
     IFeedbackService feedbackService,
     CancellationToken ct) =>
 {
