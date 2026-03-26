@@ -45,7 +45,8 @@
     {
       "clientId": "webui",
       "enabled": true,
-      "publicClient": true,
+      "publicClient": false,
+      "secret": "secret",
       "standardFlowEnabled": true,
       "directAccessGrantsEnabled": false,
       "rootUrl": "",

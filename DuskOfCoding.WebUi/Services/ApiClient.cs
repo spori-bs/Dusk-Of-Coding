@@ -23,11 +23,12 @@ public class ApiClient
         _nav = nav;
     }
 
-    private void EnsureAuthHeader()
+    private async Task EnsureAuthHeaderAsync()
     {
-        if (!string.IsNullOrEmpty(_tokenProvider.AccessToken) && _http.DefaultRequestHeaders.Authorization == null)
+        var token = await _tokenProvider.GetAccessTokenAsync();
+        if (!string.IsNullOrEmpty(token) && _http.DefaultRequestHeaders.Authorization == null)
         {
-            _http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _tokenProvider.AccessToken);
+            _http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         }
     }
 
@@ -60,7 +61,7 @@ public class ApiClient
     {
         try
         {
-            EnsureAuthHeader();
+            await EnsureAuthHeaderAsync();
             var response = await _http.GetAsync("/tasks");
             if (HandleAuthErrors(response)) return Result<List<TaskDto>>.Failure(string.Empty);
             
@@ -81,7 +82,7 @@ public class ApiClient
     {
         try
         {
-            EnsureAuthHeader();
+            await EnsureAuthHeaderAsync();
             var response = await _http.GetAsync($"/tasks/{id}");
             if (HandleAuthErrors(response)) return Result<TaskDto>.Failure(string.Empty);
 
@@ -105,7 +106,7 @@ public class ApiClient
     {
         try
         {
-            EnsureAuthHeader();
+            await EnsureAuthHeaderAsync();
             var response = await _http.PostAsJsonAsync("/tasks", dto);
             if (HandleAuthErrors(response)) return Result<TaskDto>.Failure(string.Empty);
 
@@ -127,7 +128,7 @@ public class ApiClient
     {
         try
         {
-            EnsureAuthHeader();
+            await EnsureAuthHeaderAsync();
             var response = await _http.PutAsJsonAsync($"/tasks/{id}", dto);
             if (HandleAuthErrors(response)) return Result<TaskDto>.Failure(string.Empty);
 
@@ -149,7 +150,7 @@ public class ApiClient
     {
         try
         {
-            EnsureAuthHeader();
+            await EnsureAuthHeaderAsync();
             var response = await _http.DeleteAsync($"/tasks/{id}");
             if (HandleAuthErrors(response)) return Result.Failure(string.Empty);
 
@@ -171,7 +172,7 @@ public class ApiClient
     {
         try
         {
-            EnsureAuthHeader();
+            await EnsureAuthHeaderAsync();
             var payload = new SubmitCodeDto 
             { 
                 TaskId = taskId, 
@@ -199,7 +200,7 @@ public class ApiClient
     {
         try
         {
-            EnsureAuthHeader();
+            await EnsureAuthHeaderAsync();
             var response = await _http.GetAsync($"/submissions/{id}");
             if (HandleAuthErrors(response)) return Result<SubmissionResultDto>.Failure(string.Empty);
 
@@ -229,7 +230,7 @@ public class ApiClient
     {
         try
         {
-            EnsureAuthHeader();
+            await EnsureAuthHeaderAsync();
             var response = await _http.GetAsync("/admin/stats");
             if (HandleAuthErrors(response)) return Result<AdminStatsDto>.Failure(string.Empty);
 
@@ -252,7 +253,7 @@ public class ApiClient
     {
         try
         {
-            EnsureAuthHeader();
+            await EnsureAuthHeaderAsync();
             var response = await _http.PostAsJsonAsync("/feedback", dto, ct);
             if (HandleAuthErrors(response)) return Result<object>.Failure(string.Empty);
 
@@ -274,7 +275,7 @@ public class ApiClient
     {
         try
         {
-            EnsureAuthHeader();
+            await EnsureAuthHeaderAsync();
             var response = await _http.GetAsync($"/feedback/task/{taskId}/summary", ct);
             if (HandleAuthErrors(response)) return Result<FeedbackSummaryDto>.Failure(string.Empty);
 
@@ -295,7 +296,7 @@ public class ApiClient
     {
         try
         {
-            EnsureAuthHeader();
+            await EnsureAuthHeaderAsync();
             var response = await _http.GetAsync("/feedback/overview", ct);
             if (HandleAuthErrors(response)) return Result<List<TaskFeedbackOverviewDto>>.Failure(string.Empty);
 

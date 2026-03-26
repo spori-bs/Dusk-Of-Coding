@@ -19,28 +19,13 @@
 </CascadingAuthenticationState>
 
 @code {
-    private PersistingComponentStateSubscription _subscription;
-
     protected override void OnInitialized()
     {
-        _subscription = ApplicationState.RegisterOnPersisting(PersistToken);
-        if (ApplicationState.TryTakeFromJson<string>("AccessToken", out var token))
-        {
-            TokenProvider.AccessToken = token;
-        }
-    }
-
-    private Task PersistToken()
-    {
-        if (!string.IsNullOrEmpty(TokenProvider.AccessToken))
-        {
-            ApplicationState.PersistAsJson("AccessToken", TokenProvider.AccessToken);
-        }
-        return Task.CompletedTask;
+        // Token logic moved to TokenProvider via AuthenticationStateProvider
     }
 
     public void Dispose()
     {
-        _subscription.Dispose();
+        // No subscription to dispose
     }
 }

@@ -172,5 +172,17 @@
   <data name="Feedback_Submit" xml:space="preserve"><value>Submit Feedback</value></data>
   <data name="Feedback_Success" xml:space="preserve"><value>Thank you for your feedback!</value></data>
   <data name="Feedback_Error" xml:space="preserve"><value>Failed to submit feedback.</value></data>
+
+  <!-- Auth UI -->
+  <data name="Auth_Login" xml:space="preserve"><value>Bejelentkezés</value></data>
+  <data name="Auth_Logout" xml:space="preserve"><value>Kijelentkezés</value></data>
+  <data name="Auth_AdminBadge" xml:space="preserve"><value>Admin</value></data>
+  <data name="Nav_Dashboard" xml:space="preserve"><value>Irányítópult</value></data>
+
+  <!-- Access Denied -->
+  <data name="AccessDenied_Title" xml:space="preserve"><value>Hozzáférés megtagadva</value></data>
+  <data name="AccessDenied_Heading" xml:space="preserve"><value>Hozzáférés megtagadva</value></data>
+  <data name="AccessDenied_Message" xml:space="preserve"><value>Nincs jogosultságod az oldal megtekintéséhez.</value></data>
+  <data name="AccessDenied_GoHome" xml:space="preserve"><value>Vissza a főoldalra</value></data>
 </root>
 

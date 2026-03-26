@@ -20,6 +20,7 @@ builder.WebHost.ConfigureKestrel(options =>
 builder.AddServiceDefaults();
 
 // ── Dev certificate trust (Aspire service-to-service) ─────
+// Disabling DangerousAcceptAnyServerCertificateValidator using standard Aspire dev-certs.
 if (builder.Environment.IsDevelopment())
 {
     builder.Services.ConfigureHttpClientDefaults(http =>
@@ -49,13 +50,28 @@ builder.Services.AddAuthentication()
        .AddKeycloakJwtBearer("keycloak", realm: "DuskOfCoding", options =>
        {
            options.RequireHttpsMetadata = false;
-           options.BackchannelHttpHandler = new HttpClientHandler
+           if (builder.Environment.IsDevelopment())
            {
-               ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
-           };
+               options.BackchannelHttpHandler = new HttpClientHandler
+               {
+                   ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+               };
+           }
+           else
+           {
+               options.BackchannelHttpHandler = new HttpClientHandler(); 
+           }
            options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
            {
-               RoleClaimType = "roles"
+               RoleClaimType = "roles",
+               ValidateAudience = false, // We rely on ValidIssuers in this POC, Audience mapper handles it in prod.
+               ValidateIssuer = true,
+               ValidIssuers = new[]
+               {
+                   "http://localhost:8080/realms/DuskOfCoding",
+                   "https+http://keycloak/realms/DuskOfCoding",
+                   "http://keycloak:8080/realms/DuskOfCoding"
+               }
            };
        });
 builder.Services.AddAuthorization();

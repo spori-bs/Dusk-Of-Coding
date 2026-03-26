@@ -164,5 +164,17 @@
   <data name="Error_DeleteTask" xml:space="preserve"><value>Failed to delete task: {0}</value></data>
   <data name="Error_SubmitCode" xml:space="preserve"><value>Submission failed: {0}. {1}</value></data>
   <data name="Error_FetchSubmission" xml:space="preserve"><value>Failed to fetch submission: {0}</value></data>
+
+  <!-- Auth UI -->
+  <data name="Auth_Login" xml:space="preserve"><value>Log in</value></data>
+  <data name="Auth_Logout" xml:space="preserve"><value>Log out</value></data>
+  <data name="Auth_AdminBadge" xml:space="preserve"><value>Admin</value></data>
+  <data name="Nav_Dashboard" xml:space="preserve"><value>Dashboard</value></data>
+
+  <!-- Access Denied -->
+  <data name="AccessDenied_Title" xml:space="preserve"><value>Access Denied</value></data>
+  <data name="AccessDenied_Heading" xml:space="preserve"><value>Access Denied</value></data>
+  <data name="AccessDenied_Message" xml:space="preserve"><value>You don't have permission to view this page.</value></data>
+  <data name="AccessDenied_GoHome" xml:space="preserve"><value>Go Home</value></data>
 </root>
 
