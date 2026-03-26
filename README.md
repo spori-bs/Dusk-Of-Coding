@@ -114,3 +114,5 @@ This project was built iteratively using a sequence of specialized AI prompts. C
     - **Goal:** A premium storytelling/teaser page at `/how-it-was-made`. Explaining the "vibecoding" philosophy and demonstrating the iterative prompt-driven development.
 102. **Visionary UI/UX Design (`phase102-visionary-design-master-prompt.md`)**
     - **Goal:** Cinematic next-gen aesthetic with glassmorphism, dynamic animations, and WebGL integration to elevate the overall user experience.
+103. **Engineering Cockpit UI (`phase103-engineering-cockpit-master-prompt.md`)**
+    - **Goal:** High-density, "Industrial Amber" themed HUD for Dusk of Coding, focusing on interactive circuitry backgrounds, clear logical "De-Blur" sections, and tactical mechanical UI components.
