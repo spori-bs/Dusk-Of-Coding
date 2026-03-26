@@ -43,18 +43,14 @@ public class TaskService : ITaskService
         var task = await _taskRepository.GetByIdAsync(id, ct);
         if (task == null) return null;
 
-        var updatedTask = new TaskDefinition
-        {
-            Id = id,
-            Title = dto.Title,
-            Description = dto.Description,
-            DifficultyLevel = dto.DifficultyLevel,
-            Tags = dto.Tags ?? new List<string>(),
-            TestBundleReference = dto.TestBundleReference
-        };
+        task.Title = dto.Title;
+        task.Description = dto.Description;
+        task.DifficultyLevel = dto.DifficultyLevel;
+        task.Tags = dto.Tags ?? new List<string>();
+        task.TestBundleReference = dto.TestBundleReference;
 
-        await _taskRepository.UpdateAsync(updatedTask, ct);
-        return updatedTask;
+        await _taskRepository.UpdateAsync(task, ct);
+        return task;
     }
 
     public async Task<bool> DeleteTaskAsync(Guid id, CancellationToken ct = default)

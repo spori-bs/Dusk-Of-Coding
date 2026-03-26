@@ -4,7 +4,7 @@ namespace DuskOfCoding.Domain.Entities;
 
 public class FeedbackRecord
 {
-    public Guid Id { get; init; } = Guid.NewGuid();
+    public Guid Id { get; init; }
     public Guid SubmissionId { get; init; }
     
     public bool IsSuccess { get; set; }

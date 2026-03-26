@@ -106,7 +106,9 @@ This project was built iteratively using a sequence of specialized AI prompts. C
     - **Phase 12.1 - Root Cause Analysis:** Deep-dive into OIDC correlation failures, issuer mismatches, and Blazor circuit-to-SSR state transitions.
     - **Phase 12.2 - Pipeline Fix:** Systematic repair of the authentication pipeline, addressing WebSocket state issues and multi-network trust chains.
     - **Phase 12.3 - Principal Security Audit:** Implementation of OIDC role mapping standardization (`roles` claim), securing sensitive tokens (erasing `PersistentComponentState` leaks), enforcing `Confidential Client` secrets, and conditional dev-cert validation logic.
-13. **How It Was Made (`phase13-how-it-was-made-master-prompt.md`)**
+13. **EF Core Concurrency Resolution (`phase13-ef-core-concurrency-master-prompt.md`)**
+    - **Goal:** Resolve `DbUpdateConcurrencyException` errors in `SubmissionService` and `TaskService`. Map DTOs onto tracked entities instead of replacing objects.
+14. **How It Was Made (`phase14-how-it-was-made-master-prompt.md` / `phase14-how-it-was-made-context.md`)**
     - **Goal:** A premium storytelling/teaser page at `/how-it-was-made`. Explaining the "vibecoding" philosophy and demonstrating the iterative prompt-driven development.
-14. **Visionary UI/UX Design (`phase14-visionary-design-master-prompt.md`)**
+15. **Visionary UI/UX Design (`phase15-visionary-design-master-prompt.md`)**
     - **Goal:** Cinematic next-gen aesthetic with glassmorphism, dynamic animations, and WebGL integration to elevate the overall user experience.

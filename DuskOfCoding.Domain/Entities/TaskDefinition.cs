@@ -2,7 +2,7 @@ namespace DuskOfCoding.Domain.Entities;
 
 public class TaskDefinition
 {
-    public Guid Id { get; init; } = Guid.NewGuid();
+    public Guid Id { get; init; }
     public string Title { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public string DifficultyLevel { get; set; } = string.Empty;

@@ -80,9 +80,11 @@ public class SubmissionService : ISubmissionService
                         AiReviewRemarks = "The submission contains syntax errors. Please fix them before attempting execution."
                     };
                     
-                    var fr = new FeedbackRecord { SubmissionId = submission.Id, IsSuccess = false, Summary = syntaxFeedback.Summary, AiReviewRemarks = syntaxFeedback.AiReviewRemarks };
-                    fr.SetCompilationMessages(diagnostics);
-                    submission.Feedback = fr;
+                    submission.Feedback ??= new FeedbackRecord { SubmissionId = submission.Id };
+                    submission.Feedback.IsSuccess = false;
+                    submission.Feedback.Summary = syntaxFeedback.Summary;
+                    submission.Feedback.AiReviewRemarks = syntaxFeedback.AiReviewRemarks;
+                    submission.Feedback.SetCompilationMessages(diagnostics);
                     
                     await _submissionRepository.UpdateAsync(submission, ct);
                     return new SubmissionResult(submission, syntaxFeedback);
@@ -99,13 +101,12 @@ public class SubmissionService : ISubmissionService
 
             var feedback = await _aiReviewService.EnrichFeedbackAsync(task, submission, executionResult, ct);
 
-            var record = new FeedbackRecord 
-            { 
-                SubmissionId = submission.Id, IsSuccess = feedback.IsSuccess, Summary = feedback.Summary, AiReviewRemarks = feedback.AiReviewRemarks 
-            };
-            record.SetCompilationMessages(feedback.CompilationMessages?.ToList() ?? new List<string>());
-            record.SetTestMessages(feedback.TestMessages?.ToList() ?? new List<string>());
-            submission.Feedback = record;
+            submission.Feedback ??= new FeedbackRecord { SubmissionId = submission.Id };
+            submission.Feedback.IsSuccess = feedback.IsSuccess;
+            submission.Feedback.Summary = feedback.Summary;
+            submission.Feedback.AiReviewRemarks = feedback.AiReviewRemarks;
+            submission.Feedback.SetCompilationMessages(feedback.CompilationMessages?.ToList() ?? new List<string>());
+            submission.Feedback.SetTestMessages(feedback.TestMessages?.ToList() ?? new List<string>());
 
             submission.Status = feedback.IsSuccess ? SubmissionStatus.Success : SubmissionStatus.TestsFailed;
             submission.CompletedAt = DateTime.UtcNow;
@@ -115,8 +116,10 @@ public class SubmissionService : ISubmissionService
         }
         catch (Exception ex)
         {
-            var errorFeedback = new FeedbackRecord { SubmissionId = submission.Id, IsSuccess = false, Summary = "Internal Execution Error", AiReviewRemarks = ex.Message };
-            submission.Feedback = errorFeedback;
+            submission.Feedback ??= new FeedbackRecord { SubmissionId = submission.Id };
+            submission.Feedback.IsSuccess = false;
+            submission.Feedback.Summary = "Internal Execution Error";
+            submission.Feedback.AiReviewRemarks = ex.Message;
 
             submission.Status = SubmissionStatus.Error;
             submission.CompletedAt = DateTime.UtcNow;

@@ -27,7 +27,11 @@ public class EfFeedbackRepository : IFeedbackRepository
 
     public async Task UpdateAsync(UserFeedback feedback, CancellationToken ct = default)
     {
-        _db.UserFeedbacks.Update(feedback);
+        var entry = _db.Entry(feedback);
+        if (entry.State == EntityState.Detached)
+        {
+            _db.UserFeedbacks.Update(feedback);
+        }
         await _db.SaveChangesAsync(ct);
     }
 
