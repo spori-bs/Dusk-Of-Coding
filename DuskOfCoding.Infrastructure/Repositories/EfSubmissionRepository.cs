@@ -28,7 +28,11 @@ public class EfSubmissionRepository : ISubmissionRepository
 
     public async Task UpdateAsync(Submission submission, CancellationToken ct = default)
     {
-        _db.Submissions.Update(submission);
+        var entry = _db.Entry(submission);
+        if (entry.State == EntityState.Detached)
+        {
+            _db.Submissions.Update(submission);
+        }
         await _db.SaveChangesAsync(ct);
     }
 }

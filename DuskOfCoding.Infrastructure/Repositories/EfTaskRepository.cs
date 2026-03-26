@@ -16,12 +16,12 @@ public class EfTaskRepository : ITaskRepository
 
     public async Task<IReadOnlyList<TaskDefinition>> GetAllAsync(CancellationToken ct = default)
     {
-        return await _db.Tasks.AsNoTracking().ToListAsync(ct);
+        return await _db.Tasks.ToListAsync(ct);
     }
 
     public async Task<TaskDefinition?> GetByIdAsync(Guid id, CancellationToken ct = default)
     {
-        return await _db.Tasks.AsNoTracking().FirstOrDefaultAsync(t => t.Id == id, ct);
+        return await _db.Tasks.FirstOrDefaultAsync(t => t.Id == id, ct);
     }
 
     public async Task AddAsync(TaskDefinition task, CancellationToken ct = default)
@@ -32,7 +32,11 @@ public class EfTaskRepository : ITaskRepository
 
     public async Task UpdateAsync(TaskDefinition task, CancellationToken ct = default)
     {
-        _db.Tasks.Update(task);
+        var entry = _db.Entry(task);
+        if (entry.State == EntityState.Detached)
+        {
+            _db.Tasks.Update(task);
+        }
         await _db.SaveChangesAsync(ct);
     }
 
