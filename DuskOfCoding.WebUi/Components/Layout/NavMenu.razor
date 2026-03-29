@@ -25,7 +25,7 @@
         </NotAuthorized>
     </AuthorizeView>
 
-    <AuthorizeView Roles="tutor,admin">
+    <AuthorizeView Roles="@($"{AppRoles.Tutor},{AppRoles.Admin}")">
         <Authorized>
             <div class="nav-item me-3">
                 <NavLink class="nav-link dusk-nav-link fw-semibold text-warning" href="tutor">
@@ -52,7 +52,7 @@
     <AuthorizeView>
         <Authorized>
             Roles: @(string.Join(", ", context.User.FindAll("roles").Select(c => c.Value))) |
-            HasTutor: @context.User.IsInRole("tutor")
+            HasTutor: @context.User.IsInRole(AppRoles.Tutor)
         </Authorized>
     </AuthorizeView>
 </div>

@@ -8,8 +8,11 @@ using DuskOfCoding.Infrastructure.Persistence;
 using DuskOfCoding.WebApi.Hubs;
 using DuskOfCoding.WebApi.Services;
 using DuskOfCoding.Infrastructure.Configuration;
+using DuskOfCoding.Domain.Constants;
 using Scalar.AspNetCore;
 using Microsoft.Extensions.Hosting;
+
+System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -69,6 +72,7 @@ builder.Services.AddAuthentication()
            options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
            {
                RoleClaimType = "roles",
+               NameClaimType = "preferred_username",
                ValidateAudience = false, // We rely on ValidIssuers in this POC, Audience mapper handles it in prod.
                ValidateIssuer = true,
                ValidIssuers = new[]
@@ -128,19 +132,19 @@ tasksGroup.MapGet("/{id:guid}", async (Guid id, ITaskService taskService, Cancel
     return task is not null ? Results.Ok(task) : Results.NotFound();
 });
 
-tasksGroup.MapPost("/", [Microsoft.AspNetCore.Authorization.Authorize(Roles = "tutor,admin")] async ([FromBody] DuskOfCoding.Application.DTOs.CreateTaskDto dto, ITaskService taskService, CancellationToken ct) =>
+tasksGroup.MapPost("/", [Microsoft.AspNetCore.Authorization.Authorize(Roles = AppRoles.Tutor + "," + AppRoles.Admin)] async ([FromBody] DuskOfCoding.Application.DTOs.CreateTaskDto dto, ITaskService taskService, CancellationToken ct) =>
 {
     var task = await taskService.CreateTaskAsync(dto, ct);
     return Results.Created($"/tasks/{task.Id}", task);
 });
 
-tasksGroup.MapPut("/{id:guid}", [Microsoft.AspNetCore.Authorization.Authorize(Roles = "tutor,admin")] async (Guid id, [FromBody] DuskOfCoding.Application.DTOs.UpdateTaskDto dto, ITaskService taskService, CancellationToken ct) =>
+tasksGroup.MapPut("/{id:guid}", [Microsoft.AspNetCore.Authorization.Authorize(Roles = AppRoles.Tutor + "," + AppRoles.Admin)] async (Guid id, [FromBody] DuskOfCoding.Application.DTOs.UpdateTaskDto dto, ITaskService taskService, CancellationToken ct) =>
 {
     var task = await taskService.UpdateTaskAsync(id, dto, ct);
     return task is not null ? Results.Ok(task) : Results.NotFound();
 });
 
-tasksGroup.MapDelete("/{id:guid}", [Microsoft.AspNetCore.Authorization.Authorize(Roles = "tutor,admin")] async (Guid id, ITaskService taskService, CancellationToken ct) =>
+tasksGroup.MapDelete("/{id:guid}", [Microsoft.AspNetCore.Authorization.Authorize(Roles = AppRoles.Tutor + "," + AppRoles.Admin)] async (Guid id, ITaskService taskService, CancellationToken ct) =>
 {
     var success = await taskService.DeleteTaskAsync(id, ct);
     return success ? Results.NoContent() : Results.NotFound();
@@ -170,7 +174,7 @@ tasksGroup.MapGet("/{id:guid}/stats", async (Guid id, DuskOfCoding.Infrastructur
     });
 });
 
-var tutorGroup = app.MapGroup("/tutor").WithTags("Tutor").RequireAuthorization(new Microsoft.AspNetCore.Authorization.AuthorizeAttribute { Roles = "tutor,admin" });
+var tutorGroup = app.MapGroup("/tutor").WithTags("Tutor").RequireAuthorization(new Microsoft.AspNetCore.Authorization.AuthorizeAttribute { Roles = AppRoles.Tutor + "," + AppRoles.Admin });
 
 tutorGroup.MapGet("/stats", async (DuskOfCoding.Infrastructure.Persistence.AppDbContext db, CancellationToken ct) => 
 {
@@ -280,7 +284,7 @@ feedbackGroup.MapPost("/", async (
     return Results.Ok(feedback);
 });
 
-feedbackGroup.MapGet("/task/{taskId:guid}/summary", [Microsoft.AspNetCore.Authorization.Authorize(Roles = "tutor,admin")] async (
+feedbackGroup.MapGet("/task/{taskId:guid}/summary", [Microsoft.AspNetCore.Authorization.Authorize(Roles = AppRoles.Tutor + "," + AppRoles.Admin)] async (
     Guid taskId,
     IFeedbackService feedbackService,
     CancellationToken ct) =>
@@ -289,7 +293,7 @@ feedbackGroup.MapGet("/task/{taskId:guid}/summary", [Microsoft.AspNetCore.Author
     return Results.Ok(summary);
 });
 
-feedbackGroup.MapGet("/overview", [Microsoft.AspNetCore.Authorization.Authorize(Roles = "tutor,admin")] async (
+feedbackGroup.MapGet("/overview", [Microsoft.AspNetCore.Authorization.Authorize(Roles = AppRoles.Tutor + "," + AppRoles.Admin)] async (
     IFeedbackService feedbackService,
     CancellationToken ct) =>
 {

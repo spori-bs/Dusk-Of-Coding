@@ -6,8 +6,12 @@
   "roles": {
     "realm": [
       {
+        "name": "admin",
+        "description": "System Administrator role"
+      },
+      {
         "name": "tutor",
-        "description": "Administrator role"
+        "description": "Tutor role"
       },
       {
         "name": "student",
@@ -17,10 +21,23 @@
   },
   "users": [
     {
-      "username": "student",
-      "email": "student@example.com",
+      "username": "sysadmin",
+      "email": "sysadmin@example.com",
       "enabled": true,
-      "realmRoles": [ "student" ],
+      "realmRoles": [ "admin" ],
+      "credentials": [
+        {
+          "type": "password",
+          "value": "admin",
+          "temporary": false
+        }
+      ]
+    },
+    {
+      "username": "tutor",
+      "email": "tutor@example.com",
+      "enabled": true,
+      "realmRoles": [ "tutor" ],
       "credentials": [
         {
           "type": "password",
@@ -30,14 +47,14 @@
       ]
     },
     {
-      "username": "dusk-admin",
-      "email": "admin@example.com",
+      "username": "student",
+      "email": "student@example.com",
       "enabled": true,
-      "realmRoles": [ "tutor" ],
+      "realmRoles": [ "student" ],
       "credentials": [
         {
           "type": "password",
-          "value": "admin",
+          "value": "password",
           "temporary": false
         }
       ]
