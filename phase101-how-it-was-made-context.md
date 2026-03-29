@@ -13,8 +13,10 @@
 - [ ] **Phase 2: Narrative Timeline Sections**
   - [ ] **The Spark**: Visualize the Roslyn Compilation engine & Sandbox (Phases 1-2 logic).
   - [ ] **The Language**: Implement the "Global Reach" visual representing the App's Bilingual (HU/EN) capability (Phase 3 logic).
-  - [ ] **The Identity**: Create the "Holographic Perimeter" visual for Keycloak/OIDC integration (Phase 4 logic).
-  - [ ] **The Evolution**: Build the **Interactive Comparison Slider** (Rebranding) to show Generic UI vs. Dusk UI.
+  - [ ] **The Aesthetic**: Build the **Interactive Comparison Slider** (Rebranding) to show Generic UI vs. Dusk UI (Phases 4-5 logic).
+  - [ ] **The Fortress & Persistence**: Create the "Holographic Perimeter" visual for Keycloak/OIDC integration interlocking with a pulsing database core (Phases 6-10, 13 logic).
+  - [ ] **The Abyss**: Design the "System Failure" glitch sequence showing HTTP-431 infinite loops and EF Core concurrency crashes, resolving into clean code via glowing "Master Root-Cause Prompts."
+  - [ ] **The Mentor**: Implement a glowing neural network intersecting with code blocks representing the Socratic AI Tutor integration (Phases 11-15 logic).
 
 - [ ] **Phase 3: Interactive Artifacts & Manifesto**
   - [ ] Build `PromptCard.razor` component with **Glassmorphism** and **3D-tilt** hover effects.
@@ -36,9 +38,11 @@
 1. **The Big Bang**: The industry shift from manual coding to high-level AI orchestration.
 2. **The Spark**: Building the "heart" of the platform—safe code execution via Roslyn/Docker.
 3. **The Language**: Teaching the platform to speak—bilingual support and global accessibility.
-4. **The Perimeter**: Securing the vision and user data with Keycloak IAM.
-5. **The New Dawn**: The aesthetic evolution into the "Dusk" glassmorphism identity.
-6. **The Methodology**: Defining "Vibecoding"—mastery of the craft through directing AI with intent.
+4. **The Aesthetic**: The evolution into the "Dusk" glassmorphism UI.
+5. **The Fortress**: Securing the vision and preserving data through Keycloak IAM and EF Core.
+6. **The Abyss**: The brutal reality of AI-generated architecture—where "Vibecoding" crashed, but was salvaged by crafting laser-focused, isolated external AI prompts to dissect root causes and execute surgical solutions.
+7. **The Mentor**: Transforming into a true AI-assisted learning platform with a Socratic Tutor.
+8. **The Methodology**: Defining "Vibecoding"—mastery of the craft through directing AI with intent.
 
 ---
 
