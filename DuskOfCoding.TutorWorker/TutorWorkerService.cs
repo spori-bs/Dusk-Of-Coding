@@ -3,22 +3,29 @@ using Microsoft.Extensions.Options;
 using Polly;
 using Polly.Registry;
 using DuskOfCoding.Infrastructure.Messaging;
-using DuskOfCoding.TutorWorker.Configuration;
+using DuskOfCoding.Infrastructure.Configuration;
 using DuskOfCoding.TutorWorker.Prompts;
 using DuskOfCoding.TutorWorker.Resilience;
+using DuskOfCoding.Domain.Interfaces;
+using DuskOfCoding.Domain.Enums;
+using DuskOfCoding.Domain.Entities;
+using DuskOfCoding.Domain.Models;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace DuskOfCoding.TutorWorker;
 
 /// <summary>
 /// Background service that consumes submissions from RabbitMQ,
-/// processes them through the Socratic Tutor LLM with MCP tools,
-/// and publishes tutor responses back to the response exchange.
+/// performs execution and AI evaluation, then provides Socratic tutoring.
 /// </summary>
 public sealed class TutorWorkerService : BackgroundService
 {
     private readonly RabbitMQService _rabbitMqService;
     private readonly IChatClient _chatClient;
     private readonly ResiliencePipelineProvider<string> _resilienceProvider;
+    private readonly IServiceScopeFactory _scopeFactory;
     private readonly LlmProviderOptions _options;
     private readonly ILogger<TutorWorkerService> _logger;
 
@@ -26,12 +33,14 @@ public sealed class TutorWorkerService : BackgroundService
         RabbitMQService rabbitMqService,
         IChatClient chatClient,
         ResiliencePipelineProvider<string> resilienceProvider,
+        IServiceScopeFactory scopeFactory,
         IOptions<LlmProviderOptions> options,
         ILogger<TutorWorkerService> logger)
     {
         _rabbitMqService = rabbitMqService;
         _chatClient = chatClient;
         _resilienceProvider = resilienceProvider;
+        _scopeFactory = scopeFactory;
         _options = options.Value;
         _logger = logger;
     }
@@ -68,11 +77,124 @@ public sealed class TutorWorkerService : BackgroundService
             "Processing submission {SubmissionId} with CorrelationId {CorrelationId}",
             message.SubmissionId, correlationId);
 
+        using var scope = _scopeFactory.CreateScope();
+        var taskRepo = scope.ServiceProvider.GetRequiredService<ITaskRepository>();
+        var submissionRepo = scope.ServiceProvider.GetRequiredService<ISubmissionRepository>();
+        var aiReviewService = scope.ServiceProvider.GetRequiredService<IAIReviewService>();
+        
+        var submission = await submissionRepo.GetByIdAsync(message.SubmissionId, ct);
+        if (submission == null)
+        {
+            _logger.LogError("Submission {SubmissionId} not found in database.", message.SubmissionId);
+            return;
+        }
+
+        var task = await taskRepo.GetByIdAsync(message.TaskId, ct);
+        if (task == null)
+        {
+            _logger.LogError("Task {TaskId} not found for submission {SubmissionId}.", message.TaskId, message.SubmissionId);
+            return;
+        }
+
+        try
+        {
+            // 1. Initial State: Executing
+            submission.Status = SubmissionStatus.Executing;
+            await submissionRepo.UpdateAsync(submission, ct);
+
+            Feedback feedback;
+            
+            // 2. Roslyn Syntax Check (as previously in WebApi)
+            var syntaxTree = CSharpSyntaxTree.ParseText(message.SourceCode);
+            var syntaxDiagnostics = syntaxTree.GetDiagnostics()
+                .Where(d => d.Severity == DiagnosticSeverity.Error)
+                .Select(d => $"Line {d.Location.GetLineSpan().StartLinePosition.Line + 1}: {d.GetMessage()}")
+                .ToList();
+
+            if (syntaxDiagnostics.Any())
+            {
+                submission.Status = SubmissionStatus.CompilationFailed;
+                feedback = new Feedback
+                {
+                    IsSuccess = false,
+                    Summary = "Compilation Failed",
+                    CompilationMessages = syntaxDiagnostics,
+                    AiReviewRemarks = "The submission contains syntax errors. Please fix them before attempting execution."
+                };
+            }
+            else
+            {
+                // 3. Resolve Execution Engine and Execute
+                var targetLanguage = nameof(ProgrammingLanguage.CSharp);
+                var executionEngine = scope.ServiceProvider.GetRequiredKeyedService<ICodeExecutionEngine>(targetLanguage);
+                
+                var executionResult = await executionEngine.ExecuteAsync(task, submission, ct);
+
+                // 4. Enrich feedback with AI Review Service
+                feedback = await aiReviewService.EnrichFeedbackAsync(task, submission, executionResult, message.PreferredLanguage, ct);
+                submission.Status = feedback.IsSuccess ? SubmissionStatus.Success : SubmissionStatus.TestsFailed;
+            }
+
+            // 5. Save Results to DB
+            submission.CompletedAt = DateTime.UtcNow;
+            submission.Feedback ??= new FeedbackRecord { SubmissionId = submission.Id };
+            submission.Feedback.IsSuccess = feedback.IsSuccess;
+            submission.Feedback.Summary = feedback.Summary;
+            submission.Feedback.AiReviewRemarks = feedback.AiReviewRemarks;
+            submission.Feedback.SetCompilationMessages(feedback.CompilationMessages?.ToList() ?? new List<string>());
+            submission.Feedback.SetTestMessages(feedback.TestMessages?.ToList() ?? new List<string>());
+
+            await submissionRepo.UpdateAsync(submission, ct);
+
+            // 6. Notify UI via SignalR
+            await NotifyEvaluationComplete(message.SubmissionId, correlationId, feedback, ct);
+
+            // 7. Follow up with the Socratic Tutor logic
+            await HandleSocraticTutoring(message, correlationId, ct);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to evaluate submission {SubmissionId}", message.SubmissionId);
+            submission.Status = SubmissionStatus.Error;
+            await submissionRepo.UpdateAsync(submission, ct);
+            
+            await _rabbitMqService.PublishAsync(
+                RabbitMQTopology.ResponseExchange,
+                RabbitMQTopology.ResponseRoutingKey,
+                new TutorResponseMessage
+                {
+                    CorrelationId = correlationId,
+                    SubmissionId = message.SubmissionId,
+                    ResponseType = "error",
+                    Content = $"An error occurred during evaluation: {ex.Message}"
+                }, correlationId, ct);
+        }
+    }
+
+    private async Task NotifyEvaluationComplete(Guid submissionId, Guid correlationId, Feedback feedback, CancellationToken ct)
+    {
+        var response = new TutorResponseMessage
+        {
+            CorrelationId = correlationId,
+            SubmissionId = submissionId,
+            ResponseType = "evaluation",
+            Content = feedback.Summary // This will be used by UI to update state
+        };
+
+        await _rabbitMqService.PublishAsync(
+            RabbitMQTopology.ResponseExchange,
+            RabbitMQTopology.ResponseRoutingKey,
+            response,
+            correlationId,
+            ct);
+    }
+
+    private async Task HandleSocraticTutoring(SubmissionMessage message, Guid correlationId, CancellationToken ct)
+    {
         var pipeline = _resilienceProvider.GetPipeline(LlmResilienceRegistration.PipelineName);
 
         try
         {
-            // Try the LLM with Polly resilience
             var tutorResponse = await pipeline.ExecuteAsync(async token =>
             {
                 return await InvokeSocraticTutorAsync(message, token);
@@ -92,55 +214,29 @@ public sealed class TutorWorkerService : BackgroundService
                 response,
                 correlationId,
                 ct);
-
-            _logger.LogInformation("Published tutor response for submission {SubmissionId}", message.SubmissionId);
         }
         catch (Exception ex)
         {
-            // Fallback: LLM completely failed — send safety message + raw diagnostics
-            _logger.LogError(ex, "LLM failed for submission {SubmissionId}, executing fallback", message.SubmissionId);
-
-            var rawDiagnostics = McpTools.AnalyzeCodeTool.AnalyzeCode(message.SourceCode, ct);
-
-            var fallbackResponse = new TutorResponseMessage
-            {
-                CorrelationId = correlationId,
-                SubmissionId = message.SubmissionId,
-                ResponseType = "safety",
-                Content = _options.FallbackMessage,
-                RawDiagnostics = rawDiagnostics
-            };
-
-            await _rabbitMqService.PublishAsync(
-                RabbitMQTopology.ResponseExchange,
-                RabbitMQTopology.ResponseRoutingKey,
-                fallbackResponse,
-                correlationId,
-                ct);
+             _logger.LogError(ex, "Socratic Tutor failed for submission {SubmissionId}", message.SubmissionId);
+             // Fallback logic could go here
         }
     }
 
-    /// <summary>Maximum source code length accepted per submission (50 KB).</summary>
     private const int MaxSourceCodeLength = 50_000;
 
     private async Task<string> InvokeSocraticTutorAsync(SubmissionMessage message, CancellationToken ct)
     {
         if (string.IsNullOrWhiteSpace(message.SourceCode))
-            return "⚠️ No source code was provided. Please submit your code and try again.";
-
-        if (message.SourceCode.Length > MaxSourceCodeLength)
-            return $"⚠️ Source code exceeds the maximum allowed length of {MaxSourceCodeLength:N0} characters. Please reduce the code size and try again.";
+            return "⚠️ No source code was provided.";
 
         var chatMessages = new List<ChatMessage>
         {
-            new(ChatRole.System, SocraticTutorPrompt.SystemPrompt),
+            new(ChatRole.System, SocraticTutorPrompt.GetSystemPrompt(message.PreferredLanguage)),
             new(ChatRole.User, $"""
-                Please review my code submission for the practice exercise.
-
+                Please review my code submission:
                 ```csharp
                 {message.SourceCode}
                 ```
-
                 Language: {message.Language}
                 """)
         };
@@ -152,7 +248,6 @@ public sealed class TutorWorkerService : BackgroundService
         };
 
         var response = await _chatClient.GetResponseAsync(chatMessages, chatOptions, ct);
-
-        return response.Text ?? "I wasn't able to generate feedback for your submission. Please try again.";
+        return response.Text ?? "I wasn't able to generate feedback.";
     }
 }

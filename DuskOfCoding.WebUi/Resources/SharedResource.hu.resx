@@ -177,7 +177,7 @@
   <!-- Auth UI -->
   <data name="Auth_Login" xml:space="preserve"><value>Bejelentkezés</value></data>
   <data name="Auth_Logout" xml:space="preserve"><value>Kijelentkezés</value></data>
-  <data name="Auth_AdminBadge" xml:space="preserve"><value>Admin</value></data>
+  <data name="Auth_AdminBadge" xml:space="preserve"><value>Oktató</value></data>
   <data name="Nav_Dashboard" xml:space="preserve"><value>Irányítópult</value></data>
 
   <!-- Access Denied -->

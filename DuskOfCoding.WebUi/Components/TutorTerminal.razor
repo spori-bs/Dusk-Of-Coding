@@ -66,6 +66,7 @@
 
 @code {
     [Parameter] public bool IsExpanded { get; set; } = true;
+    [Parameter] public EventCallback<Guid> OnEvaluationReceived { get; set; }
 
     private HubConnection? hubConnection;
     private readonly List<TutorMessage> messages = new();
@@ -119,6 +120,12 @@
 
     private void OnTutorResponse(TutorResponseDto response)
     {
+        if (response.ResponseType == "evaluation")
+        {
+            InvokeAsync(async () => await OnEvaluationReceived.InvokeAsync(response.SubmissionId));
+            return; // Don't show evaluation status as a chat message
+        }
+
         isWaiting = false;
 
         var msg = new TutorMessage

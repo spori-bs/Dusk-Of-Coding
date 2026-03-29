@@ -10,8 +10,8 @@
             <AuthorizeView>
                 <Authorized>
                     <a href="/practice" class="btn btn-link dusk-nav-link text-decoration-none me-4">@L["Landing_Practice"]</a>
-                    <AuthorizeView Roles="admin">
-                        <Authorized Context="adminCtx">
+                    <AuthorizeView Roles="@($"{AppRoles.Tutor},{AppRoles.Admin}")">
+                        <Authorized Context="tutorCtx">
                             <a href="/tasks" class="btn btn-link dusk-nav-link text-decoration-none me-4">@L["Landing_ManageTasks"]</a>
                         </Authorized>
                     </AuthorizeView>
@@ -23,8 +23,8 @@
                     <span class="text-white me-3 d-none d-md-inline" style="font-size: 0.9rem;">
                         <i class="bi bi-person-circle me-1"></i> @context.User.Identity?.Name
                     </span>
-                    <AuthorizeView Roles="admin">
-                        <Authorized Context="adminCtx2">
+                    <AuthorizeView Roles="@($"{AppRoles.Tutor},{AppRoles.Admin}")">
+                        <Authorized Context="tutorCtx2">
                             <span class="badge bg-warning text-dark me-3 px-2 py-1" style="font-size: 0.75rem;">
                                 <i class="bi bi-shield-lock-fill me-1"></i>@L["Auth_AdminBadge"]
                             </span>
@@ -36,7 +36,7 @@
                     </form>
                 </Authorized>
                 <NotAuthorized>
-                    <a href="login?returnUrl=%2Fpractice" class="btn btn-sm dusk-btn-outline me-3">@L["Auth_Login"]</a>
+                    <a href="login?returnUrl=@Uri.EscapeDataString(NavigationManager.ToBaseRelativePath(NavigationManager.Uri))" class="btn btn-sm dusk-btn-outline me-3">@L["Auth_Login"]</a>
                     <a href="/register" class="btn btn-primary btn-sm me-3 px-4">@L["Landing_GetStarted"]</a>
                 </NotAuthorized>
             </AuthorizeView>

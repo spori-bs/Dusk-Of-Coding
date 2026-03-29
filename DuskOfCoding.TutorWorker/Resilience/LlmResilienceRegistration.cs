@@ -3,7 +3,7 @@ using Microsoft.Extensions.Options;
 using Polly;
 using Polly.Retry;
 using Polly.Timeout;
-using DuskOfCoding.TutorWorker.Configuration;
+using DuskOfCoding.Infrastructure.Configuration;
 
 namespace DuskOfCoding.TutorWorker.Resilience;
 

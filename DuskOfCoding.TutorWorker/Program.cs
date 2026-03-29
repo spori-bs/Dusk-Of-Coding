@@ -1,13 +1,15 @@
 using DuskOfCoding.Infrastructure;
 using DuskOfCoding.Infrastructure.Messaging;
+using DuskOfCoding.Infrastructure.Configuration;
 using DuskOfCoding.TutorWorker;
-using DuskOfCoding.TutorWorker.Configuration;
-using DuskOfCoding.TutorWorker.LlmClient;
 using DuskOfCoding.TutorWorker.Resilience;
 
 var builder = Host.CreateApplicationBuilder(args);
 
 builder.AddServiceDefaults();
+
+// ── Infrastructure (DB, Repositories, AI Service) ────────────
+builder.Services.AddInfrastructureServices(builder.Configuration.GetConnectionString("DefaultConnection"));
 
 // ── Configuration ──────────────────────────────────────────
 builder.Services.Configure<LlmProviderOptions>(

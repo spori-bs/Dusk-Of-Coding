@@ -3,9 +3,12 @@ using System.Security.Claims;
 using System.Text.Json;
 using DuskOfCoding.WebUi.Components;
 using DuskOfCoding.WebUi.Services;
+using DuskOfCoding.Domain.Constants;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+
+System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -82,6 +85,7 @@ builder.Services.AddAuthentication()  // no-op re-registration, just need the bu
         options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
         {
             RoleClaimType = "roles",
+            NameClaimType = "preferred_username",
             ValidateIssuer = true,
             ValidIssuers = new[]
             {

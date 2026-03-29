@@ -5,6 +5,7 @@ using DuskOfCoding.Domain.Common;
 using Microsoft.Extensions.Localization;
 using DuskOfCoding.WebUi.Resources;
 using Microsoft.AspNetCore.Components;
+using DuskOfCoding.WebUi.DTOs;
 
 namespace DuskOfCoding.WebUi.Services;
 
@@ -48,12 +49,6 @@ public class ApiClient
         return false;
     }
 
-    public class SubmitCodeDto
-    {
-        public Guid TaskId { get; set; }
-        public string SourceCode { get; set; } = string.Empty;
-        public string Language { get; set; } = "C#"; 
-    }
 
     // ---- Tasks ----
 
@@ -168,7 +163,7 @@ public class ApiClient
 
     // ---- Submissions ----
 
-    public async Task<Result<SubmissionResultDto>> SubmitCodeAsync(Guid taskId, string sourceCode, string language = nameof(ProgrammingLanguage.CSharp), CancellationToken ct = default)
+    public async Task<Result<SubmissionResultDto>> SubmitCodeAsync(Guid taskId, string sourceCode, string language = nameof(ProgrammingLanguage.CSharp), string? preferredLanguage = null, CancellationToken ct = default)
     {
         try
         {
@@ -177,7 +172,8 @@ public class ApiClient
             { 
                 TaskId = taskId, 
                 SourceCode = sourceCode,
-                Language = language
+                Language = language,
+                PreferredLanguage = preferredLanguage ?? System.Globalization.CultureInfo.CurrentUICulture.Name
             };
             var response = await _http.PostAsJsonAsync("/submissions", payload, ct);
             if (HandleAuthErrors(response)) return Result<SubmissionResultDto>.Failure(string.Empty);
@@ -218,32 +214,25 @@ public class ApiClient
     }
 
     // ---- Admin ----
-    public class AdminStatsDto
-    {
-        public int TotalStudents { get; set; }
-        public int TotalTasks { get; set; }
-        public int TotalSubmissions { get; set; }
-        public double SuccessRate { get; set; }
-    }
 
-    public async Task<Result<AdminStatsDto>> GetAdminStatsAsync()
+    public async Task<Result<TutorStatsDto>> GetTutorStatsAsync()
     {
         try
         {
             await EnsureAuthHeaderAsync();
-            var response = await _http.GetAsync("/admin/stats");
-            if (HandleAuthErrors(response)) return Result<AdminStatsDto>.Failure(string.Empty);
+            var response = await _http.GetAsync("/tutor/stats");
+            if (HandleAuthErrors(response)) return Result<TutorStatsDto>.Failure(string.Empty);
 
             if (response.IsSuccessStatusCode)
             {
-                var data = await response.Content.ReadFromJsonAsync<AdminStatsDto>();
-                return Result<AdminStatsDto>.Success(data!);
+                var data = await response.Content.ReadFromJsonAsync<TutorStatsDto>();
+                return Result<TutorStatsDto>.Success(data!);
             }
-            return Result<AdminStatsDto>.Failure($"Failed to fetch analytics: {response.StatusCode}");
+            return Result<TutorStatsDto>.Failure($"Failed to fetch analytics: {response.StatusCode}");
         }
         catch (HttpRequestException ex)
         {
-            return Result<AdminStatsDto>.Failure(_localizer["Error_Network", ex.Message]);
+            return Result<TutorStatsDto>.Failure(_localizer["Error_Network", ex.Message]);
         }
     }
 
@@ -292,7 +281,7 @@ public class ApiClient
         }
     }
 
-    public async Task<Result<List<TaskFeedbackOverviewDto>>> GetAdminFeedbackOverviewAsync(CancellationToken ct = default)
+    public async Task<Result<List<TaskFeedbackOverviewDto>>> GetTutorFeedbackOverviewAsync(CancellationToken ct = default)
     {
         try
         {
@@ -314,91 +303,3 @@ public class ApiClient
     }
 }
 
-// ---- DTOs (mirrors WebApi responses) ----
-
-public class TaskDto
-{
-    public Guid Id { get; set; }
-    public string Title { get; set; } = "";
-    public string Description { get; set; } = "";
-    public string DifficultyLevel { get; set; } = "";
-    public List<string> Tags { get; set; } = new();
-    public string TestBundleReference { get; set; } = "";
-}
-
-public class CreateTaskDto
-{
-    public string Title { get; set; } = "";
-    public string Description { get; set; } = "";
-    public string DifficultyLevel { get; set; } = "";
-    public List<string> Tags { get; set; } = new();
-    public string TestBundleReference { get; set; } = "";
-}
-
-public class UpdateTaskDto
-{
-    public string Title { get; set; } = "";
-    public string Description { get; set; } = "";
-    public string DifficultyLevel { get; set; } = "";
-    public List<string> Tags { get; set; } = new();
-    public string TestBundleReference { get; set; } = "";
-}
-
-public class SubmissionResultDto
-{
-    public SubmissionDto? Submission { get; set; }
-    public FeedbackDto? Feedback { get; set; }
-}
-
-public class SubmissionDto
-{
-    public Guid Id { get; set; }
-    public Guid TaskId { get; set; }
-    public string SourceCode { get; set; } = "";
-    public SubmissionStatus Status { get; set; } = SubmissionStatus.Pending;
-    public DateTime CreatedAt { get; set; }
-    public DateTime? CompletedAt { get; set; }
-}
-
-public class FeedbackDto
-{
-    public bool IsSuccess { get; set; }
-    public string Summary { get; set; } = "";
-    public List<string>? CompilationMessages { get; set; }
-    public List<string>? TestMessages { get; set; }
-    public string? AiReviewRemarks { get; set; }
-}
-
-public class CreateFeedbackDto
-{
-    public Guid TaskId { get; set; }
-    public int Rating { get; set; }
-    public string? Comment { get; set; }
-    public string FeedbackType { get; set; } = "rating";
-}
-
-public class FeedbackSummaryDto
-{
-    public Guid TaskId { get; set; }
-    public double AverageRating { get; set; }
-    public int TotalFeedbackCount { get; set; }
-    public Dictionary<int, int> RatingDistribution { get; set; } = new();
-    public List<FeedbackCommentDto> RecentComments { get; set; } = new();
-}
-
-public class FeedbackCommentDto
-{
-    public int Rating { get; set; }
-    public string? Comment { get; set; }
-    public string FeedbackType { get; set; } = string.Empty;
-    public DateTime CreatedAt { get; set; }
-}
-
-public class TaskFeedbackOverviewDto
-{
-    public Guid TaskId { get; set; }
-    public string TaskTitle { get; set; } = string.Empty;
-    public double AverageRating { get; set; }
-    public int FeedbackCount { get; set; }
-    public DateTime LatestFeedbackDate { get; set; }
-}

@@ -22,7 +22,8 @@ public static class DependencyInjection
         services.AddScoped<ITaskRepository, EfTaskRepository>();
         services.AddScoped<ISubmissionRepository, EfSubmissionRepository>();
         services.AddScoped<IFeedbackRepository, EfFeedbackRepository>();
-        services.AddSingleton<IAIReviewService, MockAIReviewService>();
+        services.AddConfigurableChatClient();
+        services.AddScoped<IAIReviewService, AiReviewService>();
 
         // Register the Execution Engine with a typed HttpClient
         // Uses the Aspire service discovery name "executionapi" configured in AppHost.

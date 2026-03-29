@@ -108,7 +108,12 @@ This project was built iteratively using a sequence of specialized AI prompts. C
     - **Phase 12.3 - Principal Security Audit:** Implementation of OIDC role mapping standardization (`roles` claim), securing sensitive tokens (erasing `PersistentComponentState` leaks), enforcing `Confidential Client` secrets, and conditional dev-cert validation logic.
 13. **EF Core Concurrency Resolution (`phase13-ef-core-concurrency-master-prompt.md`)**
     - **Goal:** Resolve `DbUpdateConcurrencyException` errors in `SubmissionService` and `TaskService`. Map DTOs onto tracked entities instead of replacing objects.
-14. **How It Was Made (`phase14-how-it-was-made-master-prompt.md` / `phase14-how-it-was-made-context.md`)**
+
+14. **RBAC & AI Refactor (`_ArchivePrompts/phase14-*` and `_ArchivePrompts/phase14-2-*`)**
+    - **Goal:** Comprehensive role refactoring (admin to tutor/admin), fixed OIDC claim mapping for roles, implemented server-side login redirects, resolved 400 Bad Request in the execution engine, and optimized the Socratic Tutor with stricter guardrails and Hungarian-language support.
+101. **How It Was Made (`phase101-how-it-was-made-master-prompt.md` / `phase101-how-it-was-made-context.md`)**
     - **Goal:** A premium storytelling/teaser page at `/how-it-was-made`. Explaining the "vibecoding" philosophy and demonstrating the iterative prompt-driven development.
-15. **Visionary UI/UX Design (`phase15-visionary-design-master-prompt.md`)**
+102. **Visionary UI/UX Design (`phase102-visionary-design-master-prompt.md`)**
     - **Goal:** Cinematic next-gen aesthetic with glassmorphism, dynamic animations, and WebGL integration to elevate the overall user experience.
+103. **Engineering Cockpit UI (`phase103-engineering-cockpit-master-prompt.md`)**
+    - **Goal:** High-density, "Industrial Amber" themed HUD for Dusk of Coding, focusing on interactive circuitry backgrounds, clear logical "De-Blur" sections, and tactical mechanical UI components.
