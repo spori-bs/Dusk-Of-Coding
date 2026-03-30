@@ -111,6 +111,7 @@
   <data name="Hero_Tagline" xml:space="preserve"><value>MI-alapú tanulás</value></data>
   <data name="Hero_Description" xml:space="preserve"><value>Az MI nem írja meg helyetted a tökéletes szoftvert, de megnöveli a hatékonyságod, ha tudod, mit csinálsz. Fókuszálj a stabil alapokra, írj tiszta kódot, és dolgozz a mesterséges intelligenciával úgy, ahogy a profik: eszközként és nem mankóként.</value></data>
   <data name="Hero_CTA" xml:space="preserve"><value>Vágj bele most</value></data>
+  <data name="Hero_HowItWasMade" xml:space="preserve"><value>Így Készült</value></data>
   <data name="Hero_SecondaryCTA" xml:space="preserve"><value>Bemutató</value></data>
 
   <!-- Features -->

@@ -111,6 +111,7 @@
   <data name="Hero_Tagline" xml:space="preserve"><value>MI-alapú tanulás</value></data>
   <data name="Hero_Description" xml:space="preserve"><value>Belső, MI-támogatott .NET kódfuttatási környezet. Strukturált feladatok, C# kód validáció és részletes visszajelzések MI-alapú kódellenőrzéssel, biztonságos sandbox környezetben.</value></data>
   <data name="Hero_CTA" xml:space="preserve"><value>Gyakorlás indítása</value></data>
+  <data name="Hero_HowItWasMade" xml:space="preserve"><value>Így Készült</value></data>
 
   <!-- Features -->
   <data name="Features_Heading" xml:space="preserve"><value>Strukturált betanítás. Automatizált futtatás.</value></data>

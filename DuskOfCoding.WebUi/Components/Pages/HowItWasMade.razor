@@ -1,0 +1,166 @@
+@page "/how-it-was-made"
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<HowItWasMade> Loc
+@inject NavigationManager Nav
+
+<PageTitle>@Loc["PageTitle"]</PageTitle>
+
+<div class="how-it-was-made-container">
+    @* Background Elements *@
+    <div class="background-grid"></div>
+    <div class="glow-orb purple-orb"></div>
+    <div class="glow-orb cyan-orb"></div>
+
+    @* 1. The Hero *@
+    <section class="cinematic-section hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title tracking-in-expand">@Loc["HeroTitle"]</h1>
+            <p class="hero-subtitle fade-in-up">@Loc["HeroSubtitle"]</p>
+            <div class="hero-particle-effect"></div>
+        </div>
+    </section>
+
+    @* 2. The Platform Ecosystem (Architecture Bento Grid) *@
+    <section class="cinematic-section grid-section scroll-reveal">
+        <div class="architecture-bento-grid">
+            
+            @* The Spark *@
+            <div class="bento-cell cell-spark">
+                <div class="bento-content">
+                    <h3 class="bento-title">@Loc["SparkTitle"]</h3>
+                    <p class="bento-desc">@Loc["SparkDesc"]</p>
+                </div>
+                <div class="bento-visual">
+                    <div class="sandbox-cube">
+                        <div class="cube-face front"></div>
+                        <div class="cube-face back"></div>
+                        <div class="cube-face right"></div>
+                        <div class="cube-face left"></div>
+                        <div class="cube-face top"></div>
+                        <div class="cube-face bottom"></div>
+                    </div>
+                </div>
+            </div>
+
+            @* The Language *@
+            <div class="bento-cell cell-language">
+                <div class="bento-content">
+                    <h3 class="bento-title">@Loc["LanguageTitle"]</h3>
+                    <p class="bento-desc">@Loc["LanguageDesc"]</p>
+                </div>
+                <div class="bento-visual language-globe">
+                    <div class="lang-text hu">Magyar</div>
+                    <div class="lang-text en">English</div>
+                </div>
+            </div>
+
+            @* The Aesthetic *@
+            <div class="bento-cell cell-aesthetic">
+                <div class="bento-content">
+                    <h3 class="bento-title">@Loc["AestheticTitle"]</h3>
+                    <p class="bento-desc">@Loc["AestheticDesc"]</p>
+                </div>
+                <div class="bento-visual comparison-slider">
+                    <div class="before-ui generic-ui">Generic Sidebar</div>
+                    <div class="slider-handle"></div>
+                    <div class="after-ui dusk-ui">Dusk Glassmorphism</div>
+                </div>
+            </div>
+
+            @* The Fortress *@
+            <div class="bento-cell cell-fortress">
+                <div class="bento-content">
+                    <h3 class="bento-title">@Loc["FortressTitle"]</h3>
+                    <p class="bento-desc">@Loc["FortressDesc"]</p>
+                </div>
+                <div class="bento-visual perimeter">
+                    <div class="holographic-ring ring-1"></div>
+                    <div class="holographic-ring ring-2"></div>
+                    <div class="holographic-ring ring-3"></div>
+                    <div class="database-core"></div>
+                </div>
+            </div>
+
+            @* The Mentor *@
+            <div class="bento-cell cell-mentor">
+                <div class="bento-content">
+                    <h3 class="bento-title">@Loc["MentorTitle"]</h3>
+                    <p class="bento-desc">@Loc["MentorDesc"]</p>
+                </div>
+                <div class="bento-visual neural-network">
+                    <svg viewBox="0 0 200 200" class="neural-svg">
+                        <path class="neural-path" d="M20,100 C70,150 130,50 180,100" />
+                        <circle cx="20" cy="100" r="4" class="node" />
+                        <circle cx="100" cy="100" r="4" class="node active-node" />
+                        <circle cx="180" cy="100" r="4" class="node" />
+                        <rect x="80" y="50" width="40" height="20" class="code-block" />
+                    </svg>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    @* 3. The Abyss (Where Vibecoding Failed) *@
+    <section class="cinematic-section abyss-section scroll-reveal">
+        <div class="section-content">
+            <div class="text-block abyss-text">
+                <h2 class="section-title text-gradient">@Loc["AbyssTitle"]</h2>
+                <p>@Loc["AbyssDesc"]</p>
+            </div>
+            <div class="visual-block fractured-graph">
+                <svg viewBox="0 0 200 200" class="graph-svg">
+                    <g class="broken-nodes">
+                        <circle cx="50" cy="50" r="6" class="node-err" />
+                        <circle cx="150" cy="50" r="6" class="node-err" />
+                        <circle cx="100" cy="150" r="6" class="node-err" />
+                        <path stroke-dasharray="5,5" class="edge-err" d="M50,50 L150,50" />
+                        <path stroke-dasharray="5,5" class="edge-err" d="M150,50 L100,150" />
+                        <path stroke-dasharray="5,5" class="edge-err" d="M50,50 L100,150" />
+                    </g>
+                    <g class="healing-wave">
+                        <circle cx="100" cy="100" r="0" class="pulse-healing" />
+                        <path class="edge-healed" d="M50,50 L150,50" />
+                        <path class="edge-healed" d="M150,50 L100,150" />
+                        <path class="edge-healed" d="M50,50 L100,150" />
+                        <circle cx="50" cy="50" r="6" class="node-healed" />
+                        <circle cx="150" cy="50" r="6" class="node-healed" />
+                        <circle cx="100" cy="150" r="6" class="node-healed" />
+                    </g>
+                </svg>
+                <div class="directive-ui">
+                    <span class="typing-text">Injecting Socratic Directive...</span>
+                    <span class="success-code">Architecture Stabilized.</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    @* 8. The Prompt Gallery *@
+    <section class="cinematic-section gallery-section scroll-reveal">
+        <h2 class="section-title text-center">@Loc["PromptGalleryTitle"]</h2>
+        <div class="prompt-grid">
+            <PromptCard Title="Phase 1: Architecture" 
+                        Description="The original directive that birthed the Roslyn Roslyn execution environment."
+                        CodeSnippet="Role: You are a Senior .NET Architect...\nBuild a secure compilation service." />
+            
+            <PromptCard Title="Phase 12: Root-Cause Analysis" 
+                        Description="Targeted surgical prompt that solved the HTTP 431 Keycloak death loop."
+                        CodeSnippet="Context: I have an infinite redirect loop.\nDiagnose SameSite=None cookie rejection." />
+            
+            <PromptCard Title="Phase 14: The Mentor" 
+                        Description="Instructing the AI on how to critique code Socratically without giving answers."
+                        CodeSnippet="You are a strict code reviewer.\nProvide a Socratic JSON response." />
+        </div>
+    </section>
+
+    @* 9. The Manifesto (CTA) *@
+    <section class="cinematic-section manifesto-section scroll-reveal">
+        <div class="manifesto-content">
+            <h2 class="manifesto-title">@Loc["VibeManifesto"]</h2>
+            <button class="btn btn-dusk btn-dawn pulse-hover" @onclick='() => Nav.NavigateTo("/register")'>
+                @Loc["JoinPlatform"]
+            </button>
+        </div>
+    </section>
+</div>

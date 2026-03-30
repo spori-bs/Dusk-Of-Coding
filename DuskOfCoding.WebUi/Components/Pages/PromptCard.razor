@@ -1,0 +1,21 @@
+<div class="prompt-card glass-card 3d-tilt">
+    <div class="card-content">
+        <h3 class="card-title">@Title</h3>
+        <p class="card-desc">@Description</p>
+        
+        <div class="code-snippet-container">
+            <pre class="code-snippet"><code>@CodeSnippet</code></pre>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string Title { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Description { get; set; } = string.Empty;
+
+    [Parameter]
+    public string CodeSnippet { get; set; } = string.Empty;
+}

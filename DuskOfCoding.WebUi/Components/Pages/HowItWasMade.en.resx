@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+
+  <data name="PageTitle" xml:space="preserve">
+    <value>How It Was Made</value>
+  </data>
+  <data name="HeroTitle" xml:space="preserve">
+    <value>The Twilight of Coding.</value>
+  </data>
+  <data name="HeroSubtitle" xml:space="preserve">
+    <value>The evolution of a platform: how we replaced line-by-line typing with the surgical direction of artificial intelligence.</value>
+  </data>
+  <data name="SparkTitle" xml:space="preserve">
+    <value>The Spark</value>
+  </data>
+  <data name="SparkDesc" xml:space="preserve">
+    <value>Phase 1-2. Building the 'heart' of the platform—safe code execution via Roslyn and Docker orchestration.</value>
+  </data>
+  <data name="LanguageTitle" xml:space="preserve">
+    <value>The Language</value>
+  </data>
+  <data name="LanguageDesc" xml:space="preserve">
+    <value>Phase 3. Teaching the platform to speak globally. A fully bilingual, real-time localized architecture.</value>
+  </data>
+  <data name="AestheticTitle" xml:space="preserve">
+    <value>The Aesthetic</value>
+  </data>
+  <data name="AestheticDesc" xml:space="preserve">
+    <value>Phase 4-5. The rebranding evolution from generic developer UI to the modern, glass-morphic 'Dusk' identity.</value>
+  </data>
+  <data name="FortressTitle" xml:space="preserve">
+    <value>The Fortress</value>
+  </data>
+  <data name="FortressDesc" xml:space="preserve">
+    <value>Phases 6-10. Securing the perimeter and preserving the legacy. Integrating Keycloak IAM and strict EF Core persistence.</value>
+  </data>
+  <data name="AbyssTitle" xml:space="preserve">
+    <value>The Abyss</value>
+  </data>
+  <data name="AbyssDesc" xml:space="preserve">
+    <value>The architecture eventually collapsed under its own generated complexity. The AI components were logically sound in isolation but tore each other apart in a distributed environment: user sessions vanished in infinite loops, and the database locked up from simultaneous overwrites. The solution wasn't to write more manual code ourselves. We mapped the underlying logical failures and designed highly surgical, Socratic prompts—forcing the AI to interrogate its own flaws and piece the system back together securely.</value>
+  </data>
+  <data name="MentorTitle" xml:space="preserve">
+    <value>The Mentor</value>
+  </data>
+  <data name="MentorDesc" xml:space="preserve">
+    <value>Phases 11-15. Injecting intelligence. Integrating the Socratic Gemini Tutor API natively into the student workflow.</value>
+  </data>
+  <data name="PromptGalleryTitle" xml:space="preserve">
+    <value>The Prompt Gallery</value>
+  </data>
+  <data name="VibeManifesto" xml:space="preserve">
+    <value>We don't code; we build intent.</value>
+  </data>
+  <data name="JoinPlatform" xml:space="preserve">
+    <value>Join the New Dawn</value>
+  </data>
+</root>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+
+  <data name="PageTitle" xml:space="preserve">
+    <value>Így Készült</value>
+  </data>
+  <data name="HeroTitle" xml:space="preserve">
+    <value>A Kódolás Alkonya.</value>
+  </data>
+  <data name="HeroSubtitle" xml:space="preserve">
+    <value>Egy platform evolúciója: hogyan cseréltük le a soronkénti gépelést a mesterséges intelligencia sebészi irányítására.</value>
+  </data>
+  <data name="SparkTitle" xml:space="preserve">
+    <value>A Szikra</value>
+  </data>
+  <data name="SparkDesc" xml:space="preserve">
+    <value>1-2. Fázis. A platform szívének felépítése — biztonságos kód-végrehajtás Roslyn és Docker orchestráció segítségével.</value>
+  </data>
+  <data name="LanguageTitle" xml:space="preserve">
+    <value>A Nyelv</value>
+  </data>
+  <data name="LanguageDesc" xml:space="preserve">
+    <value>3. Fázis. A platform megtanítása a világ nyelveire. Egy teljesen kétnyelvű, valós idejű lokalizált architektúra.</value>
+  </data>
+  <data name="AestheticTitle" xml:space="preserve">
+    <value>Az Esztétika</value>
+  </data>
+  <data name="AestheticDesc" xml:space="preserve">
+    <value>4-5. Fázis. A vizuális evolúció a generikus fejlesztői felületről a modern, glassmorphism alapú 'Dusk' arculatra.</value>
+  </data>
+  <data name="FortressTitle" xml:space="preserve">
+    <value>Az Erődítmény</value>
+  </data>
+  <data name="FortressDesc" xml:space="preserve">
+    <value>6-10. Fázisok. A peremhálózat biztosítása és a hagyaték megőrzése. A Keycloak IAM és a szigorú EF Core perzisztencia integrációja.</value>
+  </data>
+  <data name="AbyssTitle" xml:space="preserve">
+    <value>A Szakadék</value>
+  </data>
+  <data name="AbyssDesc" xml:space="preserve">
+    <value>A rendszer összeroppant a saját generált komplexitása alatt. A komponensek elszigetelve tökéletesek voltak, de az elosztott környezetben összeomlottak: végtelen munkamenet-hurkok, és párhuzamos folyamatok okozta adatbázis-káosz. A megoldás nem a visszalépés volt a manuális kódíráshoz. Precíz, fókuszált instrukciókat terveztünk, amelyekkel rávettük az MI-t, hogy maga izolálja és oldja fel a strukturális hibákat.</value>
+  </data>
+  <data name="MentorTitle" xml:space="preserve">
+    <value>A Mentor</value>
+  </data>
+  <data name="MentorDesc" xml:space="preserve">
+    <value>11-15. Fázisok. Az intelligencia befecskendezése. A szókratészi Gemini Tutor API natív beépítése a diákok munkafolyamatába.</value>
+  </data>
+  <data name="PromptGalleryTitle" xml:space="preserve">
+    <value>A Prompt Galéria</value>
+  </data>
+  <data name="VibeManifesto" xml:space="preserve">
+    <value>Nem kódolunk; szándékot építünk.</value>
+  </data>
+  <data name="JoinPlatform" xml:space="preserve">
+    <value>Csatlakozz az új hajnalhoz</value>
+  </data>
+</root>
