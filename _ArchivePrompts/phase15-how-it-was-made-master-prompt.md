@@ -37,21 +37,37 @@ Implement the following sections as the user scrolls:
 - **Narrative:** "Teaching the platform to speak."
 - **Visual:** A floating globe or dynamic text translation effect showing English and Hungarian strings swapping.
 
-### 4. The Identity (Phase 4 - Keycloak)
-- **Focus:** Security and IAM.
-- **Narrative:** "Securing the perimeter."
-- **Visual:** A "Holographic Perimeter" animation representing Keycloak’s OIDC protection.
-
-### 5. The Evolution (Rebranding)
+### 4. The Aesthetic (Phases 4-5 - Rebrand)
 - **Interaction:** An **Interactive Comparison Slider** component.
 - **Content:** Show the transformation from the original "Generic Sidebar UI" to the "Dusk Glassmorphism" layout.
 
-### 6. The Prompt Gallery
+### 5. The Fortress & Persistence (Phases 6-10, 13)
+- **Focus:** Keycloak IAM, Role-Based Access Control, networking, and EF Core data persistence.
+- **Narrative:** "Securing the perimeter and preserving the legacy."
+- **Visual:** A "Holographic Perimeter" animation representing Keycloak’s OIDC protection interlocking with a pulsing database core.
+
+### 6. The Abyss (Where Vibecoding Failed)
+- **Focus:** The brutal reality of AI-generated architecture, and the surgical solutions that saved it:
+  - **The HTTP 431 Header Bloat:** The infinite redirect loop causing Keycloak correlation cookies to rapidly multiply until the Kestrel server crashed. 
+    - *The Solution:* Firing targeted "Root-Cause Analysis" prompts to external AI to isolate the `SameSite=None` trap and execute a precise `CookiePolicy` fix.
+  - **The Dual-Network Illusion:** Aspire container resolution (`https+http://keycloak`) clashing with browser URLs (`localhost:8080`), resulting in impossible Issuer Mismatches.
+    - *The Solution:* Generating deep-dive architectural prompts to split `Authority` and `MetadataAddress` logic between the Podman network and the Host.
+  - **The EF Core Concurrency Collapse:** AI's failure to respect the Change Tracker, blindly replacing tracked entities and triggering cascading `DbUpdateConcurrencyException` errors.
+    - *The Solution:* Feeding explicit error contexts into external AI (e.g., `phase13-ef-core...`) to enforce strict "Load -> Map -> Save" repository patterns.
+- **Narrative:** "Where the general AI hallucinated, the human architect shifted strategies. We wielded isolated, targeted external AI prompts to dissect the root causes—using AI as a surgical instrument rather than a blunt text generator."
+- **Visual:** A high-contrast "System Failure" glitch effect with red error traces (`SecurityTokenInvalidIssuerException`) rapidly scrolling like a kernel panic. The screen stabilizes as a glowing "Master Root-Cause Prompt" drops in, instantly resolving the chaos into clean, functional code.
+
+### 7. The Mentor (Phases 11-15 - Socratic AI)
+- **Focus:** Deep Gemini Integration, Tutor/Student RBAC, and intelligent feedback pipelines.
+- **Narrative:** "Injecting the intelligence. The platform learns to teach."
+- **Visual:** A flowing, organic "neural network" animation intersecting with sharp, rigid code blocks.
+
+### 8. The Prompt Gallery
 - **Component:** **Holographic Prompt Cards**. 
-- **Content:** Display snippets of actual prompts (e.g., the Master Prompt, the Localization Prompt).
+- **Content:** Display snippets of actual prompts (e.g., the Master Prompt, the AI Integration Prompt, and the Root-Cause Analysis Prompts).
 - **Style:** Cards should look like floating glass artifacts with syntax-highlighted code.
 
-### 7. The Manifesto (The Future)
+### 9. The Manifesto (The Future)
 - **Content:** "Master the craft. Wield the tool." 
 - **CTA:** A high-contrast "Join the New Dawn" button redirecting to `/register`.
 
@@ -74,6 +90,9 @@ Implement the following sections as the user scrolls:
 | `VibeManifesto` | We don't just write code; we wield intent. | Nem csak kódot írunk; szándékot irányítunk. |
 | `SparkTitle` | The Spark | A Szikra |
 | `LanguageTitle` | The Language | A Nyelv |
-| `IdentityTitle` | The Identity | Az Identitás |
-| `EvolutionTitle` | The Evolution | Az Evolúció |
+| `AestheticTitle` | The Aesthetic | Az Esztétika |
+| `FortressTitle` | The Fortress | Az Erődítmény |
+| `AbyssTitle` | The Abyss | A Szakadék |
+| `MentorTitle` | The Mentor | A Mentor |
+| `PromptGalleryTitle` | The Prompt Gallery | A Prompt Galéria |
 | `JoinPlatform` | Join the New Dawn | Csatlakozz az új hajnalhoz |

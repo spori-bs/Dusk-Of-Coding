@@ -1,0 +1,69 @@
+/* PromptCard Glassmorphism & 3D Tilt */
+
+.prompt-card {
+    position: relative;
+    background: rgba(30, 41, 59, 0.4);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+    border-radius: 12px;
+    padding: 1.5rem;
+    overflow: hidden;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                box-shadow 0.4s ease;
+    cursor: default;
+}
+
+.prompt-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 4px;
+    background: linear-gradient(90deg, #06b6d4, #7e22ce);
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+}
+
+.prompt-card:hover {
+    transform: perspective(1000px) rotateX(2deg) rotateY(-2deg) scale3d(1.02, 1.02, 1.02);
+    box-shadow: -10px 15px 30px rgba(126, 34, 206, 0.2), 
+                 10px 15px 30px rgba(6, 182, 212, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.prompt-card:hover::before {
+    opacity: 1;
+}
+
+.card-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #f8fafc;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.5px;
+}
+
+.card-desc {
+    font-size: 0.95rem;
+    color: #cbd5e1;
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+}
+
+.code-snippet-container {
+    background: rgba(15, 23, 42, 0.8);
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 1rem;
+    position: relative;
+}
+
+.code-snippet {
+    font-family: 'Geist Mono', 'Fira Code', monospace;
+    font-size: 0.85rem;
+    color: #38bdf8;
+    white-space: pre-wrap;
+    word-break: break-all;
+    margin: 0;
+}

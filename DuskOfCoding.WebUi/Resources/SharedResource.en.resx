@@ -112,6 +112,7 @@
   <data name="Hero_Description" xml:space="preserve"><value>AI won't write perfect software for you, but it will supercharge your workflow if you know what you are doing. Focus on stable fundamentals, write clean code, and use AI like the pros—as a tool, not a crutch.</value></data>
   <data name="Hero_CTA" xml:space="preserve"><value>Start Practicing</value></data>
   <data name="Hero_SecondaryCTA" xml:space="preserve"><value>Watch Demo</value></data>
+  <data name="Hero_HowItWasMade" xml:space="preserve"><value>How It Was Made</value></data>
 
   <!-- Features -->
   <data name="Features_Heading" xml:space="preserve"><value>Stable fundamentals. Modern tools.</value></data>
