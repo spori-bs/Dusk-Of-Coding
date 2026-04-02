@@ -1,4 +1,4 @@
-# 🌌 Phase 101: "How It Was Made" Context (State Holder)
+# 🌌 Phase 15: "How It Was Made" Context (State Holder)
 
 > **Goal**: Create a cinematic, scroll-driven storytelling page at `/how-it-was-made` that serves as a technical manifesto for the "Vibecoding" journey.
 > **Source**: `phase101-how-it-was-made-master-prompt.md`

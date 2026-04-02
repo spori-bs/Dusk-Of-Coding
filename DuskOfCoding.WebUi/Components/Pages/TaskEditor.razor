@@ -7,8 +7,9 @@
 @inject NavigationManager Nav
 @inject IStringLocalizer<SharedResource> L
 @using Microsoft.AspNetCore.Authorization
+@using DuskOfCoding.Domain.Constants
 
-@attribute [Authorize]
+@attribute [Authorize(Roles = AppRoles.Tutor + "," + AppRoles.Admin)]
 @rendermode InteractiveServer
 
 <PageTitle>@Title | Dusk of Coding</PageTitle>
