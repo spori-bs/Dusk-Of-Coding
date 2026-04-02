@@ -170,6 +170,7 @@
   <data name="Auth_Login" xml:space="preserve"><value>Log in</value></data>
   <data name="Auth_Logout" xml:space="preserve"><value>Log out</value></data>
   <data name="Auth_AdminBadge" xml:space="preserve"><value>Admin</value></data>
+  <data name="Auth_TutorBadge" xml:space="preserve"><value>Tutor</value></data>
   <data name="Nav_Dashboard" xml:space="preserve"><value>Dashboard</value></data>
 
   <!-- Access Denied -->

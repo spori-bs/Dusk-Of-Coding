@@ -68,6 +68,7 @@ builder.Services.AddAuthentication()  // no-op re-registration, just need the bu
         options.ClientId = "webui";
         options.ClientSecret = "secret"; // Matches Keycloak config update
         options.ResponseType = "code";
+        options.ResponseMode = "query"; // Fix for Chromium SameSite=Lax strictness dropping POST cookies
         options.SaveTokens = true;
         options.RequireHttpsMetadata = false;
         options.PushedAuthorizationBehavior = PushedAuthorizationBehavior.Disable;

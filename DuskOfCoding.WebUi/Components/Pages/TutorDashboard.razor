@@ -1,5 +1,6 @@
 @page "/tutor"
-@attribute [Microsoft.AspNetCore.Authorization.Authorize(Roles = "tutor")]
+@using DuskOfCoding.Domain.Constants
+@attribute [Microsoft.AspNetCore.Authorization.Authorize(Roles = AppRoles.Tutor + "," + AppRoles.Admin)]
 @inject DuskOfCoding.WebUi.Services.ApiClient Api
 @using DuskOfCoding.WebUi.DTOs
 
