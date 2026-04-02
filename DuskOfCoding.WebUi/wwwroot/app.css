@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500;700&display=swap');
 
 :root {
     --dusk-bg-dark: #09090b;
@@ -8,13 +9,25 @@
     --dusk-purple-light: #7c3aed;
     --dusk-orange-glow: #ea580c;
     --dusk-orange-warm: #c2410c;
-    
+
     --dusk-text-primary: #f8fafc;
     --dusk-text-muted: #94a3b8;
 
     --glass-bg: rgba(15, 23, 42, 0.45);
     --glass-border: rgba(255, 255, 255, 0.08);
     --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+
+    /* ── Obsidian Foundry Design System (Phase 17+) ─────── */
+    --ck-bg:           #0D0D0E;
+    --ck-surface:      #1a1a1d;
+    --ck-amber:        #ea580c;
+    --ck-amber-bright: #f97316;
+    --ck-amber-dim:    rgba(234, 88, 12, 0.12);
+    --ck-border:       rgba(234, 88, 12, 0.2);
+    --ck-border-dim:   rgba(234, 88, 12, 0.06);
+    --ck-font:         'Geist Mono', 'Fira Code', monospace;
+    --ck-shadow:       0 0 0 1px rgba(234,88,12,0.1), 0 4px 24px rgba(0,0,0,0.6);
+    --ck-muted:        #6b7280;
 }
 
 html, body {
@@ -45,6 +58,88 @@ a:hover, .btn-link:hover {
     box-shadow: 0 6px 20px rgba(124, 58, 237, 0.5);
 }
 
+/* ── Obsidian Foundry: Amber CTA button ─────────────────────── */
+.btn-amber {
+    background: transparent;
+    border: 1px solid var(--ck-amber);
+    color: var(--ck-amber);
+    font-family: var(--ck-font);
+    font-size: 0.82rem;
+    letter-spacing: 0.08em;
+    padding: 0.6rem 1.5rem;
+    border-radius: 0;
+    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    cursor: pointer;
+}
+.btn-amber:hover {
+    background: var(--ck-amber-dim);
+    color: var(--ck-amber-bright);
+    border-color: var(--ck-amber-bright);
+}
+
+/* ── Obsidian Foundry: Section header pattern ────────────────── */
+.ck-section-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+.ck-section-prefix {
+    font-family: var(--ck-font);
+    font-size: 0.65rem;
+    color: var(--ck-amber);
+    letter-spacing: 0.18em;
+    white-space: nowrap;
+}
+.ck-section-title {
+    font-family: var(--ck-font);
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--dusk-text-primary);
+    white-space: nowrap;
+    margin: 0;
+}
+.ck-section-line {
+    flex: 1;
+    height: 1px;
+    background: var(--ck-border-dim);
+}
+
+/* ── Obsidian Foundry: Amber input ──────────────────────────── */
+.ck-input {
+    background-color: #111113;
+    border: 1px solid var(--ck-border);
+    color: var(--dusk-text-primary);
+    border-radius: 0;
+    font-family: var(--ck-font);
+    font-size: 0.85rem;
+    transition: border-color 0.2s;
+}
+.ck-input:focus {
+    background-color: #111113;
+    border-color: var(--ck-amber);
+    box-shadow: 0 0 0 2px rgba(234, 88, 12, 0.2);
+    color: var(--dusk-text-primary);
+}
+.ck-input::placeholder {
+    color: var(--ck-muted);
+}
+
+/* ── Obsidian Foundry: Pulsing status dot ───────────────────── */
+.ck-status-dot {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 0;
+    background: var(--ck-amber);
+    flex-shrink: 0;
+    animation: ckPulseDot 2s ease-in-out infinite;
+}
+@keyframes ckPulseDot {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.25; }
+}
+
 .dusk-btn-outline {
     color: var(--dusk-text-primary);
     background-color: transparent;
@@ -57,12 +152,12 @@ a:hover, .btn-link:hover {
     border-color: rgba(255, 255, 255, 0.4);
 }
 
-/* Glass panel utility class */
+/* Glass panel — amber-tinted border (Phase 18 update) */
 .dusk-glass-panel {
     background: var(--glass-bg);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid var(--glass-border);
+    border: 1px solid rgba(234, 88, 12, 0.12);
     border-radius: 16px;
     box-shadow: var(--glass-shadow);
 }

@@ -1,0 +1,40 @@
+/* Table — amber accents, sufficient specificity over Bootstrap */
+.dusk-table {
+    color: var(--dusk-text-muted);
+    --bs-table-bg: transparent;
+    background-color: transparent;
+}
+
+.dusk-table thead {
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.dusk-table th {
+    color: var(--ck-amber);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    border-bottom: 1px solid rgba(234, 88, 12, 0.2);
+}
+
+.dusk-table tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+.dusk-table tbody tr:hover {
+    background-color: rgba(234, 88, 12, 0.03);
+}
+
+/* Difficulty badge — amber */
+.dusk-badge-info {
+    background: rgba(234, 88, 12, 0.1);
+    color: var(--ck-amber-bright);
+    border: 1px solid rgba(234, 88, 12, 0.25);
+}
+
+.dusk-badge-secondary {
+    background: rgba(148, 163, 184, 0.15);
+    color: #94a3b8;
+    border: 1px solid rgba(148, 163, 184, 0.3);
+}

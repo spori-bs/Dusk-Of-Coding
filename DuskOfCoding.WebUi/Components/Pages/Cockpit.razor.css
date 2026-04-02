@@ -1,0 +1,639 @@
+/* Geist Mono is imported via wwwroot/app.css */
+
+/* ─── Cockpit CSS Variables ───────────────────────────────── */
+:root {
+    --ck-bg:           #0D0D0E;
+    --ck-surface:      #1a1a1d;
+    --ck-border:       rgba(234, 88, 12, 0.2);
+    --ck-border-dim:   rgba(234, 88, 12, 0.08);
+    --ck-amber:        #ea580c;
+    --ck-amber-bright: #f97316;
+    --ck-amber-dim:    rgba(234, 88, 12, 0.15);
+    --ck-text:         #f8fafc;
+    --ck-muted:        #6b7280;
+    --ck-shadow:       0 0 0 1px rgba(234,88,12,0.1), 0 4px 24px rgba(0,0,0,0.6);
+    --ck-font:         'Geist Mono', 'Fira Code', monospace;
+}
+
+/* ─── Root ────────────────────────────────────────────────── */
+.cockpit-root {
+    font-family: var(--ck-font);
+    background-color: var(--ck-bg);
+    color: var(--ck-text);
+    min-height: 100vh;
+    /* Bleed past MainLayout's container padding */
+    margin: -1.5rem -12px 0;
+    overflow-x: hidden;
+}
+
+/* ─── Section base ────────────────────────────────────────── */
+.cockpit-section {
+    padding: 5rem 4rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    margin-bottom: 2.5rem;
+}
+
+.section-prefix {
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: var(--ck-amber);
+    letter-spacing: 0.15em;
+    white-space: nowrap;
+}
+
+.section-title {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--ck-text);
+    letter-spacing: 0.05em;
+    margin: 0;
+    white-space: nowrap;
+}
+
+.section-line {
+    flex: 1;
+    height: 1px;
+    background: var(--ck-border);
+}
+
+/* ─── Scroll-Driven Reveals ───────────────────────────────── */
+@supports (animation-timeline: view()) {
+    .cockpit-reveal {
+        animation: revealSection linear both;
+        animation-timeline: view();
+        animation-range: entry 0% entry 25%;
+    }
+}
+
+@supports not (animation-timeline: view()) {
+    .cockpit-reveal {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@keyframes revealSection {
+    from {
+        opacity: 0;
+        transform: translateY(24px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ─── 1. HERO ─────────────────────────────────────────────── */
+.cockpit-hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid var(--ck-border);
+    overflow: hidden;
+}
+
+/* PCB Background SVG */
+.pcb-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Corner accent brackets */
+.hero-corner-tl,
+.hero-corner-br {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    pointer-events: none;
+}
+
+.hero-corner-tl {
+    top: 2rem;
+    left: 2rem;
+    border-top: 2px solid var(--ck-amber);
+    border-left: 2px solid var(--ck-amber);
+}
+
+.hero-corner-br {
+    bottom: 2rem;
+    right: 2rem;
+    border-bottom: 2px solid var(--ck-amber);
+    border-right: 2px solid var(--ck-amber);
+}
+
+/* Hero content */
+.hero-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    max-width: 800px;
+    padding: 2rem;
+}
+
+.hero-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    background: var(--ck-amber-dim);
+    border: 1px solid var(--ck-border);
+    padding: 0.3rem 0.8rem;
+    margin-bottom: 2rem;
+}
+
+.hero-label-text {
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    color: var(--ck-amber-bright);
+    font-weight: 500;
+}
+
+.hero-title {
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    font-weight: 700;
+    color: var(--ck-text);
+    line-height: 1.05;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.02em;
+}
+
+.hero-title-accent {
+    color: var(--ck-amber);
+}
+
+/* De-Blur subtitle — pure CSS hover on parent section */
+.hero-subtitle {
+    font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+    font-weight: 300;
+    color: var(--ck-muted);
+    letter-spacing: 0.08em;
+    margin-bottom: 2.5rem;
+    filter: blur(6px);
+    opacity: 0.4;
+    transition: filter 0.6s ease, opacity 0.6s ease;
+}
+
+.cockpit-hero:hover .hero-subtitle {
+    filter: blur(0);
+    opacity: 1;
+}
+
+/* CTA Button */
+.cockpit-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: transparent;
+    border: 1px solid var(--ck-amber);
+    color: var(--ck-amber);
+    font-family: var(--ck-font);
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    padding: 0.75rem 2rem;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+    border-radius: 0;
+}
+
+.cockpit-btn-primary:hover {
+    background: var(--ck-amber-dim);
+    color: var(--ck-amber-bright);
+}
+
+.btn-arrow {
+    transition: transform 0.2s ease;
+}
+
+.cockpit-btn-primary:hover .btn-arrow {
+    transform: translateX(4px);
+}
+
+/* ─── Status Dot (pulsing) ────────────────────────────────── */
+.status-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 0;
+    background: var(--ck-amber);
+}
+
+.pulse-dot {
+    animation: pulseDot 2s ease-in-out infinite;
+}
+
+@keyframes pulseDot {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.3; }
+}
+
+/* ─── 2. INSTRUMENT PANELS ───────────────────────────────── */
+.status-grid-section {
+    border-bottom: 1px solid var(--ck-border-dim);
+}
+
+.status-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1px;
+    background: var(--ck-border-dim);
+    border: 1px solid var(--ck-border-dim);
+}
+
+.instrument-panel {
+    background: var(--ck-bg);
+    cursor: pointer;
+    transition: background 0.15s ease;
+    overflow: hidden;
+}
+
+.instrument-panel:hover {
+    background: var(--ck-surface);
+}
+
+/* Snap animation on expand */
+.instrument-panel.panel-deployed {
+    animation: snapOpen 150ms ease-out;
+}
+
+@keyframes snapOpen {
+    0%   { transform: scaleY(0.97); }
+    100% { transform: scaleY(1); }
+}
+
+.panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.2rem;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s;
+}
+
+.panel-deployed .panel-header {
+    border-bottom-color: var(--ck-border);
+}
+
+.panel-header-left {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+}
+
+.panel-icon {
+    font-size: 1rem;
+    color: var(--ck-amber);
+}
+
+.panel-title {
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    color: var(--ck-text);
+    text-transform: uppercase;
+}
+
+.panel-header-right {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.panel-status-text {
+    font-size: 0.6rem;
+    color: var(--ck-amber);
+    letter-spacing: 0.08em;
+}
+
+.panel-dot {
+    width: 6px;
+    height: 6px;
+}
+
+.panel-chevron {
+    font-size: 1.2rem;
+    color: var(--ck-muted);
+    line-height: 1;
+    transition: transform 0.2s ease, color 0.2s ease;
+    display: inline-block;
+}
+
+.chevron-open {
+    transform: rotate(90deg);
+    color: var(--ck-amber);
+}
+
+/* Grid-row expand trick — smooth height transition */
+.panel-body-wrapper {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.25s ease;
+}
+
+.panel-deployed .panel-body-wrapper {
+    grid-template-rows: 1fr;
+}
+
+.panel-body {
+    overflow: hidden;
+    padding: 0 1.2rem;
+    transition: padding 0.25s ease;
+}
+
+.panel-deployed .panel-body {
+    padding: 1rem 1.2rem 1.2rem;
+}
+
+.panel-desc {
+    font-size: 0.75rem;
+    color: var(--ck-muted);
+    line-height: 1.6;
+    margin-bottom: 0.8rem;
+    font-family: 'Geist Mono', monospace;
+}
+
+.panel-readout {
+    background: #111113;
+    border: 1px solid var(--ck-border-dim);
+    padding: 0.75rem 1rem;
+    font-size: 0.68rem;
+    color: var(--ck-amber-bright);
+    line-height: 1.7;
+    overflow-x: auto;
+    border-radius: 0;
+    margin: 0;
+}
+
+.panel-readout code {
+    font-family: var(--ck-font);
+    background: none;
+    color: inherit;
+    padding: 0;
+}
+
+/* ─── 3. SOCRATIC WAVE ───────────────────────────────────── */
+.wave-section {
+    border-bottom: 1px solid var(--ck-border-dim);
+}
+
+.wave-console {
+    background: var(--ck-surface);
+    border: 1px solid var(--ck-border);
+    padding: 2rem;
+}
+
+.wave-controls {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.wave-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    color: var(--ck-muted);
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.wave-select {
+    background: #111113;
+    border: 1px solid var(--ck-border);
+    color: var(--ck-amber);
+    font-family: var(--ck-font);
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    padding: 0.4rem 0.8rem;
+    border-radius: 0;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.wave-select:focus {
+    border-color: var(--ck-amber);
+}
+
+.wave-alert-badge {
+    font-size: 0.7rem;
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    padding: 0.2rem 0.6rem;
+    letter-spacing: 0.05em;
+    animation: alertBlink 1s step-end infinite;
+}
+
+@keyframes alertBlink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.4; }
+}
+
+/* Wave display container */
+.wave-display {
+    position: relative;
+    height: 80px;
+    background: #0a0a0b;
+    border: 1px solid var(--ck-border-dim);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+/* The wave line */
+.wave-line {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* Idle — flat line */
+.wave-idle .wave-line {
+    background: none;
+    border-top: 1px solid rgba(234, 88, 12, 0.5);
+    top: 50%;
+    height: 0;
+}
+
+/* Guidance — smooth sine wave via clip-path */
+.wave-guidance .wave-line {
+    background: rgba(234, 88, 12, 0.15);
+    clip-path: polygon(
+        0% 60%, 6.25% 40%, 12.5% 55%, 18.75% 45%,
+        25% 60%, 31.25% 40%, 37.5% 55%, 43.75% 45%,
+        50% 60%, 56.25% 40%, 62.5% 55%, 68.75% 45%,
+        75% 60%, 81.25% 40%, 87.5% 55%, 93.75% 45%,
+        100% 60%, 100% 100%, 0% 100%
+    );
+    border-top: 1px solid var(--ck-amber);
+    animation: waveGuide 1.8s ease-in-out infinite;
+}
+
+/* Warning — jagged / sharp peaks */
+.wave-warning .wave-line {
+    background: rgba(239, 68, 68, 0.15);
+    clip-path: polygon(
+        0% 50%, 5% 20%, 10% 80%, 15% 30%,
+        20% 70%, 25% 15%, 30% 85%, 35% 25%,
+        40% 75%, 45% 10%, 50% 90%, 55% 20%,
+        60% 80%, 65% 15%, 70% 85%, 75% 25%,
+        80% 70%, 85% 20%, 90% 80%, 95% 30%,
+        100% 50%, 100% 100%, 0% 100%
+    );
+    border-top: 1px solid #ef4444;
+    animation: waveAlert 0.6s linear infinite;
+}
+
+@keyframes waveGuide {
+    0% {
+        clip-path: polygon(
+            0% 60%, 6.25% 40%, 12.5% 55%, 18.75% 45%,
+            25% 60%, 31.25% 40%, 37.5% 55%, 43.75% 45%,
+            50% 60%, 56.25% 40%, 62.5% 55%, 68.75% 45%,
+            75% 60%, 81.25% 40%, 87.5% 55%, 93.75% 45%,
+            100% 60%, 100% 100%, 0% 100%
+        );
+    }
+    50% {
+        clip-path: polygon(
+            0% 45%, 6.25% 60%, 12.5% 40%, 18.75% 58%,
+            25% 42%, 31.25% 60%, 37.5% 40%, 43.75% 58%,
+            50% 42%, 56.25% 60%, 62.5% 40%, 68.75% 58%,
+            75% 42%, 81.25% 60%, 87.5% 40%, 93.75% 58%,
+            100% 42%, 100% 100%, 0% 100%
+        );
+    }
+    100% {
+        clip-path: polygon(
+            0% 60%, 6.25% 40%, 12.5% 55%, 18.75% 45%,
+            25% 60%, 31.25% 40%, 37.5% 55%, 43.75% 45%,
+            50% 60%, 56.25% 40%, 62.5% 55%, 68.75% 45%,
+            75% 60%, 81.25% 40%, 87.5% 55%, 93.75% 45%,
+            100% 60%, 100% 100%, 0% 100%
+        );
+    }
+}
+
+@keyframes waveAlert {
+    0% {
+        clip-path: polygon(
+            0% 50%, 5% 20%, 10% 80%, 15% 30%,
+            20% 70%, 25% 15%, 30% 85%, 35% 25%,
+            40% 75%, 45% 10%, 50% 90%, 55% 20%,
+            60% 80%, 65% 15%, 70% 85%, 75% 25%,
+            80% 70%, 85% 20%, 90% 80%, 95% 30%,
+            100% 50%, 100% 100%, 0% 100%
+        );
+    }
+    50% {
+        clip-path: polygon(
+            0% 50%, 5% 80%, 10% 20%, 15% 75%,
+            20% 25%, 25% 85%, 30% 15%, 35% 80%,
+            40% 20%, 45% 90%, 50% 10%, 55% 85%,
+            60% 15%, 65% 80%, 70% 20%, 75% 75%,
+            80% 30%, 85% 85%, 90% 15%, 95% 70%,
+            100% 50%, 100% 100%, 0% 100%
+        );
+    }
+}
+
+/* Scanline overlay */
+.wave-scanline {
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+        to bottom,
+        transparent 0px,
+        transparent 3px,
+        rgba(0, 0, 0, 0.08) 3px,
+        rgba(0, 0, 0, 0.08) 4px
+    );
+    pointer-events: none;
+}
+
+.wave-footer-readout {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+}
+
+.readout-key {
+    color: var(--ck-muted);
+}
+
+.readout-val {
+    color: var(--ck-amber-bright);
+    margin-right: 0.5rem;
+}
+
+/* ─── 4. MANIFESTO ───────────────────────────────────────── */
+.manifesto-section {
+    text-align: center;
+}
+
+.manifesto-inner {
+    padding: 4rem 2rem;
+    border: 1px solid var(--ck-border);
+    background: var(--ck-surface);
+}
+
+.manifesto-terminal-line {
+    font-size: clamp(1.2rem, 3vw, 2rem);
+    font-weight: 700;
+    color: var(--ck-amber);
+    letter-spacing: 0.1em;
+    margin-bottom: 1.5rem;
+}
+
+.manifesto-sub {
+    font-size: 0.9rem;
+    color: var(--ck-muted);
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+}
+
+.manifesto-tagline {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--ck-text);
+    letter-spacing: 0.06em;
+    margin-bottom: 2.5rem;
+}
+
+.cockpit-btn-terminal {
+    display: inline-block;
+    background: transparent;
+    border: 1px solid var(--ck-amber);
+    color: var(--ck-amber);
+    font-family: var(--ck-font);
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+    padding: 0.85rem 2.5rem;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+    border-radius: 0;
+}
+
+.cockpit-btn-terminal:hover {
+    background: var(--ck-amber-dim);
+    color: var(--ck-amber-bright);
+    outline: 1px solid var(--ck-amber);
+    outline-offset: 3px;
+}

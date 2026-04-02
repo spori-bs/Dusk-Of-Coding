@@ -6,11 +6,11 @@
 
 <PageTitle>Tutor Dashboard — DuskOfCoding</PageTitle>
 
-<div class="d-flex justify-content-between align-items-center mb-5">
-    <div>
-        <h2 class="display-6 fw-bold text-white mb-0">Platform Overview</h2>
-        <p class="text-white-50 mb-0 mt-2">Aggregate analytics for all student submissions.</p>
-    </div>
+<div class="ck-section-header mb-5">
+    <span class="ck-section-prefix">// 01</span>
+    <h2 class="ck-section-title">Platform Overview</h2>
+    <div class="ck-section-line"></div>
+    <span class="ck-status-dot"></span>
 </div>
 
 @if (_isLoading)
@@ -30,7 +30,7 @@ else if (_stats != null)
     <div class="row g-4">
         <!-- Metric Cards -->
         <div class="col-md-3">
-            <div class="dusk-glass-panel p-4 h-100 text-center">
+            <div class="dusk-glass-panel ck-card-top p-4 h-100 text-center">
                 <i class="bi bi-people display-4 text-info mb-3"></i>
                 <h3 class="fw-bold text-white mb-1">@_stats.TotalStudents</h3>
                 <span class="text-white-50 small text-uppercase fw-semibold">Active Students</span>
@@ -62,9 +62,13 @@ else if (_stats != null)
     @if (_feedbackOverview != null && _feedbackOverview.Any())
     {
         <div class="mt-5 dusk-glass-panel p-4">
-            <h4 class="text-white fw-bold mb-4">Task Feedback Analytics</h4>
+            <div class="ck-section-header mb-4">
+                <span class="ck-section-prefix">// 02</span>
+                <span class="ck-section-title">Task Feedback Analytics</span>
+                <div class="ck-section-line"></div>
+            </div>
             <div class="table-responsive">
-                <table class="table table-dark table-hover align-middle mb-0">
+                <table class="table table-dark table-hover align-middle mb-0 ck-table">
                     <thead class="text-uppercase small text-white-50">
                         <tr>
                             <th>Task</th>
