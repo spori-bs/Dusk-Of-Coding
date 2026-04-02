@@ -1,0 +1,52 @@
+@using DuskOfCoding.WebUi.Resources
+@inject IStringLocalizer<SharedResource> L
+
+<section class="system-section py-5">
+    <div class="container py-5">
+
+        <div class="ck-section-header mb-5">
+            <span class="ck-section-prefix">// THE SYSTEM</span>
+            <div class="ck-section-line"></div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="sys-panel">
+                    <div class="sys-panel-id">sys-sandbox</div>
+                    <h3 class="sys-panel-title">@L["Sys_Sandbox_Title"]</h3>
+                    <p class="sys-panel-body">@L["Sys_Sandbox_Body"]</p>
+                    <div class="sys-panel-readout">STATUS // ACTIVE</div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="sys-panel">
+                    <div class="sys-panel-id">sys-mentor</div>
+                    <h3 class="sys-panel-title">@L["Sys_Mentor_Title"]</h3>
+                    <p class="sys-panel-body">@L["Sys_Mentor_Body"]</p>
+                    <div class="sys-panel-readout">STATUS // ACTIVE</div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="sys-panel">
+                    <div class="sys-panel-id">sys-identity</div>
+                    <h3 class="sys-panel-title">@L["Sys_Identity_Title"]</h3>
+                    <p class="sys-panel-body">@L["Sys_Identity_Body"]</p>
+                    <div class="sys-panel-readout">STATUS // ACTIVE</div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="sys-panel">
+                    <div class="sys-panel-id">sys-resilience</div>
+                    <h3 class="sys-panel-title">@L["Sys_Resilience_Title"]</h3>
+                    <p class="sys-panel-body">@L["Sys_Resilience_Body"]</p>
+                    <div class="sys-panel-readout">STATUS // ACTIVE</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="sys-interconnect mt-5">
+            &gt; All systems are interconnected. Failure in one triggers recovery in another.
+        </div>
+
+    </div>
+</section>

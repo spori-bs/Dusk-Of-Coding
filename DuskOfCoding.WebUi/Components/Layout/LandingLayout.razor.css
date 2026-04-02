@@ -1,0 +1,86 @@
+.landing-page-wrapper {
+    font-family: var(--ck-font);
+    background-color: var(--ck-bg);
+    color: var(--dusk-text-primary);
+    overflow-x: hidden;
+}
+
+/* ── Header ─────────────────────────────────────────────────── */
+.landing-header {
+    padding: 0 4rem;
+    height: 70px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(13, 13, 14, 0.88);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 1px 0 0 rgba(234, 88, 12, 0.08);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    border-bottom: 1px solid var(--ck-border);
+}
+
+.landing-logo {
+    font-family: var(--ck-font);
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--dusk-text-primary);
+    text-decoration: none;
+    letter-spacing: 0.05em;
+    transition: text-shadow 0.3s ease;
+}
+
+.landing-logo:hover {
+    color: white;
+    text-decoration: none;
+}
+
+.logo-prefix {
+    color: var(--ck-amber);
+}
+
+.landing-nav-link {
+    font-family: var(--ck-font);
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    color: var(--ck-muted);
+    text-decoration: none;
+    transition: color 0.2s ease;
+    text-transform: uppercase;
+}
+
+.landing-nav-link:hover {
+    color: var(--ck-amber-bright);
+    text-decoration: none;
+}
+
+.landing-role-badge {
+    font-family: var(--ck-font);
+    font-size: 0.65rem;
+    color: var(--ck-amber);
+    border: 1px solid var(--ck-border);
+    padding: 0.25rem 0.6rem;
+    letter-spacing: 0.1em;
+}
+
+/* ── Main ────────────────────────────────────────────────────── */
+.landing-main {
+    padding-top: 70px; /* fixed header offset */
+}
+
+/* ── Footer ──────────────────────────────────────────────────── */
+.landing-footer {
+    padding: 2rem 0;
+    background: var(--ck-bg);
+    border-top: 1px solid var(--ck-border-dim);
+}
+
+.footer-copy {
+    font-family: var(--ck-font);
+    font-size: 0.65rem;
+    color: var(--ck-muted);
+    letter-spacing: 0.15em;
+}

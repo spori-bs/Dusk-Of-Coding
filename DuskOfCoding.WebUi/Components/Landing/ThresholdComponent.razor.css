@@ -1,0 +1,119 @@
+.threshold-section {
+    background: var(--ck-bg);
+    border-top: 1px solid var(--ck-border-dim);
+}
+
+/* Checkpoint divider */
+.checkpoint-divider {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.checkpoint-line {
+    flex: 1;
+    height: 1px;
+    background: var(--ck-border-dim);
+}
+
+.checkpoint-label {
+    font-family: var(--ck-font);
+    font-size: 0.65rem;
+    color: var(--ck-amber);
+    letter-spacing: 0.2em;
+    white-space: nowrap;
+    border: 1px solid var(--ck-border);
+    padding: 0.3rem 0.8rem;
+}
+
+/* Statement */
+.threshold-statement {
+    font-family: var(--ck-font);
+    font-size: 1.05rem;
+    color: var(--dusk-text-primary);
+    text-align: center;
+    line-height: 1.8;
+}
+
+.threshold-statement p {
+    margin-bottom: 0.25rem;
+}
+
+/* Binary choice panels */
+.threshold-choice {
+    border: 1px solid var(--ck-border);
+    padding: 2rem;
+    text-align: center;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    transition: border-color 0.2s ease;
+}
+
+.threshold-choice--enter {
+    border-color: var(--ck-border);
+}
+
+.threshold-choice--enter:hover {
+    border-color: rgba(234, 88, 12, 0.5);
+}
+
+.threshold-choice--wait {
+    border-color: rgba(107, 114, 128, 0.2);
+}
+
+.threshold-choice-title {
+    font-family: var(--ck-font);
+    font-size: 0.78rem;
+    color: var(--ck-amber);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+}
+
+.threshold-choice-desc {
+    font-family: var(--ck-font);
+    font-size: 0.78rem;
+    color: var(--ck-muted);
+    line-height: 1.6;
+    flex: 1;
+}
+
+/* Dimmed button for the "not ready yet" choice */
+.threshold-btn-dim {
+    background: transparent;
+    border: 1px solid rgba(107, 114, 128, 0.3);
+    color: var(--ck-muted);
+    font-family: var(--ck-font);
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    border-radius: 0;
+    padding: 0.6rem 1.5rem;
+    transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.threshold-btn-dim:hover {
+    border-color: var(--ck-muted);
+    color: var(--dusk-text-primary);
+}
+
+/* Authenticated state */
+.threshold-authenticated {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 2rem;
+    border: 1px solid var(--ck-border-dim);
+}
+
+.auth-readout {
+    font-family: var(--ck-font);
+    font-size: 0.82rem;
+    color: var(--ck-muted);
+}
+
+.auth-readout strong {
+    color: var(--ck-amber-bright);
+}

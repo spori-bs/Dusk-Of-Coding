@@ -5,39 +5,37 @@
 
 <div class="landing-page-wrapper">
     <header class="landing-header">
-        <a href="" class="landing-logo">@L["AppTitle"]</a>
-        <div class="d-flex align-items-center">
+        <a href="" class="landing-logo"><span class="logo-prefix">&gt; </span>@L["AppTitle"]</a>
+        <div class="d-flex align-items-center gap-3">
             <AuthorizeView>
                 <Authorized>
-                    <a href="/practice" class="btn btn-link dusk-nav-link text-decoration-none me-4">@L["Landing_Practice"]</a>
+                    <a href="/practice" class="landing-nav-link">@L["Landing_Practice"]</a>
                     <AuthorizeView Roles="@($"{AppRoles.Tutor},{AppRoles.Admin}")">
                         <Authorized Context="tutorCtx">
-                            <a href="/tasks" class="btn btn-link dusk-nav-link text-decoration-none me-4">@L["Landing_ManageTasks"]</a>
+                            <a href="/tasks" class="landing-nav-link">@L["Landing_ManageTasks"]</a>
                         </Authorized>
                     </AuthorizeView>
+                    <a href="/cockpit" class="landing-nav-link">Cockpit</a>
                 </Authorized>
             </AuthorizeView>
-            <a href="#demo" class="btn btn-outline-light btn-sm me-3 dusk-btn-outline">@L["Landing_WatchDemo"]</a>
+            <a href="/how-it-was-made" class="landing-nav-link">@L["Hero_HowItWasMade"]</a>
             <AuthorizeView>
                 <Authorized>
-                    <span class="text-white me-3 d-none d-md-inline" style="font-size: 0.9rem;">
-                        <i class="bi bi-person-circle me-1"></i> @context.User.Identity?.Name
-                    </span>
                     <AuthorizeView Roles="@($"{AppRoles.Tutor},{AppRoles.Admin}")">
                         <Authorized Context="tutorCtx2">
-                            <span class="badge bg-warning text-dark me-3 px-2 py-1" style="font-size: 0.75rem;">
+                            <span class="landing-role-badge">
                                 <i class="bi bi-shield-lock-fill me-1"></i>@L["Auth_AdminBadge"]
                             </span>
                         </Authorized>
                     </AuthorizeView>
-                    <form action="logout" method="post" class="m-0 me-3">
+                    <form action="logout" method="post" class="m-0">
                         <AntiforgeryToken />
-                        <button type="submit" class="btn btn-sm dusk-btn-outline">@L["Auth_Logout"]</button>
+                        <button type="submit" class="btn btn-amber btn-sm">@L["Auth_Logout"]</button>
                     </form>
                 </Authorized>
                 <NotAuthorized>
-                    <a href="login?returnUrl=@Uri.EscapeDataString(NavigationManager.ToBaseRelativePath(NavigationManager.Uri))" class="btn btn-sm dusk-btn-outline me-3">@L["Auth_Login"]</a>
-                    <a href="/register" class="btn btn-primary btn-sm me-3 px-4">@L["Landing_GetStarted"]</a>
+                    <a href="login?returnUrl=@Uri.EscapeDataString(NavigationManager.ToBaseRelativePath(NavigationManager.Uri))" class="btn btn-amber btn-sm">@L["Auth_Login"]</a>
+                    <a href="/register" class="btn btn-amber btn-sm">@L["Landing_GetStarted"]</a>
                 </NotAuthorized>
             </AuthorizeView>
             <LanguageSelector />
@@ -50,74 +48,7 @@
 
     <footer class="landing-footer">
         <div class="container text-center">
-            <span class="opacity-75">&copy; @DateTime.Now.Year @L["Footer_Rights"]</span>
+            <span class="footer-copy">// DUSK OF CODING — &copy; @DateTime.Now.Year @L["Footer_Rights"]</span>
         </div>
-        <!-- Distraction-free: No exit links -->
     </footer>
 </div>
-
-<style>
-    .landing-page-wrapper {
-        font-family: 'Outfit', sans-serif;
-        background-color: var(--dusk-bg-dark);
-        color: var(--dusk-text-primary);
-        overflow-x: hidden;
-    }
-    .landing-header {
-        padding: 0 4rem;
-        height: 80px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background: rgba(9, 9, 11, 0.7);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
-        position: fixed;
-        width: 100%;
-        top: 0;
-        z-index: 1000;
-        border-bottom: 1px solid rgba(255,255,255,0.05);
-    }
-    .landing-logo {
-        font-size: 1.75rem;
-        font-weight: 700;
-        color: var(--dusk-text-primary);
-        text-decoration: none;
-        letter-spacing: 0.5px;
-        transition: text-shadow 0.3s ease;
-    }
-    .landing-logo:hover {
-        text-shadow: 0 0 15px rgba(255,255,255,0.4);
-        color: white;
-    }
-    .landing-main {
-        min-height: calc(100vh - 80px); /* 80px is header height */
-    }
-    .landing-footer {
-        padding: 3rem 0;
-        background: var(--dusk-bg-dark);
-        border-top: 1px solid rgba(255,255,255,0.05);
-        color: var(--dusk-text-muted);
-        font-size: 0.9rem;
-    }
-    
-    .dusk-nav-link {
-        color: var(--dusk-text-muted) !important;
-        transition: color 0.3s ease;
-    }
-    .dusk-nav-link:hover {
-        color: var(--dusk-text-primary) !important;
-    }
-    
-    .dusk-btn-outline {
-        border-color: rgba(255,255,255,0.2);
-        color: var(--dusk-text-primary);
-        transition: all 0.3s ease;
-    }
-    .dusk-btn-outline:hover {
-        background: rgba(255,255,255,0.1);
-        border-color: rgba(255,255,255,0.4);
-        color: white;
-    }
-</style>

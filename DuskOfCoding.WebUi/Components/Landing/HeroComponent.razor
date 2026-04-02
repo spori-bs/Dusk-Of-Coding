@@ -1,166 +1,70 @@
 @using DuskOfCoding.WebUi.Resources
 @inject IStringLocalizer<SharedResource> L
 
-<section class="hero-section d-flex align-items-center text-center text-lg-start">
-    <!-- Abstract background glow elements -->
-    <div class="hero-glow shape-1"></div>
-    <div class="hero-glow shape-2"></div>
-    
-    <div class="container hero-content">
-        <div class="row align-items-center">
-            <div class="col-lg-6 position-relative z-1 mb-5 mb-lg-0">
-                <span class="badge dusk-badge mb-4">@L["Hero_Tagline"]</span>
-                <h1 class="display-3 fw-bold mb-4 hero-title">
-                    @L["Hero_Title"]
-                </h1>
-                <p class="lead mb-5 hero-subtitle">
-                    @L["Hero_Description"]
-                </p>
-                <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center justify-content-lg-start">
-                    <AuthorizeView>
-                        <Authorized>
-                            <a href="/practice" class="btn btn-primary btn-lg px-5 py-3 rounded-pill fw-bold">
-                                @L["Hero_CTA"] <i class="bi bi-arrow-right ms-2"></i>
-                            </a>
-                        </Authorized>
-                        <NotAuthorized>
-                            <a href="/register?returnUrl=%2Fpractice" class="btn btn-primary btn-lg px-5 py-3 rounded-pill fw-bold">
-                                Get Started <i class="bi bi-person-plus ms-2"></i>
-                            </a>
-                            <a href="/login?returnUrl=%2Fpractice" class="btn btn-outline-light btn-lg px-5 py-3 rounded-pill fw-semibold dusk-btn-outline">
-                                Login
-                            </a>
-                        </NotAuthorized>
-                    </AuthorizeView>
-                    <a href="#demo" class="btn btn-outline-secondary btn-lg px-5 py-3 rounded-pill fw-semibold text-white-50 border-0 ms-lg-2">
-                        @L["Hero_SecondaryCTA"]
-                    </a>
-                    <a href="/how-it-was-made" class="btn btn-outline-info btn-lg px-5 py-3 rounded-pill fw-semibold border-0 ms-lg-2 dusk-glass-panel" style="background: rgba(14, 165, 233, 0.1);">
-                        <i class="bi bi-stars me-2 text-info"></i>@L["Hero_HowItWasMade"]
-                    </a>
-                </div>
-            </div>
-            
-            <div class="col-lg-6 position-relative z-1">
-                <!-- Premium Abstract Representation / Code Interface -->
-                <div class="hero-image-container dusk-glass-panel overflow-hidden">
-                    <div class="editor-header d-flex align-items-center px-3 py-2 border-bottom border-secondary border-opacity-25">
-                        <div class="mac-dots d-flex gap-2">
-                            <div class="dot red"></div>
-                            <div class="dot yellow"></div>
-                            <div class="dot green"></div>
-                        </div>
-                        <div class="ms-3 text-muted small font-monospace">Architecture.cs — Dusk of Coding</div>
-                    </div>
-                    <div class="editor-body p-4 text-start font-monospace text-light" style="font-size: 0.9rem; line-height: 1.6;">
-                        <span class="text-secondary">// Learn the architecture. Master the AI tool.</span><br/>
-                        <span class="text-primary">public class</span> <span class="text-warning">DeveloperToolkit</span><br/>
-                        {<br/>
-                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-primary">public void</span> <span class="text-info">AnalyzeSystem</span>()<br/>
-                        &nbsp;&nbsp;&nbsp;&nbsp;{<br/>
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-secondary">/* The sun is setting on manual coding. <br/>
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A new dawn begins here. */</span><br/>
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sandbox.Execute(<span class="text-success">"Safe Sandbox Environment"</span>);<br/>
-                        &nbsp;&nbsp;&nbsp;&nbsp;}<br/>
-                        }
-                    </div>
-                </div>
-            </div>
+<section class="hero-section">
+    <!-- PCB Grid Background — static, CSS-animated stroke-opacity -->
+    <svg class="hero-pcb" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <!-- Horizontal lines -->
+        <line x1="0" y1="20%" x2="100%" y2="20%" />
+        <line x1="0" y1="40%" x2="100%" y2="40%" />
+        <line x1="0" y1="60%" x2="100%" y2="60%" />
+        <line x1="0" y1="80%" x2="100%" y2="80%" />
+        <!-- Vertical lines -->
+        <line x1="10%" y1="0" x2="10%" y2="100%" />
+        <line x1="25%" y1="0" x2="25%" y2="100%" />
+        <line x1="50%" y1="0" x2="50%" y2="100%" />
+        <line x1="75%" y1="0" x2="75%" y2="100%" />
+        <line x1="90%" y1="0" x2="90%" y2="100%" />
+        <!-- Junction dots -->
+        <circle cx="10%" cy="20%" r="3" />
+        <circle cx="25%" cy="40%" r="3" />
+        <circle cx="50%" cy="20%" r="3" />
+        <circle cx="75%" cy="60%" r="3" />
+        <circle cx="90%" cy="40%" r="3" />
+        <circle cx="10%" cy="60%" r="3" />
+        <circle cx="50%" cy="80%" r="3" />
+        <circle cx="25%" cy="80%" r="3" />
+        <circle cx="75%" cy="20%" r="3" />
+    </svg>
+
+    <div class="hero-content">
+        <!-- Classification label -->
+        <div class="hero-label">
+            <span class="ck-status-dot me-2"></span>
+            DUSK OF CODING // PLATFORM v1.0
+        </div>
+
+        <!-- H1 -->
+        <h1 class="hero-headline">
+            @L["Hero_Headline_L1"]<br />
+            @L["Hero_Headline_L2"]<br />
+            @L["Hero_Headline_L3"]
+        </h1>
+
+        <!-- Sub statement — de-blur on hover -->
+        <div class="hero-sub-wrapper">
+            <p class="hero-sub">@L["Hero_Sub"]</p>
+        </div>
+
+        <!-- CTAs -->
+        <div class="hero-ctas">
+            <AuthorizeView>
+                <Authorized>
+                    <a href="/practice" class="btn btn-amber">@L["Hero_CTA_Primary"]</a>
+                </Authorized>
+                <NotAuthorized>
+                    <a href="/register?returnUrl=%2Fpractice" class="btn btn-amber">@L["Hero_CTA_Primary"]</a>
+                </NotAuthorized>
+            </AuthorizeView>
+            <a href="/how-it-was-made" class="btn btn-amber hero-cta-secondary">@L["Hero_CTA_Secondary"]</a>
+        </div>
+
+        <!-- Status bar -->
+        <div class="hero-status-bar">
+            <span>SANDBOX // Roslyn Compiler</span>
+            <span>MENTOR // Gemini AI</span>
+            <span>IAM // Keycloak</span>
+            <span>RESILIENCE // Polly</span>
         </div>
     </div>
 </section>
-
-<style>
-    .hero-section {
-        min-height: 100vh;
-        background: var(--dusk-bg-dark);
-        position: relative;
-        overflow: hidden;
-        padding-top: 80px; /* offset for fixed header */
-        margin-top: -80px;
-    }
-    
-    .hero-glow {
-        position: absolute;
-        border-radius: 50%;
-        filter: blur(80px);
-        opacity: 0.4;
-        z-index: 0;
-        animation: pulseGlow 8s infinite alternate;
-    }
-    .hero-glow.shape-1 {
-        top: -10%;
-        left: -10%;
-        width: 50vw;
-        height: 50vw;
-        background: radial-gradient(circle, var(--dusk-purple-mid) 0%, transparent 70%);
-    }
-    .hero-glow.shape-2 {
-        bottom: -20%;
-        right: -10%;
-        width: 60vw;
-        height: 60vw;
-        background: radial-gradient(circle, var(--dusk-orange-warm) 0%, transparent 70%);
-        animation-delay: -4s;
-    }
-
-    @@keyframes pulseGlow {
-        0% { transform: scale(1) translate(0, 0); opacity: 0.3; }
-        100% { transform: scale(1.1) translate(20px, 20px); opacity: 0.5; }
-    }
-
-    .hero-content {
-        position: relative;
-        z-index: 10;
-        padding-top: 4rem;
-        padding-bottom: 4rem;
-    }
-    
-    .hero-title {
-        letter-spacing: -1px;
-        line-height: 1.1;
-        background: linear-gradient(180deg, #FFFFFF 0%, rgba(255, 255, 255, 0.7) 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-    }
-    
-    .hero-subtitle {
-        color: var(--dusk-text-muted);
-        font-size: 1.25rem;
-        font-weight: 300;
-        line-height: 1.6;
-    }
-    
-    .dusk-badge {
-        background: rgba(234, 88, 12, 0.15);
-        color: var(--dusk-orange-glow);
-        border: 1px solid rgba(234, 88, 12, 0.3);
-        padding: 0.5rem 1rem;
-        border-radius: 20px;
-        font-weight: 500;
-        letter-spacing: 1px;
-        text-transform: uppercase;
-    }
-    
-    .hero-image-container {
-        transform: perspective(1000px) rotateY(-5deg) rotateX(5deg);
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 40px rgba(124, 58, 237, 0.2);
-        transition: transform 0.5s ease, box-shadow 0.5s ease;
-        background: rgba(15, 23, 42, 0.7);
-    }
-    
-    .hero-image-container:hover {
-        transform: perspective(1000px) rotateY(0deg) rotateX(0deg) translateY(-10px);
-        box-shadow: 0 35px 60px -15px rgba(0, 0, 0, 0.6), 0 0 60px rgba(234, 88, 12, 0.2);
-    }
-
-    .mac-dots .dot {
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-    }
-    .mac-dots .red { background-color: #ff5f56; }
-    .mac-dots .yellow { background-color: #ffbd2e; }
-    .mac-dots .green { background-color: #27c93f; }
-</style>

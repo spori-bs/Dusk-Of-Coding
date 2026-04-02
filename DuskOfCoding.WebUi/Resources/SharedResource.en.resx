@@ -103,58 +103,52 @@
   <data name="Language_Hungarian" xml:space="preserve"><value>Hungarian</value></data>
   <data name="Language_English" xml:space="preserve"><value>English</value></data>
 
-  <!-- Landing Page -->
-  <data name="Landing_PageTitle" xml:space="preserve"><value>DuskOfCoding - Revolutionize Your Coding</value></data>
-
-  <!-- Hero -->
-  <data name="Hero_Title" xml:space="preserve"><value>Learn to code the right way, augmented by AI.</value></data>
-  <data name="Hero_Tagline" xml:space="preserve"><value>AI-Augmented Learning</value></data>
-  <data name="Hero_Description" xml:space="preserve"><value>AI won't write perfect software for you, but it will supercharge your workflow if you know what you are doing. Focus on stable fundamentals, write clean code, and use AI like the pros—as a tool, not a crutch.</value></data>
-  <data name="Hero_CTA" xml:space="preserve"><value>Start Practicing</value></data>
-  <data name="Hero_SecondaryCTA" xml:space="preserve"><value>Watch Demo</value></data>
-  <data name="Hero_HowItWasMade" xml:space="preserve"><value>How It Was Made</value></data>
-
-  <!-- Features -->
-  <data name="Features_Heading" xml:space="preserve"><value>Stable fundamentals. Modern tools.</value></data>
-  <data name="Features_Subheading" xml:space="preserve"><value>Dusk of Coding helps you understand the deeper layers of software development, ensuring AI remains a helpful assistant rather than an unexplainable magic box.</value></data>
-  <data name="Features_Sandbox_Title" xml:space="preserve"><value>Safe Execution Environment</value></data>
-  <data name="Features_Sandbox_Desc" xml:space="preserve"><value>Test your C# solutions in a fully isolated, secure environment backed by Docker and the Roslyn Compiler, where you can experiment freely.</value></data>
-  <data name="Features_Testing_Title" xml:space="preserve"><value>Automated Unit Testing</value></data>
-  <data name="Features_Testing_Desc" xml:space="preserve"><value>We don't just give you a pass/fail. Our automated tests provide detailed, structured feedback so you can understand exactly why your code didn't work.</value></data>
-  <data name="Features_AI_Title" xml:space="preserve"><value>Targeted AI Feedback</value></data>
-  <data name="Features_AI_Desc" xml:space="preserve"><value>Our built-in AI tutor won't solve the tasks for you. Instead, it guides you to the right approach, helping you learn how to effectively prompt and direct AI models.</value></data>
-
-  <!-- Media Demo -->
-  <data name="MediaDemo_Title" xml:space="preserve"><value>See it in action</value></data>
-  <data name="MediaDemo_Subtitle" xml:space="preserve"><value>Curious about the details? Watch our demo video to see how we blend strong software engineering fundamentals with the capabilities of modern AI.</value></data>
-
-  <!-- Social Proof -->
-  <data name="Social_Heading" xml:space="preserve"><value>Built With Modern Architecture</value></data>
-  <data name="Social_Subheading" xml:space="preserve"><value>Applying Clean Architecture principles in a Modular Monolith structure.</value></data>
-  <data name="Social_PoweredBy" xml:space="preserve"><value>Powered By</value></data>
-  <data name="Social_Quote" xml:space="preserve"><value>"The goal of this platform is to prove that AI-assisted development doesn't replace clean, well-structured coding principles—it complements them."</value></data>
-  <data name="Social_QuoteSource" xml:space="preserve"><value>Project Methodology</value></data>
-
-  <!-- Lead Form -->
-  <data name="Lead_Heading" xml:space="preserve"><value>Ready to challenge yourself?</value></data>
-  <data name="Lead_Subheading" xml:space="preserve"><value>Join the platform and build future-proof programming skills with Dusk of Coding.</value></data>
-  <data name="Lead_Question" xml:space="preserve"><value>What's your primary coding language?</value></data>
-  <data name="Lead_Other" xml:space="preserve"><value>Other</value></data>
-  <data name="Lead_InvitePrompt" xml:space="preserve"><value>Awesome! Where should we send your access link?</value></data>
-  <data name="Lead_EmailLabel" xml:space="preserve"><value>Work Email</value></data>
-  <data name="Lead_EmailPlaceholder" xml:space="preserve"><value>you@company.com</value></data>
-  <data name="Lead_Submit" xml:space="preserve"><value>Create Free Account</value></data>
-  <data name="Lead_AlreadyRegistered" xml:space="preserve"><value>Already have an account?</value></data>
-  <data name="Lead_LoginLink" xml:space="preserve"><value>Log in</value></data>
-  <data name="Lead_Success" xml:space="preserve"><value>You're on the list!</value></data>
-  <data name="Lead_SuccessHint" xml:space="preserve"><value>Check your inbox for further instructions.</value></data>
-  <data name="Lead_StartNow" xml:space="preserve"><value>Start Practicing Now</value></data>
-
-  <!-- Landing Layout -->
+  <!-- Landing Page — Phase 19 -->
+  <data name="Landing_PageTitle" xml:space="preserve"><value>Dusk of Coding — The Platform for Engineers Who Won't Surrender to AI</value></data>
   <data name="Landing_Practice" xml:space="preserve"><value>Practice</value></data>
   <data name="Landing_ManageTasks" xml:space="preserve"><value>Manage Tasks</value></data>
-  <data name="Landing_WatchDemo" xml:space="preserve"><value>Watch Demo</value></data>
   <data name="Landing_GetStarted" xml:space="preserve"><value>Get Started</value></data>
+
+  <!-- Hero -->
+  <data name="Hero_Headline_L1" xml:space="preserve"><value>The last generation</value></data>
+  <data name="Hero_Headline_L2" xml:space="preserve"><value>of developers who</value></data>
+  <data name="Hero_Headline_L3" xml:space="preserve"><value>code alone.</value></data>
+  <data name="Hero_Sub" xml:space="preserve"><value>AI is the most powerful tool in history. Most developers will use it as a crutch. This platform is for the ones who won't.</value></data>
+  <data name="Hero_CTA_Primary" xml:space="preserve"><value>[ ENTER THE PLATFORM ]</value></data>
+  <data name="Hero_CTA_Secondary" xml:space="preserve"><value>[ SEE HOW IT WAS BUILT ]</value></data>
+  <data name="Hero_HowItWasMade" xml:space="preserve"><value>How It Was Made</value></data>
+
+  <!-- The Problem -->
+  <data name="Problem_Headline" xml:space="preserve"><value>AI doesn't make weak developers strong. It makes them invisible.</value></data>
+  <data name="Problem_Err1" xml:space="preserve"><value>Architecture hallucinated — passes tests, collapses in production.</value></data>
+  <data name="Problem_Err2" xml:space="preserve"><value>Debug loop dependency — can't trace problems the AI introduced.</value></data>
+  <data name="Problem_Err3" xml:space="preserve"><value>Skill atrophy — can direct AI, but cannot build without it.</value></data>
+  <data name="Problem_Stat1_Desc" xml:space="preserve"><value>Developers using AI code generation daily</value></data>
+  <data name="Problem_Stat2_Desc" xml:space="preserve"><value>Who can debug AI-generated code without AI</value></data>
+  <data name="Problem_Stat3_Desc" xml:space="preserve"><value>Platforms teaching the synthesis of both</value></data>
+
+  <!-- The System -->
+  <data name="Sys_Sandbox_Title" xml:space="preserve"><value>Execution Sandbox</value></data>
+  <data name="Sys_Sandbox_Body" xml:space="preserve"><value>Your code compiles inside a collectible AssemblyLoadContext. 5s timeout. xUnit runner. Zero host contamination.</value></data>
+  <data name="Sys_Mentor_Title" xml:space="preserve"><value>Socratic AI Mentor</value></data>
+  <data name="Sys_Mentor_Body" xml:space="preserve"><value>It never gives you the answer. It interrogates your thinking using Gemini AI — streamed via SignalR.</value></data>
+  <data name="Sys_Identity_Title" xml:space="preserve"><value>Identity Fortress</value></data>
+  <data name="Sys_Identity_Body" xml:space="preserve"><value>Keycloak OIDC. JWT Bearer. Role-based access. Session stored in memory — no cookie bloat.</value></data>
+  <data name="Sys_Resilience_Title" xml:space="preserve"><value>Resilience Engine</value></data>
+  <data name="Sys_Resilience_Body" xml:space="preserve"><value>Every external call — AI, execution, API — runs through Polly: Retry(3) to CircuitBreaker to Timeout.</value></data>
+
+  <!-- The Threshold -->
+  <data name="Threshold_Line1" xml:space="preserve"><value>You've seen the system.</value></data>
+  <data name="Threshold_Line2" xml:space="preserve"><value>The question is whether you're ready to use it correctly.</value></data>
+  <data name="Threshold_Enter_Title" xml:space="preserve"><value>[ REGISTER AND ENTER ]</value></data>
+  <data name="Threshold_Enter_Desc" xml:space="preserve"><value>Create your account. Start practicing today.</value></data>
+  <data name="Threshold_Enter_CTA" xml:space="preserve"><value>REGISTER AND ENTER</value></data>
+  <data name="Threshold_Wait_Title" xml:space="preserve"><value>[ I'M NOT READY YET ]</value></data>
+  <data name="Threshold_Wait_Desc" xml:space="preserve"><value>Come back when you are. The platform will wait.</value></data>
+  <data name="Threshold_Wait_CTA" xml:space="preserve"><value>NOT READY YET</value></data>
+  <data name="Threshold_Welcome" xml:space="preserve"><value>Welcome back,</value></data>
+  <data name="Threshold_Resume" xml:space="preserve"><value>[ RESUME PRACTICE ]</value></data>
+
   <!-- API Errors -->
   <data name="Error_FetchTasks" xml:space="preserve"><value>Failed to fetch tasks: {0}</value></data>
   <data name="Error_Network" xml:space="preserve"><value>Network error: {0}</value></data>
@@ -179,4 +173,3 @@
   <data name="AccessDenied_Message" xml:space="preserve"><value>You don't have permission to view this page.</value></data>
   <data name="AccessDenied_GoHome" xml:space="preserve"><value>Go Home</value></data>
 </root>
-

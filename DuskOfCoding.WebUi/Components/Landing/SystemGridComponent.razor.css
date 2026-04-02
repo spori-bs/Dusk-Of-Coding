@@ -1,0 +1,79 @@
+.system-section {
+    background: var(--ck-surface);
+    border-top: 1px solid var(--ck-border-dim);
+}
+
+/* Instrument panels */
+.sys-panel {
+    background: var(--ck-bg);
+    border: 1px solid var(--ck-border);
+    padding: 1.5rem;
+    height: 100%;
+    position: relative;
+    transition: border-color 0.2s ease;
+}
+
+.sys-panel:hover {
+    border-color: rgba(234, 88, 12, 0.5);
+}
+
+.sys-panel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--ck-amber);
+    opacity: 0.3;
+    transition: opacity 0.2s ease;
+}
+
+.sys-panel:hover::before {
+    opacity: 0.7;
+}
+
+.sys-panel-id {
+    font-family: var(--ck-font);
+    font-size: 0.6rem;
+    color: var(--ck-amber);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+}
+
+.sys-panel-title {
+    font-family: var(--ck-font);
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--dusk-text-primary);
+    margin-bottom: 0.6rem;
+}
+
+.sys-panel-body {
+    font-family: var(--ck-font);
+    font-size: 0.78rem;
+    color: var(--ck-muted);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+.sys-panel-readout {
+    font-family: var(--ck-font);
+    font-size: 0.6rem;
+    color: var(--ck-amber);
+    letter-spacing: 0.18em;
+    opacity: 0.6;
+}
+
+/* Interconnect statement */
+.sys-interconnect {
+    font-family: var(--ck-font);
+    font-size: 0.78rem;
+    color: var(--ck-amber);
+    letter-spacing: 0.08em;
+    text-align: center;
+    opacity: 0.7;
+    border-top: 1px solid var(--ck-border-dim);
+    padding-top: 2rem;
+}
