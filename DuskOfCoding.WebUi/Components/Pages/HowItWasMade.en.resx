@@ -32,58 +32,364 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
 
+  <!-- Page Meta -->
   <data name="PageTitle" xml:space="preserve">
-    <value>How It Was Made</value>
+    <value>Engineering Dossier — How It Was Made</value>
+  </data>
+
+  <!-- Section 0: Dossier Cover -->
+  <data name="DossierLabel" xml:space="preserve">
+    <value>ENGINEERING DOSSIER // CLASSIFIED — INTERNAL REVIEW</value>
+  </data>
+  <data name="DocNumber" xml:space="preserve">
+    <value>DOC-2025-VIBECODING-001</value>
   </data>
   <data name="HeroTitle" xml:space="preserve">
-    <value>The Twilight of Coding.</value>
+    <value>The Twilight of Manual Coding.</value>
   </data>
-  <data name="HeroSubtitle" xml:space="preserve">
-    <value>The evolution of a platform: how we replaced line-by-line typing with the surgical direction of artificial intelligence.</value>
+  <data name="HeroAbstract" xml:space="preserve">
+    <value>This document chronicles the construction of the Dusk of Coding platform — built without writing most of its code, directed by human architecture, assembled by AI.</value>
   </data>
-  <data name="SparkTitle" xml:space="preserve">
-    <value>The Spark</value>
+  <data name="MetaMethodology" xml:space="preserve">
+    <value>METHODOLOGY</value>
   </data>
-  <data name="SparkDesc" xml:space="preserve">
-    <value>Phase 1-2. Building the 'heart' of the platform—safe code execution via Roslyn and Docker orchestration.</value>
+  <data name="MetaMethodologyValue" xml:space="preserve">
+    <value>Vibecoding (AI-directed architecture)</value>
   </data>
-  <data name="LanguageTitle" xml:space="preserve">
-    <value>The Language</value>
+  <data name="MetaStack" xml:space="preserve">
+    <value>STACK</value>
   </data>
-  <data name="LanguageDesc" xml:space="preserve">
-    <value>Phase 3. Teaching the platform to speak globally. A fully bilingual, real-time localized architecture.</value>
+  <data name="MetaStackValue" xml:space="preserve">
+    <value>Blazor Server · Keycloak · Roslyn · Gemini · Polly</value>
   </data>
-  <data name="AestheticTitle" xml:space="preserve">
-    <value>The Aesthetic</value>
+  <data name="HeroStatusStrip" xml:space="preserve">
+    <value>PHASES: 1 → 20    //    STATUS: ACTIVE    //    BUILD: .NET 10</value>
   </data>
-  <data name="AestheticDesc" xml:space="preserve">
-    <value>Phase 4-5. The rebranding evolution from generic developer UI to the modern, glass-morphic 'Dusk' identity.</value>
+
+  <!-- Section 1: The Directive -->
+  <data name="DirectiveSectionPrefix" xml:space="preserve">
+    <value>// 01</value>
   </data>
-  <data name="FortressTitle" xml:space="preserve">
-    <value>The Fortress</value>
+  <data name="DirectiveSectionTitle" xml:space="preserve">
+    <value>The Directive</value>
   </data>
-  <data name="FortressDesc" xml:space="preserve">
-    <value>Phases 6-10. Securing the perimeter and preserving the legacy. Integrating Keycloak IAM and strict EF Core persistence.</value>
+  <data name="DirectiveBody1" xml:space="preserve">
+    <value>The sun is setting on the era of the lone developer — the craftsman who knew every line, every function, every side-effect of their system. AI does not end that era gracefully. It amputates it. What remains are two kinds of developers: those who lost the skill, and those who chose to deepen it while learning to wield the new instrument.</value>
   </data>
-  <data name="AbyssTitle" xml:space="preserve">
+  <data name="DirectiveBody2" xml:space="preserve">
+    <value>Dusk of Coding exists at this threshold. A platform built specifically to prove that the most powerful workflow is not human alone, nor AI alone — but a precise, disciplined collaboration between the two.</value>
+  </data>
+  <data name="DirectiveMissionLabel" xml:space="preserve">
+    <value>MISSION // PRIMARY</value>
+  </data>
+  <data name="DirectiveMissionLine1" xml:space="preserve">
+    <value>Teach the synthesis of:</value>
+  </data>
+  <data name="DirectiveMissionLine2" xml:space="preserve">
+    <value>→ Deep engineering mastery</value>
+  </data>
+  <data name="DirectiveMissionLine3" xml:space="preserve">
+    <value>→ Precise AI direction</value>
+  </data>
+  <data name="DirectiveMissionStatus" xml:space="preserve">
+    <value>STATUS: ACTIVE</value>
+  </data>
+
+  <!-- Section 2: The System Map -->
+  <data name="SystemMapSectionPrefix" xml:space="preserve">
+    <value>// 02</value>
+  </data>
+  <data name="SystemMapSectionTitle" xml:space="preserve">
+    <value>The System Map</value>
+  </data>
+  <data name="SystemMapIntro" xml:space="preserve">
+    <value>What was built. The platform is a modular monolith applying Clean Architecture — separating concerns across five distinct service boundaries.</value>
+  </data>
+
+  <!-- Section 3: Build Log -->
+  <data name="BuildLogSectionPrefix" xml:space="preserve">
+    <value>// 03</value>
+  </data>
+  <data name="BuildLogSectionTitle" xml:space="preserve">
+    <value>Build Log</value>
+  </data>
+  <data name="BuildLogGroupFoundation" xml:space="preserve">
+    <value>FOUNDATION</value>
+  </data>
+  <data name="BuildLogGroupSecurity" xml:space="preserve">
+    <value>SECURITY</value>
+  </data>
+  <data name="BuildLogGroupIntelligence" xml:space="preserve">
+    <value>INTELLIGENCE</value>
+  </data>
+  <data name="BuildLogGroupIdentity" xml:space="preserve">
+    <value>IDENTITY</value>
+  </data>
+  <data name="BuildLog_Phase01" xml:space="preserve">
+    <value>PHASE 01–02  //  Architecture Foundation</value>
+  </data>
+  <data name="BuildLog_Phase01_Desc" xml:space="preserve">
+    <value>Blazor Server. Roslyn sandbox. Clean Architecture scaffold. EF Core persistence layer.</value>
+  </data>
+  <data name="BuildLog_Phase03" xml:space="preserve">
+    <value>PHASE 03  //  Bilingual Core</value>
+  </data>
+  <data name="BuildLog_Phase03_Desc" xml:space="preserve">
+    <value>Full English and Hungarian localization via .resx. Real-time language switching.</value>
+  </data>
+  <data name="BuildLog_Phase04" xml:space="preserve">
+    <value>PHASE 04–05  //  Identity Rebrand</value>
+  </data>
+  <data name="BuildLog_Phase04_Desc" xml:space="preserve">
+    <value>Transitioned to "Dusk of Coding". New horizontal navigation. Premium Landing Page with glassmorphic UI.</value>
+  </data>
+  <data name="BuildLog_Phase06" xml:space="preserve">
+    <value>PHASE 06  //  Identity Fortress</value>
+  </data>
+  <data name="BuildLog_Phase06_Desc" xml:space="preserve">
+    <value>Keycloak OIDC integration. JWT Bearer API security. Self-service user registration.</value>
+  </data>
+  <data name="BuildLog_Phase07" xml:space="preserve">
+    <value>PHASE 07  //  Secure Execution Engine</value>
+  </data>
+  <data name="BuildLog_Phase07_Desc" xml:space="preserve">
+    <value>Roslyn sandbox hardened with collectible AssemblyLoadContext, 5-second timeout, memory caps, and xUnit integration. Polly resilience wired to HTTP clients.</value>
+  </data>
+  <data name="BuildLog_Phase08" xml:space="preserve">
+    <value>PHASE 08  //  Error Resilience</value>
+  </data>
+  <data name="BuildLog_Phase08_Desc" xml:space="preserve">
+    <value>Branded ErrorBoundary. AuthDelegatingHandler for 401/403. Custom Access Denied page.</value>
+  </data>
+  <data name="BuildLog_Phase09" xml:space="preserve">
+    <value>PHASE 09  //  RBAC &amp; Identity UX</value>
+  </data>
+  <data name="BuildLog_Phase09_Desc" xml:space="preserve">
+    <value>Tutor and Student roles via Keycloak. JWT claim mapping. Admin Dashboard with analytics.</value>
+  </data>
+  <data name="BuildLog_Phase10" xml:space="preserve">
+    <value>PHASE 10  //  HTTP 431 Resolution</value>
+  </data>
+  <data name="BuildLog_Phase10_Desc" xml:space="preserve">
+    <value>Memory-backed ITicketStore to prevent OIDC session cookie bloat. Proactive cookie cleanup.</value>
+  </data>
+  <data name="BuildLog_Phase12" xml:space="preserve">
+    <value>PHASE 12  //  Security Audit</value>
+  </data>
+  <data name="BuildLog_Phase12_Desc" xml:space="preserve">
+    <value>Root-cause analysis of OIDC issuer mismatch between container and browser networks. SameSite policy hardening.</value>
+  </data>
+  <data name="BuildLog_Phase11" xml:space="preserve">
+    <value>PHASE 11  //  Feedback System</value>
+  </data>
+  <data name="BuildLog_Phase11_Desc" xml:space="preserve">
+    <value>Student task ratings, comments, and aggregate analytics for tutors.</value>
+  </data>
+  <data name="BuildLog_Phase13" xml:space="preserve">
+    <value>PHASE 13  //  EF Core Stabilization</value>
+  </data>
+  <data name="BuildLog_Phase13_Desc" xml:space="preserve">
+    <value>Resolved DbUpdateConcurrencyException by mapping DTOs onto tracked entities. Enforced Change Tracker discipline.</value>
+  </data>
+  <data name="BuildLog_Phase14" xml:space="preserve">
+    <value>PHASE 14  //  AI Mentor Refinement</value>
+  </data>
+  <data name="BuildLog_Phase14_Desc" xml:space="preserve">
+    <value>Role refactoring to Tutor. Gemini-powered Socratic feedback in Hungarian. RabbitMQ async queue integration.</value>
+  </data>
+  <data name="BuildLog_Phase15" xml:space="preserve">
+    <value>PHASE 15–16  //  How It Was Made (v1)</value>
+  </data>
+  <data name="BuildLog_Phase15_Desc" xml:space="preserve">
+    <value>First storytelling page. Cinematic glassmorphism aesthetic. Bilingual narrative of the build history.</value>
+  </data>
+  <data name="BuildLog_Phase17" xml:space="preserve">
+    <value>PHASE 17  //  Engineering Cockpit</value>
+  </data>
+  <data name="BuildLog_Phase17_Desc" xml:space="preserve">
+    <value>High-density Industrial Amber HUD. Interactive circuitry background. Collapsible instrument panels.</value>
+  </data>
+  <data name="BuildLog_Phase18" xml:space="preserve">
+    <value>PHASE 18  //  Obsidian Foundry Design System</value>
+  </data>
+  <data name="BuildLog_Phase18_Desc" xml:space="preserve">
+    <value>Centralized --ck-* CSS tokens. Strict isolation. Glassmorphism replaced by hard-edged industrial aesthetic.</value>
+  </data>
+  <data name="BuildLog_Phase19" xml:space="preserve">
+    <value>PHASE 19  //  Landing Page Rebuild</value>
+  </data>
+  <data name="BuildLog_Phase19_Desc" xml:space="preserve">
+    <value>Landing Page rebuilt from scratch in the Cockpit aesthetic. Zero-JS animated PCB hero section. Full visual unification.</value>
+  </data>
+  <data name="BuildLog_Phase20" xml:space="preserve">
+    <value>PHASE 20  //  Dossier Rebuild (This Page)</value>
+  </data>
+  <data name="BuildLog_Phase20_Desc" xml:space="preserve">
+    <value>This document. The cinematic glassmorphism replaced by the Engineering Dossier — a classified briefing aesthetic that matches the Cockpit.</value>
+  </data>
+
+  <!-- Section 4: The Abyss -->
+  <data name="AbyssSectionPrefix" xml:space="preserve">
+    <value>// 04</value>
+  </data>
+  <data name="AbyssSectionTitle" xml:space="preserve">
     <value>The Abyss</value>
   </data>
-  <data name="AbyssDesc" xml:space="preserve">
-    <value>The architecture eventually collapsed under its own generated complexity. The AI components were logically sound in isolation but tore each other apart in a distributed environment: user sessions vanished in infinite loops, and the database locked up from simultaneous overwrites. The solution wasn't to write more manual code ourselves. We mapped the underlying logical failures and designed highly surgical, Socratic prompts—forcing the AI to interrogate its own flaws and piece the system back together securely.</value>
+  <data name="AbyssIntro" xml:space="preserve">
+    <value>THREE CRITICAL FAILURES. ALL AI-GENERATED. ALL RECOVERED.</value>
   </data>
-  <data name="MentorTitle" xml:space="preserve">
-    <value>The Mentor</value>
+  <data name="Incident001_Id" xml:space="preserve">
+    <value>INCIDENT-001</value>
   </data>
-  <data name="MentorDesc" xml:space="preserve">
-    <value>Phases 11-15. Injecting intelligence. Integrating the Socratic Gemini Tutor API natively into the student workflow.</value>
+  <data name="Incident001_Severity" xml:space="preserve">
+    <value>SEVERITY: HIGH</value>
   </data>
-  <data name="PromptGalleryTitle" xml:space="preserve">
-    <value>The Prompt Gallery</value>
+  <data name="Incident001_Component" xml:space="preserve">
+    <value>COMPONENT: Keycloak OIDC / Kestrel</value>
   </data>
-  <data name="VibeManifesto" xml:space="preserve">
-    <value>We don't code; we build intent.</value>
+  <data name="Incident001_Symptom" xml:space="preserve">
+    <value>SYMPTOM: HTTP 431 — Request Header Too Large</value>
   </data>
-  <data name="JoinPlatform" xml:space="preserve">
-    <value>Join the New Dawn</value>
+  <data name="Incident001_RootCause" xml:space="preserve">
+    <value>ROOT CAUSE: Correlation cookies multiplied on every OIDC redirect. SameSite=None policy misaligned between container and browser.</value>
   </data>
+  <data name="Incident001_Resolution" xml:space="preserve">
+    <value>RESOLUTION: Memory-backed ITicketStore eliminated cookie growth. Proactive cleanup on sign-out.</value>
+  </data>
+  <data name="Incident001_Directive" xml:space="preserve">
+    <value>DIRECTIVE: phase10-http431-resolution</value>
+  </data>
+  <data name="Incident002_Id" xml:space="preserve">
+    <value>INCIDENT-002</value>
+  </data>
+  <data name="Incident002_Severity" xml:space="preserve">
+    <value>SEVERITY: HIGH</value>
+  </data>
+  <data name="Incident002_Component" xml:space="preserve">
+    <value>COMPONENT: Keycloak / Aspire Container Network</value>
+  </data>
+  <data name="Incident002_Symptom" xml:space="preserve">
+    <value>SYMPTOM: Authentication succeeded inside the container, failed silently in the browser</value>
+  </data>
+  <data name="Incident002_RootCause" xml:space="preserve">
+    <value>ROOT CAUSE: Keycloak's token issuer URL differed between the Aspire internal network and the browser-facing address. JWT validation failed on every real request.</value>
+  </data>
+  <data name="Incident002_Resolution" xml:space="preserve">
+    <value>RESOLUTION: Decoupled Authority from MetadataAddress. Issuer validation aligned with the browser-reachable endpoint.</value>
+  </data>
+  <data name="Incident002_Directive" xml:space="preserve">
+    <value>DIRECTIVE: phase12-dual-network-resolution</value>
+  </data>
+  <data name="Incident003_Id" xml:space="preserve">
+    <value>INCIDENT-003</value>
+  </data>
+  <data name="Incident003_Severity" xml:space="preserve">
+    <value>SEVERITY: MEDIUM</value>
+  </data>
+  <data name="Incident003_Component" xml:space="preserve">
+    <value>COMPONENT: Entity Framework Core / SubmissionService</value>
+  </data>
+  <data name="Incident003_Symptom" xml:space="preserve">
+    <value>SYMPTOM: DbUpdateConcurrencyException on every parallel submission</value>
+  </data>
+  <data name="Incident003_RootCause" xml:space="preserve">
+    <value>ROOT CAUSE: DTOs were replacing tracked entities instead of mapping properties onto them. The Change Tracker lost ownership and threw concurrency exceptions.</value>
+  </data>
+  <data name="Incident003_Resolution" xml:space="preserve">
+    <value>RESOLUTION: Property-level mapping onto tracked entities. Update() reserved for detached objects only.</value>
+  </data>
+  <data name="Incident003_Directive" xml:space="preserve">
+    <value>DIRECTIVE: phase13-ef-core-concurrency-resolution</value>
+  </data>
+
+  <!-- Section 5: Resolution -->
+  <data name="ResolutionSectionPrefix" xml:space="preserve">
+    <value>// 05</value>
+  </data>
+  <data name="ResolutionSectionTitle" xml:space="preserve">
+    <value>Resolution</value>
+  </data>
+  <data name="ResolutionBody" xml:space="preserve">
+    <value>The architecture eventually collapsed under its own generated complexity. The AI components were logically sound in isolation — but they tore each other apart in a distributed environment. The solution was not to abandon the methodology. We mapped the underlying logical failures and designed highly surgical, Socratic prompts — forcing the AI to interrogate its own flaws, trace the root cause, and piece the system back together without destroying what already worked.</value>
+  </data>
+  <data name="ResolutionTerminalLine1" xml:space="preserve">
+    <value>&gt; Analyzing: Keycloak correlation failure...</value>
+  </data>
+  <data name="ResolutionTerminalLine2" xml:space="preserve">
+    <value>&gt; Hypothesis: Cookie policy mismatch on redirect...</value>
+  </data>
+  <data name="ResolutionTerminalLine3" xml:space="preserve">
+    <value>&gt; Directive: Split Authority from MetadataAddress...</value>
+  </data>
+  <data name="ResolutionTerminalLine4" xml:space="preserve">
+    <value>&gt; Result: ISSUER_RESOLVED ✓</value>
+  </data>
+
+  <!-- Section 6: Field Manual -->
+  <data name="GallerySectionPrefix" xml:space="preserve">
+    <value>// 06</value>
+  </data>
+  <data name="GallerySectionTitle" xml:space="preserve">
+    <value>Field Manual</value>
+  </data>
+  <data name="GalleryIntro" xml:space="preserve">
+    <value>The actual directives. Three of the twenty prompts that shaped this platform — from initial architecture to surgical incident resolution.</value>
+  </data>
+  <data name="Gallery_Panel1_Title" xml:space="preserve">
+    <value>PHASE 01 // Architecture Foundation</value>
+  </data>
+  <data name="Gallery_Panel1_Desc" xml:space="preserve">
+    <value>The original directive that birthed the Roslyn execution environment and the Clean Architecture scaffold.</value>
+  </data>
+  <data name="Gallery_Panel1_Snippet" xml:space="preserve">
+    <value>Role: Senior .NET Architect.
+Build a secure compilation service.
+Use Roslyn. Isolate in a collectible ALC.
+Enforce sandbox: 5s timeout, no IO, no reflection.</value>
+  </data>
+  <data name="Gallery_Panel2_Title" xml:space="preserve">
+    <value>PHASE 12 // Root-Cause Directive</value>
+  </data>
+  <data name="Gallery_Panel2_Desc" xml:space="preserve">
+    <value>The surgical prompt that diagnosed the Keycloak dual-network issuer mismatch and the HTTP 431 death loop.</value>
+  </data>
+  <data name="Gallery_Panel2_Snippet" xml:space="preserve">
+    <value>Context: Authentication succeeds in container.
+JWT validation fails in browser.
+Diagnose issuer mismatch: Authority vs MetadataAddress.
+Decouple and align with browser-reachable endpoint.</value>
+  </data>
+  <data name="Gallery_Panel3_Title" xml:space="preserve">
+    <value>PHASE 14 // Socratic Guardrails</value>
+  </data>
+  <data name="Gallery_Panel3_Desc" xml:space="preserve">
+    <value>Instructing the AI on how to critique student code using the Socratic method — never giving the answer directly.</value>
+  </data>
+  <data name="Gallery_Panel3_Snippet" xml:space="preserve">
+    <value>You are a strict Socratic code reviewer.
+Do NOT provide corrected code.
+Return a structured JSON: questions only.
+Language: Hungarian. Tone: precise, direct.</value>
+  </data>
+
+  <!-- Section 7: Manifesto Footer -->
+  <data name="ManifestoSectionPrefix" xml:space="preserve">
+    <value>// END OF DOSSIER</value>
+  </data>
+  <data name="ManifestoStatus" xml:space="preserve">
+    <value>&gt; DOSSIER STATUS: COMPLETE</value>
+  </data>
+  <data name="ManifestoLine1" xml:space="preserve">
+    <value>The methodology works. The system is stable. The platform is live.</value>
+  </data>
+  <data name="ManifestoLine2" xml:space="preserve">
+    <value>This is what vibecoding looks like when the human is the architect.</value>
+  </data>
+  <data name="CTA_EnterPlatform" xml:space="preserve">
+    <value>[ ENTER THE PLATFORM ]</value>
+  </data>
+  <data name="CTA_ReturnTop" xml:space="preserve">
+    <value>[ RETURN TO COVER ]</value>
+  </data>
+
 </root>
