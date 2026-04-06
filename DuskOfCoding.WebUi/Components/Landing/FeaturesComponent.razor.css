@@ -1,0 +1,75 @@
+.features-section {
+    background: var(--ck-bg);
+    border-top: 1px solid var(--ck-border-dim);
+}
+
+.problem-headline {
+    font-family: var(--ck-font);
+    font-size: clamp(1rem, 2vw, 1.25rem);
+    color: var(--dusk-text-primary);
+    font-weight: 500;
+    line-height: 1.5;
+}
+
+/* [ERR] terminal lines */
+.err-line {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    background: #111113;
+    border-left: 3px solid rgba(234, 88, 12, 0.5);
+    padding: 0.75rem 1rem;
+    font-family: var(--ck-font);
+    font-size: 0.8rem;
+    color: var(--dusk-text-muted);
+    line-height: 1.5;
+}
+
+.err-tag {
+    color: #ef4444;
+    font-weight: 700;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+/* Stat panels */
+.stat-panel {
+    background: var(--ck-surface);
+    border: 1px solid var(--ck-border);
+    padding: 1.25rem 1.5rem;
+    position: relative;
+}
+
+.stat-panel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 2px;
+    height: 100%;
+    background: var(--ck-amber);
+    opacity: 0.4;
+}
+
+.stat-label {
+    font-family: var(--ck-font);
+    font-size: 0.62rem;
+    color: var(--ck-amber);
+    letter-spacing: 0.18em;
+    margin-bottom: 0.4rem;
+}
+
+.stat-desc {
+    font-family: var(--ck-font);
+    font-size: 0.78rem;
+    color: var(--ck-muted);
+    margin-bottom: 0.75rem;
+}
+
+.stat-value {
+    font-family: var(--ck-font);
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--dusk-text-primary);
+    line-height: 1;
+}

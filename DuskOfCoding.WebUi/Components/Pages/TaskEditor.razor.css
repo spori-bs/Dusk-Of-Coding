@@ -1,0 +1,28 @@
+/* Form panel top edge — Cockpit style */
+.ck-form-panel {
+    border-top: 2px solid rgba(234, 88, 12, 0.3);
+    border-radius: 0;
+}
+
+/* Field label — monospace + accessibility-safe // suffix */
+.ck-label {
+    font-family: var(--ck-font);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-size: 0.72rem;
+    color: var(--ck-muted);
+}
+
+.ck-label::after {
+    content: ' //';
+    color: var(--ck-amber);
+}
+
+/* Help text */
+.dusk-text-muted {
+    color: var(--dusk-text-muted);
+}
+
+.tracking-wider {
+    letter-spacing: 0.05em;
+}

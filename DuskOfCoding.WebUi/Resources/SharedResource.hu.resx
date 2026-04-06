@@ -103,58 +103,52 @@
   <data name="Language_Hungarian" xml:space="preserve"><value>Magyar</value></data>
   <data name="Language_English" xml:space="preserve"><value>Angol</value></data>
 
-  <!-- Landing Page -->
-  <data name="Landing_PageTitle" xml:space="preserve"><value>DuskOfCoding - Forradalmasítsd a kódolást</value></data>
+  <!-- Landing Page — Phase 19 -->
+  <data name="Landing_PageTitle" xml:space="preserve"><value>Dusk of Coding — A platform mérnököknek, akik nem rendelik alá magukat az MI-nek</value></data>
+  <data name="Landing_Practice" xml:space="preserve"><value>Gyakorlás</value></data>
+  <data name="Landing_ManageTasks" xml:space="preserve"><value>Feladatok</value></data>
+  <data name="Landing_GetStarted" xml:space="preserve"><value>Belépés</value></data>
 
   <!-- Hero -->
-  <data name="Hero_Title" xml:space="preserve"><value>Kódolj stabil alapokkal, használd az MI-t okosan.</value></data>
-  <data name="Hero_Tagline" xml:space="preserve"><value>MI-alapú tanulás</value></data>
-  <data name="Hero_Description" xml:space="preserve"><value>Az MI nem írja meg helyetted a tökéletes szoftvert, de megnöveli a hatékonyságod, ha tudod, mit csinálsz. Fókuszálj a stabil alapokra, írj tiszta kódot, és dolgozz a mesterséges intelligenciával úgy, ahogy a profik: eszközként és nem mankóként.</value></data>
-  <data name="Hero_CTA" xml:space="preserve"><value>Vágj bele most</value></data>
+  <data name="Hero_Headline_L1" xml:space="preserve"><value>Az utolsó generáció,</value></data>
+  <data name="Hero_Headline_L2" xml:space="preserve"><value>amely még önállóan</value></data>
+  <data name="Hero_Headline_L3" xml:space="preserve"><value>írja a kódot.</value></data>
+  <data name="Hero_Sub" xml:space="preserve"><value>Az MI a történelem legerősebb eszköze. A legtöbb fejlesztő mankóként használja. Ez a platform azoknak szól, akik nem hajlandóak erre.</value></data>
+  <data name="Hero_CTA_Primary" xml:space="preserve"><value>[ BELÉPÉS A PLATFORMRA ]</value></data>
+  <data name="Hero_CTA_Secondary" xml:space="preserve"><value>[ ÍGY KÉSZÜLT ]</value></data>
   <data name="Hero_HowItWasMade" xml:space="preserve"><value>Így Készült</value></data>
-  <data name="Hero_SecondaryCTA" xml:space="preserve"><value>Bemutató</value></data>
 
-  <!-- Features -->
-  <data name="Features_Heading" xml:space="preserve"><value>Stabil alapok és modern eszközök.</value></data>
-  <data name="Features_Subheading" xml:space="preserve"><value>A Dusk of Coding segít megérteni a szoftverfejlesztés mélyebb rétegeit, hogy az MI ne egy megmagyarázhatatlan varázsdoboz, hanem egy hatékony asszisztens legyen a kezedben.</value></data>
-  <data name="Features_Sandbox_Title" xml:space="preserve"><value>Biztonságos kódolási környezet</value></data>
-  <data name="Features_Sandbox_Desc" xml:space="preserve"><value>Teszteld a C# megoldásaidat egy teljesen elszigetelt, biztonságos Docker és Roslyn alapú környezetben, ahol szabadon kísérletezhetsz.</value></data>
-  <data name="Features_Testing_Title" xml:space="preserve"><value>Automatizált egységtesztelés</value></data>
-  <data name="Features_Testing_Desc" xml:space="preserve"><value>Nemcsak azt mondjuk meg, hogy lefutott-e a kódod. Részletes visszajelzést adunk az automatizált tesztek alapján, hogy értsd a hibáid okát.</value></data>
-  <data name="Features_AI_Title" xml:space="preserve"><value>Célzott MI-visszajelzés</value></data>
-  <data name="Features_AI_Desc" xml:space="preserve"><value>A beépített MI mentor nem oldja meg helyetted a feladatot, de rávezet a helyes útra, és megtanít arra, hogyan kommunikálj hatékonyan a modellekkel.</value></data>
+  <!-- The Problem -->
+  <data name="Problem_Headline" xml:space="preserve"><value>Az MI nem teszi erőssé a gyenge fejlesztőket. Csupán láthatatlanná.</value></data>
+  <data name="Problem_Err1" xml:space="preserve"><value>Hallucinált architektúra — a teszteken átmegy, élesben összeomlik.</value></data>
+  <data name="Problem_Err2" xml:space="preserve"><value>Végtelen debug ciklus — visszakövethetetlen hibák az MI kódjában.</value></data>
+  <data name="Problem_Err3" xml:space="preserve"><value>Tudáskopás — képes irányítani az MI-t, de önállóan képtelen építeni.</value></data>
+  <data name="Problem_Stat1_Desc" xml:space="preserve"><value>Fejlesztők, akik napi szinten használnak generatív MI-t</value></data>
+  <data name="Problem_Stat2_Desc" xml:space="preserve"><value>Képesek MI-generált kódot MI nélkül debuggolni</value></data>
+  <data name="Problem_Stat3_Desc" xml:space="preserve"><value>Platform, amely a kettő szintézisét tanítja</value></data>
 
-  <!-- Media Demo -->
-  <data name="MediaDemo_Title" xml:space="preserve"><value>Nézd meg működés közben</value></data>
-  <data name="MediaDemo_Subtitle" xml:space="preserve"><value>Kíváncsi vagy a részletekre? Nézd meg bemutató videónkat, és ismerd meg, hogyan ötvözzük a mérnöki alapokat a mesterséges intelligencia nyújtotta lehetőségekkel.</value></data>
+  <!-- The System -->
+  <data name="Sys_Sandbox_Title" xml:space="preserve"><value>Futtató Környezet</value></data>
+  <data name="Sys_Sandbox_Body" xml:space="preserve"><value>A kódod egy tisztítható AssemblyLoadContext-ben fordul. 5 másodperc timeout. xUnit futtató. Zéró gazdagép-szennyezés.</value></data>
+  <data name="Sys_Mentor_Title" xml:space="preserve"><value>Szókratészi MI Mentor</value></data>
+  <data name="Sys_Mentor_Body" xml:space="preserve"><value>Soha nem adja meg a választ. Kérdésekkel provokálja a gondolkodásod a Gemini AI segítségével — SignalR folyamaton keresztül.</value></data>
+  <data name="Sys_Identity_Title" xml:space="preserve"><value>Identitás Erőd</value></data>
+  <data name="Sys_Identity_Body" xml:space="preserve"><value>Keycloak OIDC. JWT Bearer szabvány. Szerepkör-alapú hozzáférés. Memória-alapú munkamenet — zéró cookie duplikáció.</value></data>
+  <data name="Sys_Resilience_Title" xml:space="preserve"><value>Ellenállóképességi Motor</value></data>
+  <data name="Sys_Resilience_Body" xml:space="preserve"><value>Minden külső hívás — MI, futtatás, API — a Polly hálóján megy át: Retry(3) → CircuitBreaker → Timeout.</value></data>
 
-  <!-- Social Proof -->
-  <data name="Social_Heading" xml:space="preserve"><value>Modern architektúrával építve</value></data>
-  <data name="Social_Subheading" xml:space="preserve"><value>Clean Architecture és moduláris monolit fókusszal.</value></data>
-  <data name="Social_PoweredBy" xml:space="preserve"><value>Technológiák</value></data>
-  <data name="Social_Quote" xml:space="preserve"><value>"A platform célja, hogy bemutassa: az MI-asszisztált fejlesztés nem helyettesíti a tiszta, jól strukturált kódolási elveket, hanem kiegészíti azokat."</value></data>
-  <data name="Social_QuoteSource" xml:space="preserve"><value>Projekt módszertan</value></data>
+  <!-- The Threshold -->
+  <data name="Threshold_Line1" xml:space="preserve"><value>Láttad a rendszert.</value></data>
+  <data name="Threshold_Line2" xml:space="preserve"><value>A kérdés csak az, készen állsz-e a helyes használatára.</value></data>
+  <data name="Threshold_Enter_Title" xml:space="preserve"><value>[ REGISZTRÁCIÓ ÉS BELÉPÉS ]</value></data>
+  <data name="Threshold_Enter_Desc" xml:space="preserve"><value>Hozd létre a fiókod. Kezdd el a gyakorlást még ma.</value></data>
+  <data name="Threshold_Enter_CTA" xml:space="preserve"><value>REGISZTRÁCIÓ ÉS BELÉPÉS</value></data>
+  <data name="Threshold_Wait_Title" xml:space="preserve"><value>[ MÉG NEM ÁLLOK KÉSZEN ]</value></data>
+  <data name="Threshold_Wait_Desc" xml:space="preserve"><value>Térj vissza, amikor felkészültél. A platform megvár.</value></data>
+  <data name="Threshold_Wait_CTA" xml:space="preserve"><value>MÉG NEM ÁLLOK KÉSZEN</value></data>
+  <data name="Threshold_Welcome" xml:space="preserve"><value>Üdvözlünk újra,</value></data>
+  <data name="Threshold_Resume" xml:space="preserve"><value>[ GYAKORLÁS FOLYTATÁSA ]</value></data>
 
-  <!-- Lead Form -->
-  <data name="Lead_Heading" xml:space="preserve"><value>Szeretnéd próbára tenni magad?</value></data>
-  <data name="Lead_Subheading" xml:space="preserve"><value>Csatlakozz hozzánk, és alapozd meg a jövőálló programozói tudásod a Dusk of Coding segítségével.</value></data>
-  <data name="Lead_Question" xml:space="preserve"><value>Mi a fő programozási nyelved?</value></data>
-  <data name="Lead_Other" xml:space="preserve"><value>Egyéb</value></data>
-  <data name="Lead_InvitePrompt" xml:space="preserve"><value>Szuper! Hova küldhetjük a hozzáférést?</value></data>
-  <data name="Lead_EmailLabel" xml:space="preserve"><value>Munkahelyi email</value></data>
-  <data name="Lead_EmailPlaceholder" xml:space="preserve"><value>te@ceg.hu</value></data>
-  <data name="Lead_Submit" xml:space="preserve"><value>Ingyenes fiók létrehozása</value></data>
-  <data name="Lead_AlreadyRegistered" xml:space="preserve"><value>Már van fiókod?</value></data>
-  <data name="Lead_LoginLink" xml:space="preserve"><value>Bejelentkezés</value></data>
-  <data name="Lead_Success" xml:space="preserve"><value>Feliratkoztál!</value></data>
-  <data name="Lead_SuccessHint" xml:space="preserve"><value>Ellenőrizd a postaládádat a további utasításokért.</value></data>
-  <data name="Lead_StartNow" xml:space="preserve"><value>Gyakorlás indítása</value></data>
-
-  <!-- Landing Layout -->
-  <data name="Landing_Practice" xml:space="preserve"><value>Gyakorlás</value></data>
-  <data name="Landing_ManageTasks" xml:space="preserve"><value>Feladatok kezelése</value></data>
-  <data name="Landing_WatchDemo" xml:space="preserve"><value>Bemutató</value></data>
-  <data name="Landing_GetStarted" xml:space="preserve"><value>Kezdés</value></data>
   <!-- API Errors -->
   <data name="Error_FetchTasks" xml:space="preserve"><value>A feladatlista betöltése váratlan akadályba ütközött. (Hibakód: {0})</value></data>
   <data name="Error_Network" xml:space="preserve"><value>Hálózati hiba történt. Kérjük, ellenőrizze az internetkapcsolatot. ({0})</value></data>

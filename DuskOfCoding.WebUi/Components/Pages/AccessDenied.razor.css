@@ -1,0 +1,49 @@
+.ck-denied-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 70vh;
+}
+
+.ck-denied-inner {
+    text-align: center;
+    max-width: 480px;
+    padding: 2rem;
+}
+
+.ck-denied-prefix {
+    font-family: var(--ck-font);
+    font-size: 0.65rem;
+    color: var(--ck-amber);
+    letter-spacing: 0.2em;
+    margin-bottom: 1.5rem;
+    animation: ckDeniedBlink 2s step-end infinite;
+}
+
+@keyframes ckDeniedBlink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.3; }
+}
+
+.ck-denied-icon {
+    font-size: 3rem;
+    color: var(--ck-amber);
+    opacity: 0.8;
+    margin-bottom: 1.5rem;
+    display: block;
+}
+
+.ck-denied-title {
+    font-family: var(--ck-font);
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--dusk-text-primary);
+    margin-bottom: 0.75rem;
+}
+
+.ck-denied-msg {
+    font-size: 0.9rem;
+    color: var(--ck-muted);
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}

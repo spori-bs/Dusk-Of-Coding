@@ -14,11 +14,10 @@
 
 <PageTitle>@L["Practice_Title"] | Dusk of Coding</PageTitle>
 
-<div class="d-flex align-items-center mb-4">
-    <div class="feature-icon-wrapper me-3" style="width: 50px; height: 50px; background: rgba(124, 58, 237, 0.2);">
-        <i class="bi bi-code-slash fs-4 text-primary"></i>
-    </div>
-    <h2 class="display-6 fw-bold text-white mb-0">@L["Practice_Title"]</h2>
+<div class="ck-section-header mb-4">
+    <span class="ck-section-prefix">// 01</span>
+    <h2 class="ck-section-title">@L["Practice_Title"]</h2>
+    <div class="ck-section-line"></div>
 </div>
 
 @if (!string.IsNullOrEmpty(_errorMessage))
@@ -68,7 +67,7 @@ else
         <div class="row mb-4">
             <div class="col-md-4">
                 <label class="form-label text-secondary small fw-semibold text-uppercase tracking-wider">@L["Practice_Language"]</label>
-                <select class="form-select dusk-input" @bind="selectedLanguage">
+                <select class="form-select ck-input" @bind="selectedLanguage">
                     @foreach (var lang in Enum.GetNames(typeof(ProgrammingLanguage)))
                     {
                         <option value="@lang">@lang</option>
@@ -103,7 +102,7 @@ else
         <button class="btn dusk-btn-outline px-4 py-2" @onclick="AutoFormat" disabled="@(selectedLanguage != nameof(ProgrammingLanguage.CSharp))">
             <i class="bi bi-magic me-2"></i> @L["Practice_AutoFormat"]
         </button>
-        <button class="btn btn-primary px-5 py-2 fw-bold ms-auto" @onclick="SubmitCode" disabled="@(isSubmitting)">
+        <button class="btn btn-amber px-5 py-2 fw-bold ms-auto" @onclick="SubmitCode" disabled="@(isSubmitting)">
             @if (isSubmitting)
             {
                 <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
@@ -309,54 +308,4 @@ else
     }
 }
 
-<style>
-    .cursor-pointer { cursor: pointer; }
-    
-    .task-card:hover { border-color: rgba(124, 58, 237, 0.4); }
-    
-    .shadow-glow {
-        box-shadow: 0 0 20px rgba(124, 58, 237, 0.2);
-        border-color: var(--dusk-purple-light) !important;
-    }
 
-    .dusk-badge-info {
-        background: rgba(14, 165, 233, 0.15);
-        color: #38bdf8;
-        border: 1px solid rgba(14, 165, 233, 0.3);
-    }
-    
-    .dusk-badge-secondary {
-        background: rgba(148, 163, 184, 0.15);
-        color: #94a3b8;
-        border: 1px solid rgba(148, 163, 184, 0.3);
-    }
-    
-    .dusk-input {
-        background-color: rgba(15, 23, 42, 0.6);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        color: white;
-    }
-    .dusk-input:focus {
-        background-color: rgba(15, 23, 42, 0.8);
-        border-color: var(--dusk-purple-light);
-        box-shadow: 0 0 0 0.25rem rgba(124, 58, 237, 0.25);
-        color: white;
-    }
-
-    @@keyframes blink-green {
-        0% { border-color: #10b981; box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
-        50% { border-color: #10b981; box-shadow: 0 0 0 8px rgba(16, 185, 129, 0.1); }
-        100% { border-color: rgba(255,255,255,0.1); box-shadow: none; }
-    }
-    .border-success-blink {
-        animation: blink-green 1s ease-out;
-        border-color: #10b981 !important;
-    }
-    .placeholder-glow {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-    }
-</style>

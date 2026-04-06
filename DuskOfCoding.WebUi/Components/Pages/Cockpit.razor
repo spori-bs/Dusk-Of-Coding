@@ -1,0 +1,226 @@
+@page "/cockpit"
+@layout DuskOfCoding.WebUi.Components.Layout.MainLayout
+@rendermode InteractiveServer
+@inject IJSRuntime JS
+@inject NavigationManager Nav
+@implements IAsyncDisposable
+
+<PageTitle>Engineering Cockpit — Dusk of Coding</PageTitle>
+
+<div class="cockpit-root">
+
+    @* ── 1. HERO ─────────────────────────────────────────────── *@
+    <section class="cockpit-hero" id="cockpit-hero">
+
+        @* Inline PCB SVG background *@
+        <svg class="pcb-bg" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" id="cockpit-pcb-svg">
+            @* Horizontal traces *@
+            @for (int row = 1; row <= 10; row++)
+            {
+                <line class="pcb-line" x1="0" y1="@(row * 10)%" x2="100%" y2="@(row * 10)%" stroke="rgba(234,88,12,0.06)" stroke-width="1" />
+            }
+            @* Vertical traces *@
+            @for (int col = 1; col <= 16; col++)
+            {
+                <line class="pcb-line" x1="@(col * 6.25)%" y1="0" x2="@(col * 6.25)%" y2="100%" stroke="rgba(234,88,12,0.06)" stroke-width="1" />
+            }
+            @* Junction dots at intersections *@
+            @for (int row = 1; row <= 10; row++)
+            {
+                @for (int col = 1; col <= 16; col++)
+                {
+                    <circle cx="@(col * 6.25)%" cy="@(row * 10)%" r="2" fill="rgba(234,88,12,0.12)" />
+                }
+            }
+        </svg>
+
+        <div class="hero-content">
+            <div class="hero-label">
+                <span class="status-dot pulse-dot"></span>
+                <span class="hero-label-text">ENGINEERING COCKPIT // v17.0</span>
+            </div>
+
+            <h1 class="hero-title">
+                Master the Craft.<br />
+                <span class="hero-title-accent">Wield the Tool.</span>
+            </h1>
+
+            <p class="hero-subtitle">Engineering Cockpit — Precision. Control. Mastery.</p>
+
+            <button class="cockpit-btn-primary" @onclick='() => Nav.NavigateTo("/practice")'>
+                <i class="bi bi-terminal me-2"></i>Launch Practice
+                <span class="btn-arrow">→</span>
+            </button>
+        </div>
+
+        <div class="hero-corner-tl"></div>
+        <div class="hero-corner-br"></div>
+    </section>
+
+    @* ── 2. STATUS GRID (Bento-Switch) ───────────────────────── *@
+    <section class="cockpit-section status-grid-section cockpit-reveal">
+        <div class="section-header">
+            <span class="section-prefix">// 02</span>
+            <h2 class="section-title">Platform Systems</h2>
+            <div class="section-line"></div>
+        </div>
+
+        <div class="status-grid">
+            @foreach (var panel in _panels)
+            {
+                var isOpen = _expandedPanels.TryGetValue(panel.Id, out var v) && v;
+                <div class="instrument-panel @(isOpen ? "panel-deployed" : "")"
+                     id="@panel.Id"
+                     @onclick="() => TogglePanel(panel.Id)">
+
+                    <div class="panel-header">
+                        <div class="panel-header-left">
+                            <i class="bi @panel.Icon panel-icon"></i>
+                            <span class="panel-title">@panel.Title</span>
+                        </div>
+                        <div class="panel-header-right">
+                            <span class="panel-status-text">@panel.StatusText</span>
+                            <span class="status-dot pulse-dot panel-dot"></span>
+                            <span class="panel-chevron @(isOpen ? "chevron-open" : "")">›</span>
+                        </div>
+                    </div>
+
+                    <div class="panel-body-wrapper">
+                        <div class="panel-body">
+                            <p class="panel-desc">@panel.Description</p>
+                            <pre class="panel-readout"><code>@panel.CodeSnippet</code></pre>
+                        </div>
+                    </div>
+
+                </div>
+            }
+        </div>
+    </section>
+
+    @* ── 3. SOCRATIC WAVE TERMINAL ────────────────────────────── *@
+    <section class="cockpit-section wave-section cockpit-reveal">
+        <div class="section-header">
+            <span class="section-prefix">// 03</span>
+            <h2 class="section-title">Socratic Mentor — Signal Monitor</h2>
+            <div class="section-line"></div>
+        </div>
+
+        <div class="wave-console">
+            <div class="wave-controls">
+                <label class="wave-label">MENTOR MODE</label>
+                <select class="wave-select" @bind="_waveMode">
+                    <option value="Idle">IDLE — Standby</option>
+                    <option value="Guidance">GUIDANCE — Active</option>
+                    <option value="Warning">WARNING — AI Dependency</option>
+                </select>
+                @if (_waveMode == "Warning")
+                {
+                    <span class="wave-alert-badge">⚠ AI dependency detected</span>
+                }
+            </div>
+
+            <div class="wave-display wave-@_waveMode.ToLower()">
+                <div class="wave-line"></div>
+                <div class="wave-scanline"></div>
+            </div>
+
+            <div class="wave-footer-readout">
+                <span class="readout-key">SIGNAL</span>
+                <span class="readout-val">@GetWaveStatusText()</span>
+                <span class="readout-key ms-4">LATENCY</span>
+                <span class="readout-val">~120ms</span>
+                <span class="readout-key ms-4">PROVIDER</span>
+                <span class="readout-val">Gemini 2.0 Flash</span>
+            </div>
+        </div>
+    </section>
+
+    @* ── 4. MANIFESTO ─────────────────────────────────────────── *@
+    <section class="cockpit-section manifesto-section cockpit-reveal">
+        <div class="manifesto-inner">
+            <div class="manifesto-terminal-line">&gt; SYSTEM STATUS: OPERATIONAL</div>
+            <p class="manifesto-sub">You are the architect. The AI is the compiler.</p>
+            <p class="manifesto-tagline">Master the craft. Wield the tool.</p>
+
+            <button class="cockpit-btn-terminal" @onclick='() => Nav.NavigateTo("/practice")'>
+                [ ENTER PRACTICE ENVIRONMENT ]
+            </button>
+        </div>
+    </section>
+
+</div>
+
+@code {
+    private IJSObjectReference? _jsModule;
+
+    private string _waveMode = "Idle";
+
+    private Dictionary<string, bool> _expandedPanels = new();
+
+    private record PanelDef(string Id, string Title, string Icon, string StatusText, string Description, string CodeSnippet);
+
+    private readonly List<PanelDef> _panels = new()
+    {
+        new(
+            "panel-sandbox", "Execution Sandbox", "bi-cpu", "Roslyn Compiler — Active",
+            "Student code is compiled in an isolated AssemblyLoadContext with a 5-second execution timeout, memory caps, and full xUnit test runner — zero host contamination.",
+            "services.AddSingleton<ISecureCompilationService,\n  SecureCompilationService>();\nservices.AddSingleton<ISandboxExecutionService,\n  SandboxExecutionService>();"
+        ),
+        new(
+            "panel-tutor", "Socratic Mentor", "bi-stars", "Gemini AI — Connected",
+            "An AI tutor that never gives the answer. It interrogates the student's code using the Socratic method, delivered via Polly-resilient streaming through SignalR.",
+            "IChatClient client = new AzureAIInferenceClient(...)\n  .AsBuilder()\n  .UseOpenTelemetry()\n  .UseRetryPolicy(3)\n  .Build();"
+        ),
+        new(
+            "panel-security", "Identity Fortress", "bi-shield-lock", "Keycloak IAM — Secured",
+            "Centralized OIDC authentication via Keycloak. All tokens validated server-side. Session cookies stored in memory-backed ITicketStore to prevent HTTP 431 bloat.",
+            "builder.Services.AddKeycloakWebAppAuthentication(\n  builder.Configuration,\n  realm: \"dusk-of-coding\",\n  client: \"dusk-web-ui\");"
+        ),
+        new(
+            "panel-pipeline", "Resilience Pipeline", "bi-diagram-3", "Polly — 3 Strategies Active",
+            "Every external call — AI inference, code execution, API requests — runs through a Polly CompositeStrategy: Retry (3x) → CircuitBreaker → Timeout. The system heals itself.",
+            "pipeline.AddRetry(new RetryStrategyOptions\n  { MaxRetryAttempts = 3 })\n.AddCircuitBreaker(...)\n.AddTimeout(TimeSpan.FromSeconds(30));"
+        ),
+    };
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            try
+            {
+                _jsModule = await JS.InvokeAsync<IJSObjectReference>(
+                    "import", "./Components/Pages/Cockpit.razor.js");
+                await _jsModule.InvokeVoidAsync("init", "cockpit-hero");
+            }
+            catch
+            {
+                // JS Interop not available in prerender — safe to ignore
+            }
+        }
+    }
+
+    private void TogglePanel(string panelId)
+    {
+        if (_expandedPanels.TryGetValue(panelId, out var current))
+            _expandedPanels[panelId] = !current;
+        else
+            _expandedPanels[panelId] = true;
+    }
+
+    private string GetWaveStatusText() => _waveMode switch
+    {
+        "Guidance" => "SOCRATIC ACTIVE — Guiding",
+        "Warning"  => "AI BRAIN MODE — Override Risk",
+        _          => "NOMINAL — Awaiting Input",
+    };
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_jsModule is not null)
+        {
+            try { await _jsModule.DisposeAsync(); }
+            catch { /* ignore dispose errors during navigation */ }
+        }
+    }
+}

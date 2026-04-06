@@ -12,15 +12,12 @@
 
 <PageTitle>@L["Tasks_Title"] | Dusk of Coding</PageTitle>
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <div class="d-flex align-items-center">
-        <div class="feature-icon-wrapper me-3" style="width: 50px; height: 50px; background: rgba(234, 88, 12, 0.2);">
-            <i class="bi bi-list-task fs-4 text-warning"></i>
-        </div>
-        <h2 class="display-6 fw-bold text-white mb-0">@L["Tasks_Title"]</h2>
-    </div>
-    <a href="/tasks/create" class="btn btn-primary px-4 fw-bold shadow-sm">
-        <i class="bi bi-plus-lg me-2"></i> @L["Tasks_CreateNew"]
+<div class="ck-section-header mb-4">
+    <span class="ck-section-prefix">// 01</span>
+    <span class="ck-section-title">@L["Tasks_Title"]</span>
+    <div class="ck-section-line"></div>
+    <a href="/tasks/create" class="btn btn-amber btn-sm">
+        <i class="bi bi-plus me-1"></i>@L["Tasks_CreateNew"]
     </a>
 </div>
 
@@ -67,7 +64,7 @@ else
                                 }
                             </td>
                             <td class="text-end pe-4 py-3">
-                                <a href="/tasks/edit/@task.Id" class="btn btn-sm dusk-btn-outline me-2">
+                                <a href="/tasks/edit/@task.Id" class="btn btn-sm btn-amber me-2">
                                     <i class="bi bi-pencil-square"></i> @L["Edit"]
                                 </a>
                                 <button class="btn btn-sm btn-outline-danger" @onclick="() => DeleteTask(task.Id)">
@@ -124,39 +121,4 @@ else
     }
 }
 
-<style>
-    .dusk-table {
-        color: var(--dusk-text-muted);
-        --bs-table-bg: transparent;
-        background-color: transparent;
-    }
-    .dusk-table thead {
-        background: rgba(0, 0, 0, 0.4);
-        border-bottom: 2px solid rgba(255, 255, 255, 0.05);
-    }
-    .dusk-table th {
-        color: var(--dusk-text-primary);
-        font-weight: 600;
-        text-transform: uppercase;
-        font-size: 0.8rem;
-        letter-spacing: 0.05em;
-    }
-    .dusk-table tbody tr {
-        transition: background-color 0.2s ease;
-    }
-    .dusk-table tbody tr:hover {
-        background-color: rgba(255, 255, 255, 0.02);
-    }
-    
-    .dusk-badge-info {
-        background: rgba(14, 165, 233, 0.15);
-        color: #38bdf8;
-        border: 1px solid rgba(14, 165, 233, 0.3);
-    }
-    
-    .dusk-badge-secondary {
-        background: rgba(148, 163, 184, 0.15);
-        color: #94a3b8;
-        border: 1px solid rgba(148, 163, 184, 0.3);
-    }
-</style>
+

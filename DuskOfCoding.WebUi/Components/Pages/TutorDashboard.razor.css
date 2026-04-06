@@ -1,0 +1,16 @@
+/* Metric card — amber top edge */
+.ck-card-top {
+    border-top: 2px solid rgba(234, 88, 12, 0.3);
+    border-radius: 0;
+}
+
+/* Feedback table — amber accents via .ck-table specificity (no !important) */
+.ck-table tbody tr:hover {
+    background: rgba(234, 88, 12, 0.03);
+}
+
+.ck-table thead th {
+    color: var(--ck-amber);
+    letter-spacing: 0.12em;
+    border-bottom: 1px solid rgba(234, 88, 12, 0.2);
+}

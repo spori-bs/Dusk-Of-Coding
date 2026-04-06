@@ -1,0 +1,51 @@
+@using DuskOfCoding.WebUi.Resources
+@inject IStringLocalizer<SharedResource> L
+
+<section class="threshold-section py-5">
+    <div class="container py-5">
+
+        <!-- Checkpoint divider -->
+        <div class="checkpoint-divider mb-5">
+            <div class="checkpoint-line"></div>
+            <span class="checkpoint-label">[ CHECKPOINT ]</span>
+            <div class="checkpoint-line"></div>
+        </div>
+
+        <!-- Statement -->
+        <div class="threshold-statement mb-5">
+            <p>@L["Threshold_Line1"]</p>
+            <p>@L["Threshold_Line2"]</p>
+        </div>
+
+        <!-- Binary CTA -->
+        <AuthorizeView>
+            <Authorized>
+                <div class="threshold-authenticated">
+                    <span class="auth-readout">
+                        &gt; AUTHENTICATED // @L["Threshold_Welcome"] <strong>@context.User.Identity?.Name</strong>.
+                    </span>
+                    <a href="/practice" class="btn btn-amber ms-3">@L["Threshold_Resume"] →</a>
+                </div>
+            </Authorized>
+            <NotAuthorized>
+                <div class="row g-4 justify-content-center">
+                    <div class="col-md-5">
+                        <div class="threshold-choice threshold-choice--enter">
+                            <div class="threshold-choice-title">@L["Threshold_Enter_Title"]</div>
+                            <p class="threshold-choice-desc">@L["Threshold_Enter_Desc"]</p>
+                            <a href="/register" class="btn btn-amber w-100">[ @L["Threshold_Enter_CTA"] ]</a>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="threshold-choice threshold-choice--wait">
+                            <div class="threshold-choice-title">@L["Threshold_Wait_Title"]</div>
+                            <p class="threshold-choice-desc">@L["Threshold_Wait_Desc"]</p>
+                            <a href="/how-it-was-made" class="btn threshold-btn-dim w-100">[ @L["Threshold_Wait_CTA"] ]</a>
+                        </div>
+                    </div>
+                </div>
+            </NotAuthorized>
+        </AuthorizeView>
+
+    </div>
+</section>
