@@ -73,6 +73,13 @@ public sealed class RabbitMQService : IAsyncDisposable
             autoDelete: false,
             cancellationToken: ct);
 
+        await channel.ExchangeDeclareAsync(
+            exchange: RabbitMQTopology.TestGenerationExchange,
+            type: ExchangeType.Direct,
+            durable: true,
+            autoDelete: false,
+            cancellationToken: ct);
+
         // Declare queues
         await channel.QueueDeclareAsync(
             queue: RabbitMQTopology.TutorInteractionsQueue,
@@ -83,6 +90,20 @@ public sealed class RabbitMQService : IAsyncDisposable
 
         await channel.QueueDeclareAsync(
             queue: RabbitMQTopology.TutorResponsesQueue,
+            durable: true,
+            exclusive: false,
+            autoDelete: false,
+            cancellationToken: ct);
+
+        await channel.QueueDeclareAsync(
+            queue: RabbitMQTopology.TestGenerationQueue,
+            durable: true,
+            exclusive: false,
+            autoDelete: false,
+            cancellationToken: ct);
+
+        await channel.QueueDeclareAsync(
+            queue: RabbitMQTopology.TestGenerationResponseQueue,
             durable: true,
             exclusive: false,
             autoDelete: false,
@@ -99,6 +120,18 @@ public sealed class RabbitMQService : IAsyncDisposable
             queue: RabbitMQTopology.TutorResponsesQueue,
             exchange: RabbitMQTopology.ResponseExchange,
             routingKey: RabbitMQTopology.ResponseRoutingKey,
+            cancellationToken: ct);
+
+        await channel.QueueBindAsync(
+            queue: RabbitMQTopology.TestGenerationQueue,
+            exchange: RabbitMQTopology.TestGenerationExchange,
+            routingKey: RabbitMQTopology.TestGenerationRoutingKey,
+            cancellationToken: ct);
+
+        await channel.QueueBindAsync(
+            queue: RabbitMQTopology.TestGenerationResponseQueue,
+            exchange: RabbitMQTopology.ResponseExchange,
+            routingKey: RabbitMQTopology.TestGenerationResponseRoutingKey,
             cancellationToken: ct);
 
         _logger.LogInformation("RabbitMQ topology declared successfully");

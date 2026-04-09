@@ -9,8 +9,7 @@ public class TaskDefinition
     public List<string> Tags { get; set; } = new();
     
     /// <summary>
-    /// Reference to the test bundle (e.g., path to xUnit project template) 
-    /// required by the Execution API to evaluate this task.
+    /// Collection of xUnit test files evaluating this task.
     /// </summary>
-    public string TestBundleReference { get; set; } = string.Empty;
+    public ICollection<TaskTest> Tests { get; set; } = new List<TaskTest>();
 }

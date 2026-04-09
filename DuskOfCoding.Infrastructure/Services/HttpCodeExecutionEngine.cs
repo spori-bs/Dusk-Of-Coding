@@ -30,9 +30,9 @@ public class HttpCodeExecutionEngine : ICodeExecutionEngine
             TestBundle = new TestBundleDto
             {
                 Framework = "xunit",
-                TestCode = string.IsNullOrWhiteSpace(task.TestBundleReference) 
+                TestCode = task.Tests == null || task.Tests.Count == 0
                     ? "using Xunit; public class DefaultTest { [Fact] public void CompilationCheckOnly() { Assert.True(true); } }"
-                    : task.TestBundleReference
+                    : string.Join("\n\n", task.Tests.Select(t => t.Code))
             },
             Limits = new LimitsDto()
         };

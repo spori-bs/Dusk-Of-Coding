@@ -88,8 +88,12 @@ builder.Services.AddAuthorization();
 // SignalR for real-time tutor feedback
 builder.Services.AddSignalR();
 
-// RabbitMQ → SignalR bridge
+// Map Keycloak sub-claim → SignalR user ID (enables Clients.User() targeting)
+builder.Services.AddSingleton<Microsoft.AspNetCore.SignalR.IUserIdProvider, DuskOfCoding.WebApi.Hubs.KeycloakUserIdProvider>();
+
+// RabbitMQ → SignalR bridges
 builder.Services.AddHostedService<TutorResponseBridge>();
+builder.Services.AddHostedService<DuskOfCoding.WebApi.Services.TestGenerationBridge>();
 
 var app = builder.Build();
 
@@ -136,6 +140,42 @@ tasksGroup.MapPost("/", [Microsoft.AspNetCore.Authorization.Authorize(Roles = Ap
 {
     var task = await taskService.CreateTaskAsync(dto, ct);
     return Results.Created($"/tasks/{task.Id}", task);
+});
+
+tasksGroup.MapPost("/{id:guid}/generate-tests", [Microsoft.AspNetCore.Authorization.Authorize(Roles = AppRoles.Tutor + "," + AppRoles.Admin)] async (
+    Guid id,
+    Microsoft.AspNetCore.Http.HttpContext httpContext,
+    ITaskService taskService,
+    RabbitMQService rabbitMqService,
+    ILogger<Program> logger,
+    CancellationToken ct) =>
+{
+    var task = await taskService.GetTaskByIdAsync(id, ct);
+    if (task is null) return Results.NotFound();
+
+    var userId = httpContext.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+    if (userId is null) return Results.Unauthorized();
+
+    var command = new GenerateTestSuiteCommand
+    {
+        TaskId = id,
+        Title = task.Title,
+        Description = task.Description,
+        UserId = userId
+    };
+
+    await rabbitMqService.PublishAsync(
+        RabbitMQTopology.TestGenerationExchange,
+        RabbitMQTopology.TestGenerationRoutingKey,
+        command,
+        Guid.NewGuid(),
+        ct);
+
+    logger.LogInformation(
+        "Published GenerateTestSuiteCommand for Task {TaskId} by User {UserId}",
+        id, userId);
+
+    return Results.Accepted();
 });
 
 tasksGroup.MapPut("/{id:guid}", [Microsoft.AspNetCore.Authorization.Authorize(Roles = AppRoles.Tutor + "," + AppRoles.Admin)] async (Guid id, [FromBody] DuskOfCoding.Application.DTOs.UpdateTaskDto dto, ITaskService taskService, CancellationToken ct) =>
@@ -305,4 +345,5 @@ feedbackGroup.MapGet("/overview", [Microsoft.AspNetCore.Authorization.Authorize(
 app.MapHub<TutorHub>("/hubs/tutor");
 
 app.Run();
+
 

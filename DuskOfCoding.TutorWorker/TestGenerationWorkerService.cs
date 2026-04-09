@@ -1,0 +1,171 @@
+using Microsoft.Extensions.AI;
+using Microsoft.Extensions.Options;
+using DuskOfCoding.Domain.Interfaces;
+using DuskOfCoding.Domain.Entities;
+using DuskOfCoding.Infrastructure.Configuration;
+using DuskOfCoding.Infrastructure.Messaging;
+using DuskOfCoding.TutorWorker.Prompts;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace DuskOfCoding.TutorWorker;
+
+/// <summary>
+/// Background service that consumes GenerateTestSuiteCommands from RabbitMQ,
+/// calls the LLM to generate xUnit test code, saves the results as TaskTest entities,
+/// and notifies the originating user via a SignalR result message.
+/// </summary>
+public sealed class TestGenerationWorkerService : BackgroundService
+{
+    private readonly RabbitMQService _rabbitMqService;
+    private readonly IChatClient _chatClient;
+    private readonly IServiceScopeFactory _scopeFactory;
+    private readonly LlmProviderOptions _options;
+    private readonly ILogger<TestGenerationWorkerService> _logger;
+
+    public TestGenerationWorkerService(
+        RabbitMQService rabbitMqService,
+        IChatClient chatClient,
+        IServiceScopeFactory scopeFactory,
+        IOptions<LlmProviderOptions> options,
+        ILogger<TestGenerationWorkerService> logger)
+    {
+        _rabbitMqService = rabbitMqService;
+        _chatClient = chatClient;
+        _scopeFactory = scopeFactory;
+        _options = options.Value;
+        _logger = logger;
+    }
+
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    {
+        _logger.LogInformation("TestGenerationWorkerService starting, subscribing to {Queue}...",
+            RabbitMQTopology.TestGenerationQueue);
+
+        var channel = await _rabbitMqService.ConsumeAsync<GenerateTestSuiteCommand>(
+            RabbitMQTopology.TestGenerationQueue,
+            HandleCommandAsync,
+            stoppingToken);
+
+        _logger.LogInformation("TestGenerationWorkerService is now consuming commands");
+
+        try
+        {
+            await Task.Delay(Timeout.Infinite, stoppingToken);
+        }
+        catch (OperationCanceledException)
+        {
+            _logger.LogInformation("TestGenerationWorkerService shutting down...");
+        }
+        finally
+        {
+            await channel.DisposeAsync();
+        }
+    }
+
+    private async Task HandleCommandAsync(GenerateTestSuiteCommand command, Guid correlationId, CancellationToken ct)
+    {
+        _logger.LogInformation(
+            "Processing test generation for Task {TaskId} requested by User {UserId}",
+            command.TaskId, command.UserId);
+
+        bool isSuccess = false;
+        string messageKey = "Test_Suite_Error_Key";
+
+        try
+        {
+            // 1. Call LLM
+            var generatedTests = await InvokeLlmAsync(command, ct);
+
+            // 2. Save to database
+            using var scope = _scopeFactory.CreateScope();
+            var taskRepo = scope.ServiceProvider.GetRequiredService<ITaskRepository>();
+
+            var task = await taskRepo.GetByIdAsync(command.TaskId, ct);
+            if (task is null)
+            {
+                _logger.LogError("Task {TaskId} not found — cannot save generated tests.", command.TaskId);
+                messageKey = "Test_Suite_Error_Key";
+            }
+            else
+            {
+                foreach (var generated in generatedTests)
+                {
+                    task.Tests.Add(new TaskTest
+                    {
+                        TaskDefinitionId = task.Id,
+                        Name = generated.Name,
+                        Code = generated.Code
+                    });
+                }
+
+                await taskRepo.UpdateAsync(task, ct);
+
+                _logger.LogInformation(
+                    "Saved {Count} generated tests for Task {TaskId}",
+                    generatedTests.Count, command.TaskId);
+
+                isSuccess = true;
+                messageKey = "Test_Suite_Success_Key";
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to generate or save tests for Task {TaskId}", command.TaskId);
+            messageKey = "Test_Suite_Error_Key";
+        }
+        finally
+        {
+            // 3. Publish result so the Bridge can push it to SignalR
+            await _rabbitMqService.PublishAsync(
+                RabbitMQTopology.ResponseExchange,
+                RabbitMQTopology.TestGenerationResponseRoutingKey,
+                new TestGenerationResultMessage
+                {
+                    TaskId = command.TaskId,
+                    UserId = command.UserId,
+                    IsSuccess = isSuccess,
+                    MessageKey = messageKey
+                },
+                correlationId,
+                ct);
+        }
+    }
+
+    private async Task<List<(string Name, string Code)>> InvokeLlmAsync(GenerateTestSuiteCommand command, CancellationToken ct)
+    {
+        var instruction = GenerateTestsPrompt.GetInstruction();
+        var userContent = $"{instruction}\n\nTask Title: {command.Title}\nDescription: {command.Description}";
+
+        var messages = new List<ChatMessage>
+        {
+            new(ChatRole.User, userContent)
+        };
+
+        var response = await _chatClient.GetResponseAsync(messages, cancellationToken: ct);
+        var responseText = response.Text ?? "[]";
+
+        // Robust markdown stripping — LLMs frequently ignore formatting instructions
+        var text = responseText.Trim();
+        if (text.StartsWith("```json", StringComparison.OrdinalIgnoreCase))
+        {
+            text = text[7..];
+            if (text.EndsWith("```")) text = text[..^3];
+        }
+        else if (text.StartsWith("```", StringComparison.OrdinalIgnoreCase))
+        {
+            text = text[3..];
+            if (text.EndsWith("```")) text = text[..^3];
+        }
+
+        text = text.Trim();
+
+        var options = new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+        var parsed = System.Text.Json.JsonSerializer.Deserialize<List<LlmTestResult>>(text, options)
+            ?? throw new InvalidOperationException("LLM returned an empty or null test list.");
+
+        return parsed.Select(t => (t.Name, t.Code)).ToList();
+    }
+
+    /// <summary>Internal DTO matching the LLM JSON response shape.</summary>
+    private sealed record LlmTestResult(string Name, string Code);
+}

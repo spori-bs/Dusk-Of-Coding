@@ -161,6 +161,32 @@ public class ApiClient
         }
     }
 
+    /// <summary>
+    /// Triggers async AI test generation for an existing task.
+    /// Returns immediately (202 Accepted). Results are delivered via SignalR.
+    /// </summary>
+    public async Task<Result> TriggerTestGenerationAsync(Guid taskId)
+    {
+        try
+        {
+            await EnsureAuthHeaderAsync();
+            var response = await _http.PostAsync($"/tasks/{taskId}/generate-tests", new StringContent(""));
+            if (HandleAuthErrors(response)) return Result.Failure(string.Empty);
+
+            // 202 Accepted is the success response for fire-and-forget
+            if (response.StatusCode == System.Net.HttpStatusCode.Accepted)
+            {
+                return Result.Success();
+            }
+            var err = await response.Content.ReadAsStringAsync();
+            return Result.Failure($"Failed to trigger test generation: {response.StatusCode} - {err}");
+        }
+        catch (HttpRequestException ex)
+        {
+            return Result.Failure(_localizer["Error_Network", ex.Message]);
+        }
+    }
+
     // ---- Submissions ----
 
     public async Task<Result<SubmissionResultDto>> SubmitCodeAsync(Guid taskId, string sourceCode, string language = nameof(ProgrammingLanguage.CSharp), string? preferredLanguage = null, CancellationToken ct = default)

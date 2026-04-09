@@ -81,6 +81,10 @@
   <data name="TaskEditor_FieldDifficulty" xml:space="preserve"><value>Nehézségi szint</value></data>
   <data name="TaskEditor_FieldTags" xml:space="preserve"><value>Címkék (vesszővel elválasztva)</value></data>
   <data name="TaskEditor_FieldTestBundle" xml:space="preserve"><value>Teszt csomag referencia</value></data>
+  <data name="TaskEditor_SaveBeforeGeneratePrompt" xml:space="preserve"><value>A teszt generáláshoz először menteni kell. Folytatod?</value></data>
+  <data name="TaskEditor_GenerationStarted" xml:space="preserve"><value>Az AI teszt generálás megkezdődött...</value></data>
+  <data name="Test_Suite_Success_Key" xml:space="preserve"><value>A teszt csomag sikeresen legenerálva!</value></data>
+  <data name="Test_Suite_Error_Key" xml:space="preserve"><value>Hiba történt a teszt generálás során.</value></data>
 
   <!-- Tutor Terminal -->
   <data name="Tutor_Title" xml:space="preserve"><value>MI Mentor</value></data>

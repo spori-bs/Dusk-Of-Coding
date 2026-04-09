@@ -31,7 +31,11 @@ public class TaskService : ITaskService
             Description = dto.Description,
             DifficultyLevel = dto.DifficultyLevel,
             Tags = dto.Tags ?? new List<string>(),
-            TestBundleReference = dto.TestBundleReference
+            Tests = (dto.Tests ?? new List<TaskTestDto>()).Select(t => new TaskTest
+            {
+                Name = t.Name,
+                Code = t.Code
+            }).ToList()
         };
 
         await _taskRepository.AddAsync(task, ct);
@@ -47,7 +51,17 @@ public class TaskService : ITaskService
         task.Description = dto.Description;
         task.DifficultyLevel = dto.DifficultyLevel;
         task.Tags = dto.Tags ?? new List<string>();
-        task.TestBundleReference = dto.TestBundleReference;
+        
+        // Update tests collection (clear and rebuild for simplicity)
+        task.Tests.Clear();
+        foreach (var t in dto.Tests ?? new List<TaskTestDto>())
+        {
+            task.Tests.Add(new TaskTest
+            {
+                Name = t.Name,
+                Code = t.Code
+            });
+        }
 
         await _taskRepository.UpdateAsync(task, ct);
         return task;

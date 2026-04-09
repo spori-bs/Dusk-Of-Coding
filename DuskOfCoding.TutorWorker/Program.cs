@@ -37,8 +37,9 @@ builder.Services.AddConfigurableChatClient();
 // ── Polly Resilience for LLM calls ──────────────────────────
 builder.Services.AddLlmResilience();
 
-// ── Background worker consuming from RabbitMQ ───────────────
+// ── Background workers consuming from RabbitMQ ──────────────
 builder.Services.AddHostedService<TutorWorkerService>();
+builder.Services.AddHostedService<TestGenerationWorkerService>();
 
 var host = builder.Build();
 host.Run();

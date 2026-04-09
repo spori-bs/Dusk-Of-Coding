@@ -6,5 +6,5 @@ public class UpdateTaskDto
     public string Description { get; set; } = "";
     public string DifficultyLevel { get; set; } = "";
     public List<string> Tags { get; set; } = new();
-    public string TestBundleReference { get; set; } = "";
+    public List<TaskTestDto> Tests { get; set; } = new();
 }

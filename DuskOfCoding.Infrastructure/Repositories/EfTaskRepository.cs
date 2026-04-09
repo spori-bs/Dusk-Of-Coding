@@ -16,12 +16,12 @@ public class EfTaskRepository : ITaskRepository
 
     public async Task<IReadOnlyList<TaskDefinition>> GetAllAsync(CancellationToken ct = default)
     {
-        return await _db.Tasks.ToListAsync(ct);
+        return await _db.Tasks.Include(t => t.Tests).ToListAsync(ct);
     }
 
     public async Task<TaskDefinition?> GetByIdAsync(Guid id, CancellationToken ct = default)
     {
-        return await _db.Tasks.FirstOrDefaultAsync(t => t.Id == id, ct);
+        return await _db.Tasks.Include(t => t.Tests).FirstOrDefaultAsync(t => t.Id == id, ct);
     }
 
     public async Task AddAsync(TaskDefinition task, CancellationToken ct = default)

@@ -18,7 +18,15 @@ public class InMemoryTaskRepository : ITaskRepository
             Description = "Write a method that returns 'Hello World!'",
             DifficultyLevel = "Easy",
             Tags = new List<string> { "fundamentals" },
-            TestBundleReference = "tasks/helloworld/tests.csproj"
+            Tests = new List<TaskTest>
+            {
+                new TaskTest
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "BasicTests.cs",
+                    Code = "using Xunit; public class T { [Fact] public void C() { Assert.True(true); } }"
+                }
+            }
         };
         _tasks.TryAdd(defaultTask.Id, defaultTask);
     }

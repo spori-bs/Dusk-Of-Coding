@@ -3,14 +3,21 @@
 @using DuskOfCoding.WebUi.Services
 @using DuskOfCoding.WebUi.DTOs
 @using DuskOfCoding.WebUi.Resources
+@using Microsoft.AspNetCore.SignalR.Client
 @inject ApiClient Api
 @inject NavigationManager Nav
 @inject IStringLocalizer<SharedResource> L
+@inject ToastService ToastService
+@inject IJSRuntime JS
+@inject IConfiguration Configuration
 @using Microsoft.AspNetCore.Authorization
 @using DuskOfCoding.Domain.Constants
+@inject NavigationManager NavManager
+@inject TokenProvider TokenProvider
 
 @attribute [Authorize(Roles = AppRoles.Tutor + "," + AppRoles.Admin)]
 @rendermode InteractiveServer
+@implements IAsyncDisposable
 
 <PageTitle>@Title | Dusk of Coding</PageTitle>
 
@@ -34,7 +41,7 @@
 else
 {
     <div class="row">
-        <div class="col-lg-8">
+        <div class="col-12">
             <div class="dusk-glass-panel ck-form-panel p-4 p-md-5">
                 <EditForm Model="@_model" OnValidSubmit="HandleValidSubmit" FormName="TaskEditorForm">
                     <DataAnnotationsValidator />
@@ -61,10 +68,73 @@ else
                         </div>
                     </div>
 
-                    <div class="mb-5">
-                        <label for="testBundle" class="form-label text-secondary small fw-semibold text-uppercase tracking-wider">@L["TaskEditor_FieldTestBundle"]</label>
-                        <InputText id="testBundle" class="form-control ck-input" @bind-Value="_model.TestBundleReference" />
-                        <div class="form-text dusk-text-muted mt-2"><i class="bi bi-info-circle me-1"></i> Ensure the bundle name maps exactly to the Aspire worker reference.</div>
+                    <!-- TEST ENGINEERING SECTION -->
+                    <div class="mt-5 mb-5 border-top border-secondary border-opacity-25 pt-5">
+                        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+                            <div class="ck-section-header">
+                                <span class="ck-section-prefix">// 02</span>
+                                <h3 class="ck-section-title text-white fs-5 mb-0">TEST ENGINEERING</h3>
+                                <div class="ck-section-line"></div>
+                            </div>
+                            <button type="button" class="btn btn-amber px-4 py-2 text-uppercase tracking-wider fw-bold rounded-1" 
+                                    @onclick="GenerateTestSuite" @onclick:preventDefault="true"
+                                    disabled="@(_isGeneratingTests || string.IsNullOrWhiteSpace(_model.Title) || string.IsNullOrWhiteSpace(_model.Description))">
+                                @if (_isGeneratingTests)
+                                {
+                                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                    <span>GENERATING...</span>
+                                }
+                                else
+                                {
+                                    <i class="bi bi-magic me-2"></i> <span>GENERATE TEST SUITE VIA AI</span>
+                                }
+                            </button>
+                        </div>
+                        
+                        <div class="row g-0 rounded border" style="border-color: var(--ck-border-dim) !important; background: var(--ck-bg);">
+                            <!-- Sidebar -->
+                            <div class="col-md-3 border-end" style="border-color: var(--ck-border-dim) !important;">
+                                <div class="list-group list-group-flush rounded-0">
+                                    @foreach (var t in _model.Tests)
+                                    {
+                                        <div class="list-group-item d-flex justify-content-between align-items-center cursor-pointer @(_selectedTest == t ? "text-white" : "text-secondary")"
+                                             style="background: @(_selectedTest == t ? "var(--ck-surface)" : "transparent"); border-left: 2px solid @(_selectedTest == t ? "var(--ck-amber)" : "transparent"); border-bottom: 1px solid var(--ck-border-dim);"
+                                             @onclick="() => SelectTest(t)">
+                                            <span class="text-truncate fw-semibold" style="font-family: monospace;">
+                                                <i class="bi bi-file-earmark-code me-2"></i>@(string.IsNullOrWhiteSpace(t.Name) ? "Untitled.cs" : t.Name)
+                                            </span>
+                                            <button type="button" class="btn btn-sm btn-link text-danger p-0" @onclick="() => RemoveTest(t)" @onclick:stopPropagation>
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </div>
+                                    }
+                                    <div class="list-group-item bg-transparent text-center p-3 border-0">
+                                        <button type="button" class="btn dusk-btn-outline w-100 py-2 fs-6 rounded-1" @onclick="AddTestFile">
+                                            <i class="bi bi-plus-lg me-1"></i> NEW FILE
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Main View -->
+                            <div class="col-md-9 p-0 bg-black">
+                                @if (_selectedTest != null)
+                                {
+                                    <div class="p-3 border-bottom" style="border-color: var(--ck-border-dim) !important; background: var(--ck-surface);">
+                                        <label class="form-label text-secondary small fw-semibold text-uppercase tracking-wider">File Name</label>
+                                        <input type="text" class="form-control ck-input font-monospace" @bind="_selectedTest.Name" placeholder="e.g. BasicTests.cs" />
+                                    </div>
+                                    <div class="editor-container" style="height: 500px;">
+                                        <StandaloneCodeEditor @ref="_testEditor" ConstructionOptions="EditorConstructionOptions" OnDidInit="OnEditorInit" CssClass="w-100 h-100" />
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="d-flex align-items-center justify-content-center h-100 p-5 text-secondary" style="min-height: 500px;">
+                                        <span class="font-monospace">// NO TEST FILE SELECTED</span>
+                                    </div>
+                                }
+                            </div>
+                        </div>
                     </div>
 
                     <div class="d-flex gap-3">
@@ -83,6 +153,9 @@ else
     [Parameter]
     public Guid? Id { get; set; }
 
+    [Parameter, SupplyParameterFromQuery]
+    public bool generating { get; set; }
+
     private bool IsEditMode => Id.HasValue;
     private string Title => IsEditMode ? L["TaskEditor_Edit"] : L["TaskEditor_Create"];
     
@@ -91,34 +164,262 @@ else
     private bool _isLoading = false;
     private string? _errorMessage;
 
+    // Test Engineering State
+    private TaskTestDto? _selectedTest;
+    private BlazorMonaco.Editor.StandaloneCodeEditor? _testEditor;
+    private bool _isGeneratingTests = false;
+    private bool _isEditorReady = false;  // Phase 22: guard against race conditions
+
+    // SignalR
+    private HubConnection? _hubConnection;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Resolve WebApi URL via Aspire service discovery (same pattern as TutorTerminal.razor)
+        var webApiBase = Configuration["services:webapi:http:0"]
+            ?? Configuration["services:webapi:https:0"]
+            ?? "http://webapi";
+
+        var hubUrl = $"{webApiBase.TrimEnd('/')}/hubs/tutor";
+
+        Console.WriteLine($"[TaskEditor] Initializing SignalR connection to {hubUrl}");
+
+        _hubConnection = new HubConnectionBuilder()
+            .WithUrl(hubUrl, options => {
+                options.AccessTokenProvider = async () => await TokenProvider.GetAccessTokenAsync();
+            })
+            .WithAutomaticReconnect()
+            .Build();
+
+        // Subscribe to test generation result events
+        _hubConnection.On<Guid, bool, string>("TestSuiteGenerationCompleted", async (taskId, isSuccess, messageKey) =>
+        {
+            Console.WriteLine($"[TaskEditor] Received TestSuiteGenerationCompleted: taskId={taskId}, isSuccess={isSuccess}");
+            if (IsEditMode && Id == taskId)
+            {
+                try
+                {
+                    if (isSuccess)
+                        await ToastService.ShowSuccess(L[messageKey].Value);
+                    else
+                        await ToastService.ShowError(L[messageKey].Value);
+
+                    await ReloadTaskData();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[TaskEditor] Error in SignalR callback: {ex.Message}");
+                }
+                finally
+                {
+                    _isGeneratingTests = false;
+                    await InvokeAsync(StateHasChanged);
+                }
+            }
+        });
+
+        try
+        {
+            await _hubConnection.StartAsync();
+        }
+        catch (Exception ex)
+        {
+            // Non-fatal: page still works, just no real-time notifications
+            Console.WriteLine($"[TaskEditor] Could not connect to Tutor hub at {hubUrl}: {ex.Message}");
+        }
+    }
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender && IsEditMode)
+        if (firstRender)
         {
-            _isLoading = true;
-            StateHasChanged();
-            var result = await Api.GetTaskByIdAsync(Id!.Value);
-            if (result.IsSuccess && result.Value != null)
+            if (IsEditMode)
             {
-                var task = result.Value;
-                _model.Title = task.Title;
-                _model.Description = task.Description;
-                _model.DifficultyLevel = task.DifficultyLevel;
-                _model.TestBundleReference = task.TestBundleReference;
-                _tagsInput = string.Join(", ", task.Tags);
+                await ReloadTaskData();
+            }
+
+            if (generating)
+            {
+                _isGeneratingTests = true;
+                StateHasChanged();
+            }
+        }
+    }
+
+    private async Task ReloadTaskData()
+    {
+        _isLoading = true;
+        await InvokeAsync(StateHasChanged);
+
+        var result = await Api.GetTaskByIdAsync(Id!.Value);
+        if (result.IsSuccess && result.Value != null)
+        {
+            var task = result.Value;
+            _model.Title = task.Title;
+            _model.Description = task.Description;
+            _model.DifficultyLevel = task.DifficultyLevel;
+            _tagsInput = string.Join(", ", task.Tags);
+            _model.Tests = task.Tests ?? new List<TaskTestDto>();
+
+            // Reset editor state and select first test
+            _isEditorReady = false;
+            _selectedTest = _model.Tests.FirstOrDefault();
+        }
+        else
+        {
+            _errorMessage = result.ErrorMessage;
+        }
+
+        _isLoading = false;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private BlazorMonaco.Editor.StandaloneEditorConstructionOptions EditorConstructionOptions(BlazorMonaco.Editor.StandaloneCodeEditor editor)
+    {
+        return new BlazorMonaco.Editor.StandaloneEditorConstructionOptions
+        {
+            Language = "csharp",
+            // NOTE: Value set here only applies on first construction.
+            // Subsequent file switches use SetValue() after OnEditorInit fires.
+            Value = _selectedTest?.Code ?? "using System;\nusing Xunit;\n\npublic class Tests\n{\n    [Fact]\n    public void Test1()\n    {\n        Assert.True(true);\n    }\n}",
+            Theme = "vs-dark",
+            AutomaticLayout = true,
+            Minimap = new BlazorMonaco.Editor.EditorMinimapOptions { Enabled = false }
+        };
+    }
+
+    // Phase 22: Called when Monaco fires its ready event.
+    // This is the ONLY safe place to interact with the editor after initialization.
+    private async Task OnEditorInit()
+    {
+        _isEditorReady = true;
+        if (_selectedTest != null && _testEditor != null)
+        {
+            await _testEditor.SetValue(_selectedTest.Code ?? string.Empty);
+        }
+    }
+
+    // Phase 22: Guarded with _isEditorReady to prevent race conditions.
+    private async Task SelectTest(TaskTestDto test)
+    {
+        // Save current editor content before switching files
+        if (_selectedTest != null && _testEditor != null && _isEditorReady)
+        {
+            _selectedTest.Code = await _testEditor.GetValue();
+        }
+
+        _selectedTest = test;
+        StateHasChanged();
+
+        // The editor instance stays alive when switching files — set value directly.
+        // (Only reset _isEditorReady when the entire editor component is recreated.)
+        if (_testEditor != null && _isEditorReady)
+        {
+            await _testEditor.SetValue(test.Code ?? string.Empty);
+        }
+    }
+
+    private void AddTestFile()
+    {
+        var newTest = new TaskTestDto
+        {
+            Name = $"NewTest{_model.Tests.Count + 1}.cs",
+            Code = "using System;\nusing Xunit;\n\npublic class Tests\n{\n    [Fact]\n    public void Test1()\n    {\n        Assert.True(true);\n    }\n}"
+        };
+        _model.Tests.Add(newTest);
+        _ = SelectTest(newTest);
+    }
+
+    private void RemoveTest(TaskTestDto test)
+    {
+        _model.Tests.Remove(test);
+        if (_selectedTest == test)
+        {
+            _selectedTest = null;
+            _isEditorReady = false;
+            if (_model.Tests.Any())
+            {
+                _ = SelectTest(_model.Tests.First());
+            }
+        }
+    }
+
+    // Phase 22: Fire-and-forget AI generation with save-guard.
+    private async Task GenerateTestSuite()
+    {
+        Console.WriteLine("[TaskEditor] GenerateTestSuite clicked");
+        if (string.IsNullOrWhiteSpace(_model.Title) || string.IsNullOrWhiteSpace(_model.Description))
+            return;
+
+        try
+        {
+            // Save-guard: ensure we have a persisted ID before publishing the command.
+            if (!IsEditMode)
+            {
+                bool confirmed = await JS.InvokeAsync<bool>("confirm", L["TaskEditor_SaveBeforeGeneratePrompt"].Value);
+                if (!confirmed) return;
+
+                bool saved = await SaveTaskAsync(navigateOnSuccess: false);
+                if (!saved || !Id.HasValue) return;  // Save failed — error already in _errorMessage
             }
             else
             {
-                _errorMessage = result.ErrorMessage;
+                // For existing tasks, flush editor changes before generating
+                bool saved = await SaveTaskAsync(navigateOnSuccess: false);
+                if (!saved) return;  // Save failed — don't start generation
             }
-            _isLoading = false;
+
+            _isGeneratingTests = true;
+            _errorMessage = null;
+            StateHasChanged();
+
+            // Trigger background generation — WebApi returns 202 immediately
+            var result = await Api.TriggerTestGenerationAsync(Id!.Value);
+            if (!result.IsSuccess)
+            {
+                _errorMessage = result.ErrorMessage;
+                _isGeneratingTests = false;
+                StateHasChanged();
+                return;
+            }
+
+            // Show info toast — spinner stays until SignalR fires TestSuiteGenerationCompleted
+            await ToastService.ShowInfo(L["TaskEditor_GenerationStarted"].Value);
+        }
+        catch (Exception ex)
+        {
+            // Surface any unexpected exceptions as a visible error instead of crashing the circuit
+            _errorMessage = $"Unexpected error: {ex.Message}";
+            _isGeneratingTests = false;
             StateHasChanged();
         }
     }
 
+    // Blazor OnValidSubmit handler — must return Task (not Task<bool>)
     private async Task HandleValidSubmit()
     {
+        try
+        {
+            await SaveTaskAsync(navigateOnSuccess: true);
+        }
+        catch (Exception ex)
+        {
+            _errorMessage = $"Unexpected error during save: {ex.Message}";
+            StateHasChanged();
+        }
+    }
+
+    // Internal save logic. navigateOnSuccess=false when called from GenerateTestSuite.
+    private async Task<bool> SaveTaskAsync(bool navigateOnSuccess = true)
+    {
         _errorMessage = null;
+
+        // Final sync of the active editor before saving
+        if (_selectedTest != null && _testEditor != null && _isEditorReady)
+        {
+            _selectedTest.Code = await _testEditor.GetValue();
+        }
+
         _model.Tags = _tagsInput.Split(',', StringSplitOptions.RemoveEmptyEntries)
                                 .Select(t => t.Trim())
                                 .ToList();
@@ -131,13 +432,13 @@ else
                 Description = _model.Description,
                 DifficultyLevel = _model.DifficultyLevel,
                 Tags = _model.Tags,
-                TestBundleReference = _model.TestBundleReference
+                Tests = _model.Tests
             };
             var result = await Api.UpdateTaskAsync(Id!.Value, updateDto);
             if (!result.IsSuccess)
             {
                 _errorMessage = result.ErrorMessage;
-                return;
+                return false;
             }
         }
         else
@@ -146,11 +447,35 @@ else
             if (!result.IsSuccess)
             {
                 _errorMessage = result.ErrorMessage;
-                return;
+                return false;
+            }
+
+            if (result.Value?.Id is Guid createdId)
+            {
+                Id = createdId;
+                // If we are about to trigger generation, navigate with a flag to keep the spinner active
+                string url = $"/tasks/edit/{createdId}";
+                if (!navigateOnSuccess) url += "?generating=true";
+                
+                Nav.NavigateTo(url, replace: true);
+                return true;
             }
         }
 
-        Nav.NavigateTo("/tasks");
+        if (navigateOnSuccess)
+        {
+            Nav.NavigateTo("/tasks");
+        }
+
+        return true;
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_hubConnection is not null)
+        {
+            await _hubConnection.DisposeAsync();
+        }
     }
 }
 
