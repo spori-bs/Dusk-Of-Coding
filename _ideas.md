@@ -1,0 +1,3 @@
+- Generated test cases should be deleted
+- The task and practice pages headers (menubar) is still in the old glassmorphism style. It should be updated to the new style.
+- The task generation is success. We can see the result in the db, but the user only see the "generating" message. The notification is missing somehow.
