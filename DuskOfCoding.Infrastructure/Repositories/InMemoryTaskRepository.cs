@@ -62,4 +62,17 @@ public class InMemoryTaskRepository : ITaskRepository
         _tasks.TryRemove(id, out _);
         return Task.CompletedTask;
     }
+
+    public Task ReplaceTestsAsync(Guid taskId, IEnumerable<TaskTest> tests, CancellationToken ct = default)
+    {
+        if (_tasks.TryGetValue(taskId, out var task))
+        {
+            task.Tests = tests.ToList();
+            foreach (var test in task.Tests)
+            {
+                test.TaskDefinitionId = taskId;
+            }
+        }
+        return Task.CompletedTask;
+    }
 }

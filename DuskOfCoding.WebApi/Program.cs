@@ -153,7 +153,9 @@ tasksGroup.MapPost("/{id:guid}/generate-tests", [Microsoft.AspNetCore.Authorizat
     var task = await taskService.GetTaskByIdAsync(id, ct);
     if (task is null) return Results.NotFound();
 
-    var userId = httpContext.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+    var userId = httpContext.User.FindFirst("sub")?.Value 
+          ?? httpContext.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
     if (userId is null) return Results.Unauthorized();
 
     var command = new GenerateTestSuiteCommand
@@ -243,7 +245,9 @@ submissionsGroup.MapPost("/", async (
     ILogger<Program> logger,
     CancellationToken ct) =>
 {
-    var userIdClaim = httpContext.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+    var userIdClaim = httpContext.User.FindFirst("sub")?.Value 
+               ?? httpContext.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
     Guid? userId = userIdClaim != null ? Guid.Parse(userIdClaim) : request.UserId;
     // Phase 5: Input validation — reject empty or oversized source code
     if (string.IsNullOrWhiteSpace(request.SourceCode))
@@ -310,7 +314,9 @@ feedbackGroup.MapPost("/", async (
     IFeedbackService feedbackService,
     CancellationToken ct) =>
 {
-    var userIdClaim = httpContext.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+    var userIdClaim = httpContext.User.FindFirst("sub")?.Value 
+               ?? httpContext.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
     if (userIdClaim == null || !Guid.TryParse(userIdClaim, out var userId))
         return Results.Unauthorized();
 

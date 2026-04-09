@@ -52,18 +52,21 @@ public class TaskService : ITaskService
         task.DifficultyLevel = dto.DifficultyLevel;
         task.Tags = dto.Tags ?? new List<string>();
         
-        // Update tests collection (clear and rebuild for simplicity)
-        task.Tests.Clear();
-        foreach (var t in dto.Tests ?? new List<TaskTestDto>())
-        {
-            task.Tests.Add(new TaskTest
-            {
-                Name = t.Name,
-                Code = t.Code
-            });
-        }
-
+        // Save the main task definition first (without touching task.Tests)
         await _taskRepository.UpdateAsync(task, ct);
+
+        // Phase 22.3: Disconnected replacement for tests to avoid DbUpdateConcurrencyException
+        var newTests = dto.Tests?.Select(t => new TaskTest
+        {
+            Name = t.Name,
+            Code = t.Code
+        }).ToList() ?? new List<TaskTest>();
+
+        await _taskRepository.ReplaceTestsAsync(id, newTests, ct);
+
+        // Assign the new tests to the domain object before returning
+        task.Tests = newTests;
+
         return task;
     }
 

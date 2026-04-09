@@ -5,7 +5,9 @@ using DuskOfCoding.Domain.Entities;
 using DuskOfCoding.Infrastructure.Configuration;
 using DuskOfCoding.Infrastructure.Messaging;
 using DuskOfCoding.TutorWorker.Prompts;
+using DuskOfCoding.Infrastructure.Persistence;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
 
 namespace DuskOfCoding.TutorWorker;
 
@@ -73,40 +75,35 @@ public sealed class TestGenerationWorkerService : BackgroundService
 
         try
         {
-            // 1. Call LLM
+            // 1. Call LLM — using data from the command, no DB tracking yet
             var generatedTests = await InvokeLlmAsync(command, ct);
 
-            // 2. Save to database
+            // 2. Direct database update (Disconnected Approach)
             using var scope = _scopeFactory.CreateScope();
-            var taskRepo = scope.ServiceProvider.GetRequiredService<ITaskRepository>();
+            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
-            var task = await taskRepo.GetByIdAsync(command.TaskId, ct);
-            if (task is null)
+            // Phase 22.2: Bulk delete existing tests and insert new ones.
+            // This avoids DbUpdateConcurrencyException because we never load/track the Task entity itself.
+            await db.TaskTests
+                .Where(t => t.TaskDefinitionId == command.TaskId)
+                .ExecuteDeleteAsync(ct);
+
+            var newTests = generatedTests.Select(g => new TaskTest
             {
-                _logger.LogError("Task {TaskId} not found — cannot save generated tests.", command.TaskId);
-                messageKey = "Test_Suite_Error_Key";
-            }
-            else
-            {
-                foreach (var generated in generatedTests)
-                {
-                    task.Tests.Add(new TaskTest
-                    {
-                        TaskDefinitionId = task.Id,
-                        Name = generated.Name,
-                        Code = generated.Code
-                    });
-                }
+                TaskDefinitionId = command.TaskId,
+                Name = g.Name,
+                Code = g.Code
+            }).ToList();
 
-                await taskRepo.UpdateAsync(task, ct);
+            db.TaskTests.AddRange(newTests);
+            await db.SaveChangesAsync(ct);
 
-                _logger.LogInformation(
-                    "Saved {Count} generated tests for Task {TaskId}",
-                    generatedTests.Count, command.TaskId);
+            _logger.LogInformation(
+                "Successfully generated and saved {Count} tests for Task {TaskId}",
+                newTests.Count, command.TaskId);
 
-                isSuccess = true;
-                messageKey = "Test_Suite_Success_Key";
-            }
+            isSuccess = true;
+            messageKey = "Test_Suite_Success_Key";
         }
         catch (Exception ex)
         {

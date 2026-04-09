@@ -9,4 +9,5 @@ public interface ITaskRepository
     Task AddAsync(TaskDefinition task, CancellationToken ct = default);
     Task UpdateAsync(TaskDefinition task, CancellationToken ct = default);
     Task DeleteAsync(Guid id, CancellationToken ct = default);
+    Task ReplaceTestsAsync(Guid taskId, IEnumerable<TaskTest> tests, CancellationToken ct = default);
 }

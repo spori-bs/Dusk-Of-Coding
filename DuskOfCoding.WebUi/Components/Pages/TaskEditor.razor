@@ -453,11 +453,17 @@ else
             if (result.Value?.Id is Guid createdId)
             {
                 Id = createdId;
-                // If we are about to trigger generation, navigate with a flag to keep the spinner active
-                string url = $"/tasks/edit/{createdId}";
-                if (!navigateOnSuccess) url += "?generating=true";
                 
-                Nav.NavigateTo(url, replace: true);
+                if (!navigateOnSuccess)
+                {
+                    // NINJA FIX: Nem használjuk a Blazor Nav.NavigateTo-t, mert az megsemmisíti a komponenst.
+                    // Csak némán átírjuk a böngésző URL-jét, hogy F5 esetén is jó helyen maradjunk.
+                    await JS.InvokeVoidAsync("history.replaceState", null, "", $"/tasks/edit/{createdId}");
+                    return true; 
+                }
+
+                // Ha ez egy normál "Mentés" gombnyomás volt, akkor mehet a Blazor navigáció
+                Nav.NavigateTo($"/tasks/edit/{createdId}", replace: true);
                 return true;
             }
         }

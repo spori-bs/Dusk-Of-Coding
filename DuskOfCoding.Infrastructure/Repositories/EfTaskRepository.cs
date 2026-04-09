@@ -49,4 +49,20 @@ public class EfTaskRepository : ITaskRepository
             await _db.SaveChangesAsync(ct);
         }
     }
+
+    public async Task ReplaceTestsAsync(Guid taskId, IEnumerable<TaskTest> tests, CancellationToken ct = default)
+    {
+        // Phase 22.3: Disconnected update to avoid DbUpdateConcurrencyException
+        await _db.TaskTests
+            .Where(t => t.TaskDefinitionId == taskId)
+            .ExecuteDeleteAsync(ct);
+
+        foreach (var test in tests)
+        {
+            test.TaskDefinitionId = taskId;
+        }
+
+        _db.TaskTests.AddRange(tests);
+        await _db.SaveChangesAsync(ct);
+    }
 }
