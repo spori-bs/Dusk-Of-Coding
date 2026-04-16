@@ -192,6 +192,19 @@ tasksGroup.MapDelete("/{id:guid}", [Microsoft.AspNetCore.Authorization.Authorize
     return success ? Results.NoContent() : Results.NotFound();
 });
 
+// Delete a single test case (Phase 23)
+tasksGroup.MapDelete("/{taskId:guid}/tests/{testId:guid}", [Microsoft.AspNetCore.Authorization.Authorize(Roles = AppRoles.Tutor + "," + AppRoles.Admin)] async (
+    Guid taskId,
+    Guid testId,
+    DuskOfCoding.Infrastructure.Persistence.AppDbContext db,
+    CancellationToken ct) =>
+{
+    var deleted = await db.TaskTests
+        .Where(t => t.TaskDefinitionId == taskId && t.Id == testId)
+        .ExecuteDeleteAsync(ct);
+    return deleted > 0 ? Results.NoContent() : Results.NotFound();
+});
+
 tasksGroup.MapGet("/{id:guid}/stats", async (Guid id, DuskOfCoding.Infrastructure.Persistence.AppDbContext db, CancellationToken ct) => 
 {
     var submissions = await db.Submissions

@@ -41,7 +41,7 @@ else
         @foreach (var task in tasks)
         {
             <div class="col-md-6 col-lg-4">
-                <div class="task-card dusk-glass-panel p-4 h-100 transition-all cursor-pointer @(selectedTask?.Id == task.Id ? "border-primary shadow-glow" : "")" @onclick="() => SelectTask(task)">
+                <div class="task-card ck-panel p-4 h-100 transition-all cursor-pointer @(selectedTask?.Id == task.Id ? "border-primary shadow-glow" : "")" @onclick="() => SelectTask(task)">
                     <h5 class="fw-bold text-white mb-2">@task.Title</h5>
                     <p class="text-secondary small mb-3 text-truncate">@task.Description</p>
                     <div class="d-flex align-items-center gap-2 flex-wrap">
@@ -61,7 +61,7 @@ else
 {
     <hr class="border-secondary opacity-25 my-5" />
     
-    <div class="dusk-glass-panel p-4 mb-4">
+    <div class="ck-panel p-4 mb-4">
         <h4 class="fw-bold text-white mb-4">@L["Practice_SubmitSolution"] <span class="text-primary">@selectedTask.Title</span></h4>
         
         <div class="row mb-4">
@@ -77,8 +77,18 @@ else
         </div>
 
         <label class="form-label text-secondary small fw-semibold text-uppercase tracking-wider">@L["Practice_YourSolution"]</label>
-        <div class="editor-container rounded overflow-hidden @(showSuccessBlink ? "border-success-blink" : "")" style="height: 500px; width: 100%; position: relative; border: 1px solid rgba(255,255,255,0.1);">
+        <div class="editor-container overflow-hidden" style="height: 500px; width: 100%; position: relative; border: 1px solid rgba(255,255,255,0.1); background: var(--ck-bg);">
             <StandaloneCodeEditor @ref="_editor" ConstructionOptions="EditorConstructionOptions" CssClass="w-100 h-100 placeholder-glow" />
+
+            @if (showSuccessBlink)
+            {
+                <div class="laser-scanner-overlay">
+                    <div class="laser-bolt"></div>
+                    <div class="hud-success-text">
+                        <i class="bi bi-shield-check me-2"></i> SYNTAX VERIFIED
+                    </div>
+                </div>
+            }
         </div>
     </div>
     
@@ -204,7 +214,7 @@ else
         {
             Language = "csharp",
             Value = "public class Solution\n{\n    // Write your code here\n}",
-            Theme = "vs",
+            Theme = "vs-dark",
             AutomaticLayout = true,
             Minimap = new EditorMinimapOptions { Enabled = false }
         };
@@ -235,7 +245,7 @@ else
             {
                 showSuccessBlink = true;
                 StateHasChanged();
-                await Task.Delay(1000);
+                await Task.Delay(1800);  // Allow laser + HUD animation to finish
                 showSuccessBlink = false;
             }
         }

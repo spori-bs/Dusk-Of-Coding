@@ -83,6 +83,7 @@
   <data name="TaskEditor_FieldTestBundle" xml:space="preserve"><value>Teszt csomag referencia</value></data>
   <data name="TaskEditor_SaveBeforeGeneratePrompt" xml:space="preserve"><value>A teszt generáláshoz először menteni kell. Folytatod?</value></data>
   <data name="TaskEditor_GenerationStarted" xml:space="preserve"><value>Az AI teszt generálás megkezdődött...</value></data>
+  <data name="TaskEditor_GenerationPollComplete" xml:space="preserve"><value>A generálás befejeződhetett — adatok frissítve.</value></data>
   <data name="Test_Suite_Success_Key" xml:space="preserve"><value>A teszt csomag sikeresen legenerálva!</value></data>
   <data name="Test_Suite_Error_Key" xml:space="preserve"><value>Hiba történt a teszt generálás során.</value></data>
 
@@ -181,7 +182,9 @@
   <!-- Auth UI -->
   <data name="Auth_Login" xml:space="preserve"><value>Bejelentkezés</value></data>
   <data name="Auth_Logout" xml:space="preserve"><value>Kijelentkezés</value></data>
-  <data name="Auth_AdminBadge" xml:space="preserve"><value>Admin</value></data>
+  <data name="Auth_AdminBadge" xml:space="preserve"><value>Adminisztrátor</value></data>
+  <data name="Auth_TutorBadge" xml:space="preserve"><value>Oktató</value></data>
+  <data name="Auth_StudentBadge" xml:space="preserve"><value>Hallgató</value></data>
   <data name="Nav_Dashboard" xml:space="preserve"><value>Irányítópult</value></data>
 
   <!-- Access Denied -->

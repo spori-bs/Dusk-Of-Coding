@@ -169,6 +169,7 @@ else
     private BlazorMonaco.Editor.StandaloneCodeEditor? _testEditor;
     private bool _isGeneratingTests = false;
     private bool _isEditorReady = false;  // Phase 22: guard against race conditions
+    private CancellationTokenSource? _generationTimeoutCts;  // Phase 23: polling fallback
 
     // SignalR
     private HubConnection? _hubConnection;
@@ -197,6 +198,8 @@ else
             Console.WriteLine($"[TaskEditor] Received TestSuiteGenerationCompleted: taskId={taskId}, isSuccess={isSuccess}");
             if (IsEditMode && Id == taskId)
             {
+                // Cancel the polling fallback — SignalR delivered first
+                _generationTimeoutCts?.Cancel();
                 try
                 {
                     if (isSuccess)
@@ -330,8 +333,19 @@ else
         _ = SelectTest(newTest);
     }
 
-    private void RemoveTest(TaskTestDto test)
+    // Phase 23: If the test is persisted (has an Id), delete it from the backend first.
+    private async Task RemoveTest(TaskTestDto test)
     {
+        if (test.Id.HasValue && test.Id != Guid.Empty && IsEditMode)
+        {
+            var result = await Api.DeleteTestAsync(Id!.Value, test.Id.Value);
+            if (!result.IsSuccess)
+            {
+                _errorMessage = result.ErrorMessage;
+                return;
+            }
+        }
+
         _model.Tests.Remove(test);
         if (_selectedTest == test)
         {
@@ -339,7 +353,7 @@ else
             _isEditorReady = false;
             if (_model.Tests.Any())
             {
-                _ = SelectTest(_model.Tests.First());
+                await SelectTest(_model.Tests.First());
             }
         }
     }
@@ -373,6 +387,11 @@ else
             _errorMessage = null;
             StateHasChanged();
 
+            // Phase 23: Start polling fallback in case SignalR doesn't arrive
+            _generationTimeoutCts?.Cancel();
+            _generationTimeoutCts = new CancellationTokenSource();
+            _ = PollForGenerationComplete(_generationTimeoutCts.Token);
+
             // Trigger background generation — WebApi returns 202 immediately
             var result = await Api.TriggerTestGenerationAsync(Id!.Value);
             if (!result.IsSuccess)
@@ -393,6 +412,26 @@ else
             _isGeneratingTests = false;
             StateHasChanged();
         }
+    }
+
+    // Phase 23: Polling fallback — fires if SignalR doesn't deliver within 60 seconds.
+    private async Task PollForGenerationComplete(CancellationToken ct)
+    {
+        try
+        {
+            await Task.Delay(TimeSpan.FromSeconds(60), ct);
+            if (!ct.IsCancellationRequested && _isGeneratingTests && IsEditMode)
+            {
+                await InvokeAsync(async () =>
+                {
+                    await ReloadTaskData();
+                    _isGeneratingTests = false;
+                    await ToastService.ShowInfo(L["TaskEditor_GenerationPollComplete"].Value);
+                    StateHasChanged();
+                });
+            }
+        }
+        catch (TaskCanceledException) { /* SignalR arrived first — expected */ }
     }
 
     // Blazor OnValidSubmit handler — must return Task (not Task<bool>)
@@ -478,6 +517,8 @@ else
 
     public async ValueTask DisposeAsync()
     {
+        _generationTimeoutCts?.Cancel();
+        _generationTimeoutCts?.Dispose();
         if (_hubConnection is not null)
         {
             await _hubConnection.DisposeAsync();

@@ -1,3 +1,5 @@
-- Generated test cases should be deleted
+- Generated test cases doesn't have a delete function.
 - The task and practice pages headers (menubar) is still in the old glassmorphism style. It should be updated to the new style.
 - The task generation is success. We can see the result in the db, but the user only see the "generating" message. The notification is missing somehow.
+- The tutor and the sysadmin can see `Administrator` in the top right corner. The orignal plan was to see the privileges like `Student`, `Tutor` and `Administrator`.
+- We can't see the username who logged in in the top right corner. It should be shown the username who logged in. mybe a dropdown menu to show the user profile and logout button can be good.

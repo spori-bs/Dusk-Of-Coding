@@ -27,13 +27,7 @@
                 </NavLink>
             </div>
         </Authorized>
-        <NotAuthorized>
-            <div class="nav-item me-3">
-                <NavLink class="nav-link dusk-nav-link fw-semibold" href="login">
-                    <i class="bi bi-box-arrow-in-right me-1"></i> @L["Auth_Login"]
-                </NavLink>
-            </div>
-        </NotAuthorized>
+
     </AuthorizeView>
 
     <AuthorizeView Roles="@($"{AppRoles.Tutor},{AppRoles.Admin}")">

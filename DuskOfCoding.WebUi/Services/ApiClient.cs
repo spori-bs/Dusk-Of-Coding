@@ -162,6 +162,29 @@ public class ApiClient
     }
 
     /// <summary>
+    /// Deletes a single persisted test case from a task. (Phase 23)
+    /// </summary>
+    public async Task<Result> DeleteTestAsync(Guid taskId, Guid testId)
+    {
+        try
+        {
+            await EnsureAuthHeaderAsync();
+            var response = await _http.DeleteAsync($"/tasks/{taskId}/tests/{testId}");
+            if (HandleAuthErrors(response)) return Result.Failure(string.Empty);
+
+            if (response.IsSuccessStatusCode)
+            {
+                return Result.Success();
+            }
+            return Result.Failure(_localizer["Error_DeleteTask", response.StatusCode]);
+        }
+        catch (HttpRequestException ex)
+        {
+            return Result.Failure(_localizer["Error_Network", ex.Message]);
+        }
+    }
+
+    /// <summary>
     /// Triggers async AI test generation for an existing task.
     /// Returns immediately (202 Accepted). Results are delivered via SignalR.
     /// </summary>
