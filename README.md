@@ -41,6 +41,7 @@ This project is built using modern .NET technologies and architectural patterns 
 - **[Roslyn Compiler](https://github.com/dotnet/roslyn)** - Integrated for C# syntax analysis, compilation diagnostics, and execution.
 - **[Keycloak](https://www.keycloak.org/)** - Open-source IAM providing centralized authentication, user registration, and JWT-based authorization via OpenID Connect.
 - **[RabbitMQ](https://www.rabbitmq.com/)** - Message broker providing the AMQP backbone for asynchronous communication between the Core API and the AI Tutor workers.
+- **[MariaDB](https://mariadb.org/)** - Highly performant relational database handling persistent storage for tasks, submissions, and metrics via EF Core provider.
 
 ## 🏗 Architecture
 
@@ -58,13 +59,13 @@ C4Context
     System_Boundary(platform, "Dusk of Coding Application") {
         System(webui, "Blazor Web UI", "Obsidian Foundry HUD: Industrial Amber aesthetic")
         System(webapi, "Core Web API", "Handles business logic, persistence, and orchestrates executions")
-        SystemDb(database, "Application Database", "Stores Tasks, Submissions, and Feedback")
+        SystemDb(database, "MariaDB Database", "Stores Tasks, Submissions, and Feedback")
         System(rabbitmq, "Message Broker", "RabbitMQ / AMQP for async task distribution")
         System(tutor_worker, "Tutor Worker", "Background service handling resilient Socratic AI evaluation streams")
         System(keycloak, "Keycloak IAM", "Centralized identity provider with OIDC and user self-registration")
     }
 
-    System_Ext(execution_api, "Execution API (Sandbox)", "In-process Roslyn sandbox that safely compiles and runs xUnit tests")
+    System_Ext(execution_api, "Execution API (Sandbox)", "Isolated Roslyn sandbox that safely compiles and runs xUnit tests")
     System_Ext(llm_provider, "OpenAI / Azure OpenAI / Gemini", "External LLM providers for the Socratic AI Mentor")
 
     Rel(candidate, webui, "Practices coding tasks", "HTTPS")
@@ -133,3 +134,7 @@ This project was built iteratively using a sequence of specialized AI prompts. C
     - **Goal:** Extended the domain schema and UI to allow editors to assign a custom `ExpectedClassName` to a task, moving away from hardcoding `Solution`. Dynamically injected this class name into the AI test generation prompts.
 25. **Practice UX Bug Fixes (`_ArchivePrompts/phase26-*`)**
     - **Goal:** Resolved SignalR user claim mismatches that hung the task generation UI. Displayed full problem descriptions inside the Practice page and wired the Monaco editor to initialize with the dynamic SUT placeholder.
+26. **Engineering Dossier Update (`phase27-*`)**
+    - **Goal:** Updated the `/how-it-was-made` page (Engineering Dossier) to reflect the recent architectural and UX milestones (Phases 21-26). Documented a critical incident regarding AI token exhaustion (Meta AI Token Collapse).
+27. **Deployment and Operations Documentation (`_ArchivePrompts/deployment-maintenance-*`)**
+    - **Goal:** Created comprehensive, bilingual (EN/HU) deployment runbooks outlining the C4 architecture, Azure/Docker/On-Premise hosting strategies, and performed a strict SRE Red Team audit to harden system resilience.
