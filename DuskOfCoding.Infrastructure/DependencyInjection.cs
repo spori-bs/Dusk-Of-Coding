@@ -14,9 +14,19 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, string? connectionString = null)
     {
-        // Register EF Core with SQLite
+        // Register EF Core with MariaDB
         services.AddDbContext<AppDbContext>(options =>
-            options.UseSqlite(connectionString ?? "Data Source=DuskOfCoding.db"));
+        {
+            var cs = connectionString ?? "Server=localhost;Database=dusk_db;User=root;Password=password;";
+            try
+            {
+                options.UseMySql(cs, ServerVersion.AutoDetect(cs));
+            }
+            catch
+            {
+                options.UseMySql(cs, new MariaDbServerVersion(new Version(10, 11, 4)));
+            }
+        });
 
         // Register EF Core repositories
         services.AddScoped<ITaskRepository, EfTaskRepository>();

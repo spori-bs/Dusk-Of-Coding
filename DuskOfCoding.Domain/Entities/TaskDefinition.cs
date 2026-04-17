@@ -7,6 +7,7 @@ public class TaskDefinition
     public string Description { get; set; } = string.Empty;
     public string DifficultyLevel { get; set; } = string.Empty;
     public List<string> Tags { get; set; } = new();
+    public string ExpectedClassName { get; set; } = "Solution";
     
     /// <summary>
     /// Collection of xUnit test files evaluating this task.

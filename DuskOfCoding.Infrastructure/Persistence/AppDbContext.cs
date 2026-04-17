@@ -14,6 +14,7 @@ public class AppDbContext : DbContext
     public DbSet<Submission> Submissions => Set<Submission>();
     public DbSet<FeedbackRecord> FeedbackRecords => Set<FeedbackRecord>();
     public DbSet<UserFeedback> UserFeedbacks => Set<UserFeedback>();
+    public DbSet<LlmTelemetryLog> LlmTelemetryLogs => Set<LlmTelemetryLog>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

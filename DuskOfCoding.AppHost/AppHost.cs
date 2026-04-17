@@ -12,14 +12,22 @@ var keycloak = builder.AddKeycloak("keycloak", 8080)
     .WithDataVolume()
     .WithRealmImport("../KeycloakConfig");
 
+var mariadb = builder.AddMySql("mysql-server")
+    .WithImage("mariadb")
+    .WithDataVolume()
+    .WithLifetime(ContainerLifetime.Persistent)
+    .AddDatabase("dusk-database");
+
 // Web API — main onboarding app, calls Execution API via service discovery
 var webApi = builder.AddProject<Projects.DuskOfCoding_WebApi>("webapi")
     .WithHttpHealthCheck("/health")
     .WithReference(executionApi)
     .WithReference(messaging)
     .WithReference(keycloak)
+    .WithReference(mariadb)
     .WaitFor(messaging)
-    .WaitFor(keycloak);
+    .WaitFor(keycloak)
+    .WaitFor(mariadb);
 
 // Web UI — Blazor Server frontend, calls Web API via service discovery
 builder.AddProject<Projects.DuskOfCoding_WebUi>("webui")
@@ -32,7 +40,9 @@ builder.AddProject<Projects.DuskOfCoding_WebUi>("webui")
 builder.AddProject<Projects.DuskOfCoding_TutorWorker>("tutorworker")
     .WithReference(messaging)
     .WithReference(executionApi)
-    .WaitFor(messaging);
+    .WithReference(mariadb)
+    .WaitFor(messaging)
+    .WaitFor(mariadb);
 
 builder.Build().Run();
 

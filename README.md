@@ -119,5 +119,11 @@ This project was built iteratively using a sequence of specialized AI prompts. C
     - **Goal:** Established the **Obsidian Foundry** design system. Centralized all styles in global `--ck-*` tokens, enforced strict CSS Isolation, and removed legacy glassmorphism in favor of a hard-edged industrial aesthetic.
 18. **Landing Page Rebuild (`_ArchivePrompts/phase19-*`)**
     - **Goal:** Reconstructed the Landing Page from the ground up to match the Engineering Cockpit. Implemented a zero-JS animated PCB hero section and unified the visual identity across the entire public entry point.
-19. **Engineering Dossier: How It Was Made Rebuild (`phase20-*`)**
+19. **Engineering Dossier: How It Was Made Rebuild (`_ArchivePrompts/phase20-*`)**
     - **Goal:** Complete overhaul of the `/how-it-was-made` storytelling page. Replaced the cinematic glassmorphism aesthetic (Phase 15/16) with the **Obsidian Foundry Engineering Dossier** design language — a classified briefing aesthetic fully consistent with the Cockpit. Added three formal incident panels documenting the platform's critical failures (HTTP 431, Dual-Network Illusion, EF Core Concurrency Collapse), a vertical phase-by-phase build log, a CSS-only terminal typing animation, and a Field Manual prompt gallery. Deeply revised and tuned both the English and Hungarian localization for precision and authenticity.
+20. **Task Editor Cockpit Upgrade (`_ArchivePrompts/phase21-*`)**
+    - **Goal:** Implemented a robust master-detail "Cockpit" UI for multi-file test editing and AI-driven test suite generation. Synchronized sidebar file navigation with the Monaco editor and refactored AI integration prompts into a dedicated directory.
+21. **Test Engineering Hardening (`_ArchivePrompts/phase22-*`)**
+    - **Goal:** Resolved database concurrency exceptions and circuit-crashing bugs in the AI test generation pipeline. Established a robust disconnected entity update pattern across the WebApi and TutorWorker services to support background test generation.
+22. **UX Polish and Identity (`_ArchivePrompts/phase23-*`)**
+    - **Goal:** Finalized the Obsidian Foundry design unification. Implemented a laser-scanner syntax validation HUD, deployed role-based identity badges, and hardened the AI test generation pipeline with a SignalR polling fallback.
