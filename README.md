@@ -127,3 +127,9 @@ This project was built iteratively using a sequence of specialized AI prompts. C
     - **Goal:** Resolved database concurrency exceptions and circuit-crashing bugs in the AI test generation pipeline. Established a robust disconnected entity update pattern across the WebApi and TutorWorker services to support background test generation.
 22. **UX Polish and Identity (`_ArchivePrompts/phase23-*`)**
     - **Goal:** Finalized the Obsidian Foundry design unification. Implemented a laser-scanner syntax validation HUD, deployed role-based identity badges, and hardened the AI test generation pipeline with a SignalR polling fallback.
+23. **Persistence Migration & Telemetry (`_ArchivePrompts/phase24-*`)**
+    - **Goal:** Migrated persistence from SQLite to MariaDB natively through Aspire orchestration. Integrated a fire-and-forget `LlmTelemetryLog` entity to track raw AI prompts and responses for test generation.
+24. **Dynamic SUT Configuration (`_ArchivePrompts/phase25-*`)**
+    - **Goal:** Extended the domain schema and UI to allow editors to assign a custom `ExpectedClassName` to a task, moving away from hardcoding `Solution`. Dynamically injected this class name into the AI test generation prompts.
+25. **Practice UX Bug Fixes (`_ArchivePrompts/phase26-*`)**
+    - **Goal:** Resolved SignalR user claim mismatches that hung the task generation UI. Displayed full problem descriptions inside the Practice page and wired the Monaco editor to initialize with the dynamic SUT placeholder.
