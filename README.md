@@ -2,6 +2,8 @@
 
 > **Disclaimer on Methodology:** This repository serves as an experimental proof-of-concept. Its architecture and implementation were born from the exploratory development paradigm of "vibecoding," operating in close synergy with AI agents to rapidly prototype and synthesize complex system capabilities.
 
+> 🚨 **CAUTION - USE AT YOUR OWN RISK:** This project is provided "as is," without warranty of any kind, express or implied. The authors and contributors shall not be held liable for any damages, security vulnerabilities, or infrastructure costs arising from the use of this software. By deploying or using this code, you assume full responsibility for any consequences.
+
 *Master the craft. Wield the tool.*
 
 An **AI-awareness and code mastery platform** designed to prepare developers for the new dawn of software engineering.
