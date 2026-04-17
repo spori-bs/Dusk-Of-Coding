@@ -64,6 +64,10 @@ else
     <div class="ck-panel p-4 mb-4">
         <h4 class="fw-bold text-white mb-4">@L["Practice_SubmitSolution"] <span class="text-primary">@selectedTask.Title</span></h4>
         
+        <div class="mb-5 p-4 rounded-3 border-secondary border border-opacity-25" style="background: rgba(0,0,0,0.3); border-left: 4px solid var(--ck-primary) !important;">
+            <p class="text-light mb-0" style="white-space: pre-wrap; font-size: 1.05rem; line-height: 1.6;">@selectedTask.Description</p>
+        </div>
+        
         <div class="row mb-4">
             <div class="col-md-4">
                 <label class="form-label text-secondary small fw-semibold text-uppercase tracking-wider">@L["Practice_Language"]</label>
@@ -198,16 +202,19 @@ else
         submissionResult = null;
         if (_editor != null)
         {
-            await _editor.SetValue("");
+            var sutName = string.IsNullOrWhiteSpace(task.ExpectedClassName) ? "Solution" : task.ExpectedClassName;
+            var template = $"public class {sutName}\n{{\n    // Write your code here\n}}";
+            await _editor.SetValue(template);
         }
     }
 
     private StandaloneEditorConstructionOptions EditorConstructionOptions(StandaloneCodeEditor editor)
     {
+        var sutName = string.IsNullOrWhiteSpace(selectedTask?.ExpectedClassName) ? "Solution" : selectedTask.ExpectedClassName;
         return new StandaloneEditorConstructionOptions
         {
             Language = "csharp",
-            Value = "public class Solution\n{\n    // Write your code here\n}",
+            Value = $"public class {sutName}\n{{\n    // Write your code here\n}}",
             Theme = "vs-dark",
             AutomaticLayout = true,
             Minimap = new EditorMinimapOptions { Enabled = false }

@@ -43,7 +43,7 @@ builder.Services.AddHealthChecks()
 
 // Register Clean Architecture layers
 builder.Services.AddApplicationServices();
-builder.Services.AddInfrastructureServices(builder.Configuration.GetConnectionString("DefaultConnection"));
+builder.Services.AddInfrastructureServices(builder.Configuration.GetConnectionString("dusk-database"));
 
 // LLM Provider Configuration
 builder.Services.Configure<LlmProviderOptions>(
@@ -163,6 +163,7 @@ tasksGroup.MapPost("/{id:guid}/generate-tests", [Microsoft.AspNetCore.Authorizat
         TaskId = id,
         Title = task.Title,
         Description = task.Description,
+        ExpectedClassName = task.ExpectedClassName ?? "Solution",
         UserId = userId
     };
 

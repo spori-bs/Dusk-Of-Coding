@@ -5,7 +5,8 @@ public record CreateTaskDto(
     string Description,
     string DifficultyLevel,
     List<string> Tags,
-    List<TaskTestDto> Tests
+    List<TaskTestDto> Tests,
+    string ExpectedClassName = "Solution"
 );
 
 public record UpdateTaskDto(
@@ -13,7 +14,8 @@ public record UpdateTaskDto(
     string Description,
     string DifficultyLevel,
     List<string> Tags,
-    List<TaskTestDto> Tests
+    List<TaskTestDto> Tests,
+    string ExpectedClassName = "Solution"
 );
 
 public record TaskTestDto(

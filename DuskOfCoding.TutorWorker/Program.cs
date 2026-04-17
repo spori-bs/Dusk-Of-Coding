@@ -9,7 +9,7 @@ var builder = Host.CreateApplicationBuilder(args);
 builder.AddServiceDefaults();
 
 // ── Infrastructure (DB, Repositories, AI Service) ────────────
-builder.Services.AddInfrastructureServices(builder.Configuration.GetConnectionString("DefaultConnection"));
+builder.Services.AddInfrastructureServices(builder.Configuration.GetConnectionString("dusk-database"));
 
 // ── Configuration ──────────────────────────────────────────
 builder.Services.Configure<LlmProviderOptions>(

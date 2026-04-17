@@ -35,7 +35,8 @@ public class TaskService : ITaskService
             {
                 Name = t.Name,
                 Code = t.Code
-            }).ToList()
+            }).ToList(),
+            ExpectedClassName = dto.ExpectedClassName ?? "Solution"
         };
 
         await _taskRepository.AddAsync(task, ct);
@@ -51,6 +52,7 @@ public class TaskService : ITaskService
         task.Description = dto.Description;
         task.DifficultyLevel = dto.DifficultyLevel;
         task.Tags = dto.Tags ?? new List<string>();
+        task.ExpectedClassName = dto.ExpectedClassName ?? "Solution";
         
         // Save the main task definition first (without touching task.Tests)
         await _taskRepository.UpdateAsync(task, ct);

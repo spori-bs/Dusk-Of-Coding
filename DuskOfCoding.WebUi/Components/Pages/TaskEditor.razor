@@ -68,6 +68,11 @@ else
                         </div>
                     </div>
 
+                    <div class="mb-4">
+                        <label for="expectedClassName" class="form-label text-secondary small fw-semibold text-uppercase tracking-wider">Expected Class Name (SUT)</label>
+                        <InputText id="expectedClassName" class="form-control ck-input font-monospace" @bind-Value="_model.ExpectedClassName" placeholder="e.g. Calculator, default: Solution" />
+                    </div>
+
                     <!-- TEST ENGINEERING SECTION -->
                     <div class="mt-5 mb-5 border-top border-secondary border-opacity-25 pt-5">
                         <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
@@ -263,6 +268,7 @@ else
             _model.DifficultyLevel = task.DifficultyLevel;
             _tagsInput = string.Join(", ", task.Tags);
             _model.Tests = task.Tests ?? new List<TaskTestDto>();
+            _model.ExpectedClassName = task.ExpectedClassName ?? "Solution";
 
             // Reset editor state and select first test
             _isEditorReady = false;
@@ -471,7 +477,8 @@ else
                 Description = _model.Description,
                 DifficultyLevel = _model.DifficultyLevel,
                 Tags = _model.Tags,
-                Tests = _model.Tests
+                Tests = _model.Tests,
+                ExpectedClassName = _model.ExpectedClassName
             };
             var result = await Api.UpdateTaskAsync(Id!.Value, updateDto);
             if (!result.IsSuccess)

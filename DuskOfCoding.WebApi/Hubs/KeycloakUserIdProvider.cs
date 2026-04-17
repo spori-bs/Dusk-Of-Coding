@@ -10,5 +10,6 @@ namespace DuskOfCoding.WebApi.Hubs;
 public sealed class KeycloakUserIdProvider : IUserIdProvider
 {
     public string? GetUserId(HubConnectionContext connection)
-        => connection.User?.FindFirstValue(ClaimTypes.NameIdentifier);
+        => connection.User?.FindFirst("sub")?.Value 
+           ?? connection.User?.FindFirstValue(ClaimTypes.NameIdentifier);
 }

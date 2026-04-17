@@ -130,7 +130,7 @@ public sealed class TestGenerationWorkerService : BackgroundService
 
     private async Task<List<(string Name, string Code)>> InvokeLlmAsync(GenerateTestSuiteCommand command, CancellationToken ct)
     {
-        var instruction = GenerateTestsPrompt.GetInstruction();
+        var instruction = GenerateTestsPrompt.GetInstruction(command.ExpectedClassName);
         var userContent = $"{instruction}\n\nTask Title: {command.Title}\nDescription: {command.Description}";
 
         var messages = new List<ChatMessage>
@@ -140,6 +140,39 @@ public sealed class TestGenerationWorkerService : BackgroundService
 
         var response = await _chatClient.GetResponseAsync(messages, cancellationToken: ct);
         var responseText = response.Text ?? "[]";
+
+        // --- LLM Observability Telemetry (Fire-and-Forget) ---
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                using var scope = _scopeFactory.CreateScope();
+                var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                
+                var log = new LlmTelemetryLog
+                {
+                    TaskId = command.TaskId,
+                    UserId = Guid.TryParse(command.UserId, out var uid) ? uid : (Guid?)null,
+                    ModelName = response.ModelId ?? "unknown",
+                    TokenCount = (int)(response.Usage?.TotalTokenCount ?? 0L),
+                    IsSuccess = true,
+                    Payload = System.Text.Json.JsonSerializer.Serialize(new
+                    {
+                        SystemPrompt = instruction,
+                        UserPrompt = userContent,
+                        RawResponse = responseText
+                    })
+                };
+                
+                db.LlmTelemetryLogs.Add(log);
+                await db.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to save LLM Telemetry Log");
+            }
+        });
+        // -----------------------------------------------------
 
         // Robust markdown stripping — LLMs frequently ignore formatting instructions
         var text = responseText.Trim();

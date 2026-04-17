@@ -61,7 +61,7 @@
     <value>Blazor Server · Keycloak · Roslyn · Gemini · Polly</value>
   </data>
   <data name="HeroStatusStrip" xml:space="preserve">
-    <value>FÁZISOK: 1 → 20    //    ÁLLAPOT: AKTÍV    //    BUILD: .NET 10</value>
+    <value>FÁZISOK: 1 → 26    //    ÁLLAPOT: AKTÍV    //    BUILD: .NET 10</value>
   </data>
 
   <data name="DirectiveSectionPrefix" xml:space="preserve">
@@ -222,6 +222,42 @@
   <data name="BuildLog_Phase20_Desc" xml:space="preserve">
     <value>Ez a dokumentum. A filmszerű glassmorphism helyét átvette a Mérnöki Dosszié — a Cockpittel azonos rendszerbe illeszkedő, titkosított eligazítási dizájn.</value>
   </data>
+  <data name="BuildLog_Phase21" xml:space="preserve">
+    <value>FÁZIS 21 // Feladatszerkesztő Cockpit</value>
+  </data>
+  <data name="BuildLog_Phase21_Desc" xml:space="preserve">
+    <value>Master-detail UI több fájlos tesztszerkesztéshez. Szinkronizált oldalsáv a Monaco editorral és MI-vezérelt tesztgenerálással.</value>
+  </data>
+  <data name="BuildLog_Phase22" xml:space="preserve">
+    <value>FÁZIS 22 // Tesztmérnöki Stabilizáció</value>
+  </data>
+  <data name="BuildLog_Phase22_Desc" xml:space="preserve">
+    <value>Adatbázis-konkurencia (DbUpdateConcurrencyException) javítása a tesztgeneráló csővezetékben. Lecsatolt (disconnected) entitás minta bevezetése a Workerben.</value>
+  </data>
+  <data name="BuildLog_Phase23" xml:space="preserve">
+    <value>FÁZIS 23 // UX Polírozás és Identitás</value>
+  </data>
+  <data name="BuildLog_Phase23_Desc" xml:space="preserve">
+    <value>Lézer-szkenneres szintaxis HUD, dinamikus szerepkör-jelvények (Role badges), és SignalR polling fallback.</value>
+  </data>
+  <data name="BuildLog_Phase24" xml:space="preserve">
+    <value>FÁZIS 24 // Perzisztencia Migráció és Telemetria</value>
+  </data>
+  <data name="BuildLog_Phase24_Desc" xml:space="preserve">
+    <value>Adatbázis motor cseréje SQLite-ról MariaDB-re Aspire hangszereléssel. LlmTelemetryLog entitás az MI nyomon követésére.</value>
+  </data>
+  <data name="BuildLog_Phase25" xml:space="preserve">
+    <value>FÁZIS 25 // Dinamikus SUT Konfiguráció</value>
+  </data>
+  <data name="BuildLog_Phase25_Desc" xml:space="preserve">
+    <value>ExpectedClassName bevezetése a hardkódolt 'Solution' helyett, dinamikus injektálással az MI promptokba.</value>
+  </data>
+  <data name="BuildLog_Phase26" xml:space="preserve">
+    <value>FÁZIS 26 // Kódolótér UX Bugfixek</value>
+  </data>
+  <data name="BuildLog_Phase26_Desc" xml:space="preserve">
+    <value>SignalR claim-eltérések feloldása. Dinamikus SUT sablon inicializálása a Monaco editorban.</value>
+  </data>
 
   <data name="AbyssSectionPrefix" xml:space="preserve">
     <value>// 04</value>
@@ -294,6 +330,27 @@
   </data>
   <data name="Incident003_Directive" xml:space="preserve">
     <value>DIREKTÍVA: phase13-ef-core-concurrency-resolution</value>
+  </data>
+  <data name="Incident004_Id" xml:space="preserve">
+    <value>INCIDENS-004</value>
+  </data>
+  <data name="Incident004_Severity" xml:space="preserve">
+    <value>SÚLYOSSÁG: KRITIKUS</value>
+  </data>
+  <data name="Incident004_Component" xml:space="preserve">
+    <value>KOMPONENS: Külső MI Eszközkészlet / API Kvóta</value>
+  </data>
+  <data name="Incident004_Symptom" xml:space="preserve">
+    <value>TÜNET: Token-kimerülés (Exhaustion). Az IDE-be integrált modellek leállása (100% kvóta limit), masszív kontextus-vesztés és hallucinált kódrészletek.</value>
+  </data>
+  <data name="Incident004_RootCause" xml:space="preserve">
+    <value>GYÖKÉROK: A 'Vibe Coding' túlterhelése. Gyors, kis kontextusú modellek használata mély architekturális (Blazor state + EF Core) refaktorálásra. A kontextus ablak megtelt irreleváns DOM/CSS zajjal.</value>
+  </data>
+  <data name="Incident004_Resolution" xml:space="preserve">
+    <value>ELHÁRÍTÁS: Átállás a 'Sniper Prompting' (Sebészi) stratégiára. Nehéztüzérség (High Compute AI) bevetése izolált kódrészletekkel és szigorú, egykéréses (One-Shot) specifikációs blokkokkal.</value>
+  </data>
+  <data name="Incident004_Directive" xml:space="preserve">
+    <value>DIREKTÍVA: phase24-sniper-prompting-protocol</value>
   </data>
 
   <data name="ResolutionSectionPrefix" xml:space="preserve">

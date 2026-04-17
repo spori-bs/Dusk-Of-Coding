@@ -7,4 +7,5 @@ public class UpdateTaskDto
     public string DifficultyLevel { get; set; } = "";
     public List<string> Tags { get; set; } = new();
     public List<TaskTestDto> Tests { get; set; } = new();
+    public string ExpectedClassName { get; set; } = "Solution";
 }
