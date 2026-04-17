@@ -9,7 +9,7 @@
     </div>
 
     <div class="nav-item me-3">
-        <NavLink class="nav-link dusk-nav-link fw-semibold text-info" href="how-it-was-made">
+        <NavLink class="nav-link dusk-nav-link fw-semibold" href="how-it-was-made">
             <i class="bi bi-magic me-1"></i> How It Was Made
         </NavLink>
     </div>
@@ -17,7 +17,7 @@
     <AuthorizeView>
         <Authorized>
             <div class="nav-item me-3">
-                <NavLink class="nav-link dusk-nav-link fw-semibold text-warning" href="cockpit">
+                <NavLink class="nav-link dusk-nav-link fw-semibold" href="cockpit">
                     <i class="bi bi-cpu me-1"></i> Cockpit
                 </NavLink>
             </div>
@@ -33,7 +33,7 @@
     <AuthorizeView Roles="@($"{AppRoles.Tutor},{AppRoles.Admin}")">
         <Authorized>
             <div class="nav-item me-3">
-                <NavLink class="nav-link dusk-nav-link fw-semibold text-warning" href="tutor">
+                <NavLink class="nav-link dusk-nav-link fw-semibold" href="tutor">
                     <i class="bi bi-speedometer2 me-1"></i> @L["Nav_Dashboard"]
                 </NavLink>
             </div>
@@ -44,23 +44,9 @@
             </div>
         </Authorized>
     </AuthorizeView>
-    
-    <div class="ms-4 border-start border-secondary opacity-50 ps-4">
-        <LoginDisplay />
-    </div>
+
 </nav>
 
-@using System.Security.Claims
-@inject AuthenticationStateProvider AuthenticationStateProvider
-
-<div class="small text-muted opacity-25" style="position: fixed; bottom: 0; right: 0; padding: 5px; z-index: 9999;">
-    <AuthorizeView>
-        <Authorized>
-            Roles: @(string.Join(", ", context.User.FindAll("roles").Select(c => c.Value))) |
-            HasTutor: @context.User.IsInRole(AppRoles.Tutor)
-        </Authorized>
-    </AuthorizeView>
-</div>
 
 <style>
     .dusk-nav-link {

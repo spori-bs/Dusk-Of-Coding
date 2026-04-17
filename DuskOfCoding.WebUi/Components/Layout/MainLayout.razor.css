@@ -5,14 +5,15 @@
 }
 
 .app-header {
-    padding: 0 2rem;
+    padding: 0 4rem;
     height: 70px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: rgba(15, 23, 42, 0.85);
-    backdrop-filter: blur(10px);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1), 0 1px 0 0 rgba(234, 88, 12, 0.08);
+    background: rgba(13, 13, 14, 0.88);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 1px 0 0 rgba(234, 88, 12, 0.08);
     position: sticky;
     top: 0;
     z-index: 1000;
@@ -20,7 +21,7 @@
 }
 
 .app-logo {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     font-weight: 700;
     color: var(--dusk-text-primary);
     text-decoration: none;

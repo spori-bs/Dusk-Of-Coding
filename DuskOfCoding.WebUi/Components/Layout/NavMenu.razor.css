@@ -1,21 +1,26 @@
-/* Scoped CSS for horizontal NavMenu */
+/* Scoped CSS for horizontal NavMenu — Obsidian Foundry theme */
 
 .nav-item ::deep .nav-link {
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
-    transition: all 0.2s ease-in-out;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0;
+    transition: color 0.2s ease;
     display: flex;
     align-items: center;
-    color: #495057 !important;
+    background: transparent;
+    color: var(--ck-muted) !important;
+    font-family: var(--ck-font);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
 }
 
 .nav-item ::deep .nav-link:hover {
-    background-color: #f8f9fa;
-    color: #0d6efd !important;
+    background-color: transparent;
+    color: var(--ck-amber-bright) !important;
 }
 
 .nav-item ::deep a.active {
-    background-color: #e9ecef;
-    color: #0d6efd !important;
-    font-weight: 700 !important;
+    background-color: transparent;
+    color: var(--dusk-text-primary) !important;
+    font-weight: 500 !important;
 }
