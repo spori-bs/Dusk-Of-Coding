@@ -80,7 +80,6 @@ public sealed class TutorWorkerService : BackgroundService
         using var scope = _scopeFactory.CreateScope();
         var taskRepo = scope.ServiceProvider.GetRequiredService<ITaskRepository>();
         var submissionRepo = scope.ServiceProvider.GetRequiredService<ISubmissionRepository>();
-        var aiReviewService = scope.ServiceProvider.GetRequiredService<IAIReviewService>();
         
         var submission = await submissionRepo.GetByIdAsync(message.SubmissionId, ct);
         if (submission == null)
@@ -130,9 +129,22 @@ public sealed class TutorWorkerService : BackgroundService
                 
                 var executionResult = await executionEngine.ExecuteAsync(task, submission, ct);
 
-                // 4. Enrich feedback with AI Review Service
-                feedback = await aiReviewService.EnrichFeedbackAsync(task, submission, executionResult, message.PreferredLanguage, ct);
-                submission.Status = feedback.IsSuccess ? SubmissionStatus.Success : SubmissionStatus.TestsFailed;
+                // 4. Build structured feedback directly from execution result.
+                //    The Socratic Tutor (step 7) is the sole LLM call — no duplicate AI review here.
+                bool isSuccess = executionResult.CompilationSucceeded && executionResult.Tests.All(t => t.Passed);
+                bool isHu = message.PreferredLanguage?.StartsWith("hu", StringComparison.OrdinalIgnoreCase) == true;
+                feedback = new Feedback
+                {
+                    IsSuccess = isSuccess,
+                    Summary = executionResult.CompilationSucceeded
+                        ? (isHu ? "A futtatás befejeződött." : "Execution completed.")
+                        : (isHu ? "A fordítás sikertelen." : "Compilation failed."),
+                    CompilationMessages = executionResult.CompilationErrors,
+                    TestMessages = executionResult.Tests
+                        .Select(t => $"{t.Name}: {(t.Passed ? "Passed" : "Failed")} {t.Message}")
+                        .ToList()
+                };
+                submission.Status = isSuccess ? SubmissionStatus.Success : SubmissionStatus.TestsFailed;
             }
 
             // 5. Save Results to DB
