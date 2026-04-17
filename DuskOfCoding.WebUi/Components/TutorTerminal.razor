@@ -211,13 +211,13 @@
 
 <style>
     .tutor-terminal {
-        border: 1px solid var(--glass-border);
-        border-radius: 12px;
-        background: var(--dusk-bg-panel);
+        border: 1px solid var(--ck-border-dim);
+        border-radius: 2px;
+        background: var(--ck-bg);
         overflow: hidden;
         transition: all 0.3s ease;
         margin-top: 1rem;
-        box-shadow: var(--glass-shadow);
+        box-shadow: var(--ck-shadow);
     }
 
     .tutor-terminal.collapsed {
@@ -228,72 +228,88 @@
         display: flex;
         align-items: center;
         gap: 0.5rem;
-        padding: 0.75rem 1rem;
-        background: rgba(255,255,255,0.03);
+        padding: 0.75rem 1.25rem;
+        background: var(--ck-surface);
         cursor: pointer;
         user-select: none;
-        border-bottom: 1px solid rgba(255,255,255,0.05);
+        border-bottom: 1px solid var(--ck-border-dim);
+        font-family: var(--ck-font);
     }
 
-    .tutor-icon { font-size: 1.2rem; }
-    .tutor-title { font-weight: 600; color: #e1e4e8; flex: 1; }
+    .tutor-icon { font-size: 1.1rem; }
+    .tutor-title {
+        font-family: var(--ck-font);
+        font-size: 0.8rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--dusk-text-primary);
+        flex: 1;
+    }
 
     .tutor-status {
-        font-size: 0.75rem;
+        font-family: var(--ck-font);
+        font-size: 0.7rem;
         padding: 0.15rem 0.5rem;
-        border-radius: 999px;
+        border-radius: 0;
+        letter-spacing: 0.08em;
     }
 
     .tutor-status.waiting {
-        background: rgba(255, 179, 0, 0.15);
-        color: #ffb300;
+        background: var(--ck-amber-dim);
+        color: var(--ck-amber);
+        border: 1px solid var(--ck-border);
         animation: pulse 1.5s ease-in-out infinite;
     }
 
     .tutor-status.ready {
-        background: rgba(46, 160, 67, 0.15);
-        color: #2ea043;
+        background: rgba(46, 160, 67, 0.1);
+        color: #4ade80;
+        border: 1px solid rgba(74, 222, 128, 0.2);
     }
 
-    .tutor-toggle { color: #8b949e; font-size: 0.75rem; }
+    .tutor-toggle { color: var(--ck-muted); font-size: 0.75rem; }
 
     .tutor-body {
         max-height: 400px;
         overflow-y: auto;
-        padding: 1rem;
+        padding: 1.25rem;
+        background: var(--ck-bg);
     }
 
     .tutor-empty {
         text-align: center;
         padding: 2rem 1rem;
-        color: #8b949e;
+        color: var(--ck-muted);
+        font-family: var(--ck-font);
+        font-size: 0.82rem;
+        letter-spacing: 0.05em;
     }
 
     .tutor-message {
         margin-bottom: 1rem;
-        padding: 1rem;
-        border-radius: 8px;
-        border-left: 3px solid;
+        padding: 1rem 1.25rem;
+        border-radius: 0;
+        border-left: 2px solid;
     }
 
     .tutor-message.msg-feedback {
-        background: rgba(56, 139, 253, 0.08);
-        border-left-color: #388bfd;
+        background: rgba(234, 88, 12, 0.05);
+        border-left-color: var(--ck-amber);
     }
 
     .tutor-message.msg-hint {
-        background: rgba(255, 179, 0, 0.08);
-        border-left-color: #ffb300;
+        background: rgba(250, 204, 21, 0.05);
+        border-left-color: #facc15;
     }
 
     .tutor-message.msg-error {
-        background: rgba(248, 81, 73, 0.08);
-        border-left-color: #f85149;
+        background: rgba(239, 68, 68, 0.06);
+        border-left-color: #ef4444;
     }
 
     .tutor-message.thinking {
-        background: rgba(139, 148, 158, 0.08);
-        border-left-color: #8b949e;
+        background: var(--ck-surface);
+        border-left-color: var(--ck-border);
         display: flex;
         justify-content: center;
         padding: 1.5rem;
@@ -303,16 +319,20 @@
         display: flex;
         justify-content: space-between;
         margin-bottom: 0.5rem;
-        font-size: 0.8rem;
+        font-size: 0.72rem;
+        font-family: var(--ck-font);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
     }
 
-    .tutor-message-type { font-weight: 600; color: #e1e4e8; }
-    .tutor-message-time { color: #8b949e; }
+    .tutor-message-type { font-weight: 600; color: var(--ck-amber); }
+    .tutor-message-time { color: var(--ck-muted); }
 
     .tutor-message-content {
-        color: #c9d1d9;
-        line-height: 1.6;
-        font-size: 0.9rem;
+        color: var(--dusk-text-primary);
+        line-height: 1.7;
+        font-size: 0.88rem;
+        opacity: 0.9;
     }
 
     .tutor-message-content p { margin-bottom: 0.5rem; }
@@ -320,32 +340,35 @@
     .tutor-diagnostics {
         margin-top: 0.75rem;
         font-size: 0.8rem;
+        font-family: var(--ck-font);
     }
 
     .tutor-diagnostics summary {
         cursor: pointer;
-        color: #8b949e;
+        color: var(--ck-muted);
         padding: 0.25rem 0;
+        letter-spacing: 0.05em;
     }
 
     .tutor-diagnostics pre {
-        background: #0d1117;
-        border: 1px solid #30363d;
-        border-radius: 6px;
+        background: #090909;
+        border: 1px solid var(--ck-border-dim);
+        border-radius: 0;
         padding: 0.75rem;
-        color: #c9d1d9;
+        color: var(--dusk-text-primary);
         font-size: 0.75rem;
         overflow-x: auto;
         margin-top: 0.5rem;
+        font-family: var(--ck-font);
     }
 
     .tutor-thinking-dots span {
         display: inline-block;
-        width: 8px;
-        height: 8px;
+        width: 7px;
+        height: 7px;
         margin: 0 3px;
-        border-radius: 50%;
-        background: #8b949e;
+        border-radius: 0;
+        background: var(--ck-amber);
         animation: bounce 1.4s infinite ease-in-out both;
     }
 
