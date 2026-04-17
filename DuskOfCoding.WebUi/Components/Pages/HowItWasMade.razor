@@ -337,6 +337,55 @@ services.AddSingleton&lt;ISandboxExecutionService,
                 </div>
             </div>
 
+            @* FINOMHANGOLÁS ÉS SKÁLÁZÁS *@
+            <div class="log-group dossier-reveal">
+                <div class="log-group-label">FINOMHANGOLÁS ÉS SKÁLÁZÁS</div>
+                <div class="log-entries">
+                    <div class="log-entry">
+                        <div class="log-connector"><span class="log-tick">├──</span></div>
+                        <div class="log-body">
+                            <div class="log-phase">@Loc["BuildLog_Phase21"]</div>
+                            <div class="log-desc">@Loc["BuildLog_Phase21_Desc"]</div>
+                        </div>
+                    </div>
+                    <div class="log-entry">
+                        <div class="log-connector"><span class="log-tick">├──</span></div>
+                        <div class="log-body">
+                            <div class="log-phase">@Loc["BuildLog_Phase22"]</div>
+                            <div class="log-desc">@Loc["BuildLog_Phase22_Desc"]</div>
+                        </div>
+                    </div>
+                    <div class="log-entry">
+                        <div class="log-connector"><span class="log-tick">├──</span></div>
+                        <div class="log-body">
+                            <div class="log-phase">@Loc["BuildLog_Phase23"]</div>
+                            <div class="log-desc">@Loc["BuildLog_Phase23_Desc"]</div>
+                        </div>
+                    </div>
+                    <div class="log-entry">
+                        <div class="log-connector"><span class="log-tick">├──</span></div>
+                        <div class="log-body">
+                            <div class="log-phase">@Loc["BuildLog_Phase24"]</div>
+                            <div class="log-desc">@Loc["BuildLog_Phase24_Desc"]</div>
+                        </div>
+                    </div>
+                    <div class="log-entry">
+                        <div class="log-connector"><span class="log-tick">├──</span></div>
+                        <div class="log-body">
+                            <div class="log-phase">@Loc["BuildLog_Phase25"]</div>
+                            <div class="log-desc">@Loc["BuildLog_Phase25_Desc"]</div>
+                        </div>
+                    </div>
+                    <div class="log-entry">
+                        <div class="log-connector"><span class="log-tick">└──</span></div>
+                        <div class="log-body">
+                            <div class="log-phase">@Loc["BuildLog_Phase26"]</div>
+                            <div class="log-desc">@Loc["BuildLog_Phase26_Desc"]</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </section>
 
@@ -380,6 +429,16 @@ services.AddSingleton&lt;ISandboxExecutionService,
                 <div class="incident-line muted">@Loc["Incident003_RootCause"]</div>
                 <div class="incident-line resolution">@Loc["Incident003_Resolution"]</div>
                 <div class="incident-line directive">@Loc["Incident003_Directive"]</div>
+            </div>
+
+            <div class="incident-panel dossier-reveal" style="border-color: rgba(239, 68, 68, 0.4);">
+                <div class="incident-header">@Loc["Incident004_Id"]</div>
+                <div class="incident-line severity">@Loc["Incident004_Severity"]</div>
+                <div class="incident-line muted">@Loc["Incident004_Component"]</div>
+                <div class="incident-line muted">@Loc["Incident004_Symptom"]</div>
+                <div class="incident-line muted">@Loc["Incident004_RootCause"]</div>
+                <div class="incident-line resolution" style="color: #ef4444;">@Loc["Incident004_Resolution"]</div>
+                <div class="incident-line directive">@Loc["Incident004_Directive"]</div>
             </div>
 
         </div>
