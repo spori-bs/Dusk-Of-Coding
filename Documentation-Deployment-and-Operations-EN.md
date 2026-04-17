@@ -147,6 +147,23 @@ For highly scalable, portable, and cloud-agnostic deployments.
   ```
 - **Warning (What can break):** "Race conditions" during startup can be a critical point of failure. It is particularly important that the `docker-compose.yml` uses the `depends_on` directive with `condition: service_healthy`. This ensures that MariaDB and RabbitMQ are fully operational before the WebAPI or Worker attempts to connect using their Connection Strings.
 
+## 4.2. Mandatory Environment Variables
+
+To ensure the platform operates securely and robustly across all orchestrated environments (Docker, Azure, IIS), the following environment variables **must** be injected into both the `WebApi` and `TutorWorker` containers/processes:
+
+### Core System
+- `ASPNETCORE_ENVIRONMENT`: Must be set to `Production`. Without this, internal health checks will remain offline by default, causing orchestration networks to terminate containers indefinitely.
+- `ConnectionStrings__DefaultConnection`: The primary MariaDB connection string for robust system persistence.
+- `ConnectionStrings__rabbitmq`: The AMQP broker connection string handling asynchronous AI task dispatching.
+
+### AI Mentor (LlmProvider)
+- `LlmProvider__Provider`: Defines the active AI API provider (e.g., `Gemini`, `OpenAI`, or `AzureOpenAI`).
+- `LlmProvider__ModelId`: The specific model engine to use (e.g., `gemini-3-flash-preview` or `gpt-4o`).
+- `LlmProvider__GeminiApiKey` (or `LlmProvider__OpenAIApiKey`): The secure API key for the chosen LLM provider. **Never hardcode this in `appsettings.json`.**
+
+### Identity (Keycloak)
+- `Keycloak__Authority`: The trusted OIDC issuer URL (e.g., `https://keycloak.your-domain.com/realms/DuskOfCoding`). For Azure Container Apps, ensure this points to the external ingress host if token issuers require validation.
+
 ## 5. Monitoring & Maintenance
 - **Observability with LlmTelemetryLog**:
   The system tracks AI-driven code evaluations via the `LlmTelemetryLog` entity. This provides deep observability into token utilization, AI response latency, and generation anomalies. Administrators should query this table periodically or stream its logs to an external dashboard (like Grafana or Application Insights) to monitor AI cost and efficiency.

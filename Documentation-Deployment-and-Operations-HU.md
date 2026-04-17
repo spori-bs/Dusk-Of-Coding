@@ -146,6 +146,23 @@ Rendkívül dinamikusan skálázható, hordozható és szolgáltató-független 
   ```
 - **Figyelmeztetés (Kritikus hibaforrás):** A rendszer indításakor kritikus hibaforrást jelenthetnek a "Race conditions" (versenyhelyzetek). Hangsúlyozandó, hogy a `docker-compose.yml` konfigurációban kötelező a `depends_on` paramétert `condition: service_healthy` értékkel használni. Ez garantálja, hogy a MariaDB és a RabbitMQ teljes mértékben készen áll a kérések fogadására, mielőtt a WebAPI vagy a Worker megkísérelne csatlakozni hozzájuk.
 
+## 4.2. Kötelező Környezeti Változók (Environment Variables)
+
+A platform biztonságos és stabil működése érdekében az alábbi környezeti változókat **kötelező** injektálni mind a `WebAPI`, mind a `TutorWorker` konténerekbe/folyamatokba az operációs környezettől függetlenül (Docker, Azure, IIS):
+
+### Alapvető Konfiguráció (Core)
+- `ASPNETCORE_ENVIRONMENT`: Kötelező értéke `Production`. Ennek hiányában a Health Check végpontok inaktívak maradnak, ami miatt az orchestrator rendszerek (pl. Azure Container Apps) folyamatosan újraindítják a konténereket.
+- `ConnectionStrings__DefaultConnection`: A MariaDB adatbázis kapcsolati sztringje a stabil háttértároláshoz.
+- `ConnectionStrings__rabbitmq`: Az AMQP broker kapcsolati sztringje, amely biztosítja az aszinkron AI-feladatok ütemezését.
+
+### Szókratészi AI Mentor (LlmProvider)
+- `LlmProvider__Provider`: Az aktív mesterséges intelligencia szolgáltató (pl. `Gemini`, `OpenAI`, vagy `AzureOpenAI`).
+- `LlmProvider__ModelId`: A használni kívánt specifikus modell azonosítója (pl. `gemini-3-flash-preview` vagy `gpt-4o`).
+- `LlmProvider__GeminiApiKey` (vagy `LlmProvider__OpenAIApiKey`): A kiválasztott LLM szolgáltatóhoz tartozó titkosított API kulcs. **Ezt soha ne hardkódolja az `appsettings.json` fájlba.**
+
+### Hitelesítés (Keycloak)
+- `Keycloak__Authority`: A megbízható OIDC kibocsátó URL-je (pl. `https://keycloak.your-domain.com/realms/DuskOfCoding`). Azure Container Apps esetén győződjön meg róla, hogy ez a publikus ingress hostra mutat a helyes token-validáció érdekében.
+
 ## 5. Monitorozás és Karbantartás (Monitoring & Maintenance)
 - **Megfigyelhetőség (Observability) a LlmTelemetryLog-gal**:
   A rendszer külön nyilvántartást vezet (`LlmTelemetryLog`) a mesterséges intelligencia-vezérelt elemzésekről. Ez létfontosságú Observability mutatószámokat jelent a tokenfelhasználás (token throughput), válaszidők és predikciós anomáliák esetében. Az üzemeltetők monitorozó rendszerekkel (Grafana, Datadog) tudják vizualizálni a logokat, hogy elkerüljék a túlzott AI-hívások okozta rejtett költségeket.
