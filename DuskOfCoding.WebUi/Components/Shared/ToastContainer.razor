@@ -1,0 +1,76 @@
+@using DuskOfCoding.WebUi.Services
+@inject ToastService ToastService
+@implements IDisposable
+
+@if (_toasts.Any())
+{
+    <div class="toast-container" aria-live="polite" aria-atomic="true">
+        @foreach (var toast in _toasts)
+        {
+            <div class="ck-toast ck-toast--@toast.Type @(toast.IsVisible ? "ck-toast--visible" : "")" role="alert">
+                <div class="ck-toast__icon">
+                    @if (toast.Type == "success")
+                    {
+                        <i class="bi bi-check-circle-fill"></i>
+                    }
+                    else if (toast.Type == "danger")
+                    {
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                    }
+                    else
+                    {
+                        <i class="bi bi-info-circle-fill"></i>
+                    }
+                </div>
+                <div class="ck-toast__body font-monospace">@toast.Message</div>
+                <button class="ck-toast__close" @onclick="() => Dismiss(toast)" aria-label="Close">
+                    <i class="bi bi-x"></i>
+                </button>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    private readonly List<ToastItem> _toasts = [];
+
+    protected override void OnInitialized()
+    {
+        ToastService.OnToast += HandleToastAsync;
+    }
+
+    private async Task HandleToastAsync(string message, string type)
+    {
+        var toast = new ToastItem(message, type);
+        _toasts.Add(toast);
+
+        await InvokeAsync(StateHasChanged);
+
+        // Brief delay to trigger CSS enter transition
+        await Task.Delay(50);
+        toast.IsVisible = true;
+        await InvokeAsync(StateHasChanged);
+
+        // Auto-dismiss after 4 seconds
+        await Task.Delay(4000);
+        Dismiss(toast);
+    }
+
+    private void Dismiss(ToastItem toast)
+    {
+        _toasts.Remove(toast);
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        ToastService.OnToast -= HandleToastAsync;
+    }
+
+    private sealed class ToastItem(string message, string type)
+    {
+        public string Message { get; } = message;
+        public string Type { get; } = type;
+        public bool IsVisible { get; set; }
+    }
+}

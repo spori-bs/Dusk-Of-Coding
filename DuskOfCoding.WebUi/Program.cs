@@ -231,6 +231,7 @@ builder.Services.AddControllers();
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<TokenProvider>();
+builder.Services.AddScoped<ToastService>();
 
 var app = builder.Build();
 

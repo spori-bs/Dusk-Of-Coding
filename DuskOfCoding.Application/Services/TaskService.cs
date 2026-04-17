@@ -31,7 +31,11 @@ public class TaskService : ITaskService
             Description = dto.Description,
             DifficultyLevel = dto.DifficultyLevel,
             Tags = dto.Tags ?? new List<string>(),
-            TestBundleReference = dto.TestBundleReference
+            Tests = (dto.Tests ?? new List<TaskTestDto>()).Select(t => new TaskTest
+            {
+                Name = t.Name,
+                Code = t.Code
+            }).ToList()
         };
 
         await _taskRepository.AddAsync(task, ct);
@@ -47,9 +51,22 @@ public class TaskService : ITaskService
         task.Description = dto.Description;
         task.DifficultyLevel = dto.DifficultyLevel;
         task.Tags = dto.Tags ?? new List<string>();
-        task.TestBundleReference = dto.TestBundleReference;
-
+        
+        // Save the main task definition first (without touching task.Tests)
         await _taskRepository.UpdateAsync(task, ct);
+
+        // Phase 22.3: Disconnected replacement for tests to avoid DbUpdateConcurrencyException
+        var newTests = dto.Tests?.Select(t => new TaskTest
+        {
+            Name = t.Name,
+            Code = t.Code
+        }).ToList() ?? new List<TaskTest>();
+
+        await _taskRepository.ReplaceTestsAsync(id, newTests, ct);
+
+        // Assign the new tests to the domain object before returning
+        task.Tests = newTests;
+
         return task;
     }
 

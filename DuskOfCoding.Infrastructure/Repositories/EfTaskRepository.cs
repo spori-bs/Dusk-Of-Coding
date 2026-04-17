@@ -16,12 +16,12 @@ public class EfTaskRepository : ITaskRepository
 
     public async Task<IReadOnlyList<TaskDefinition>> GetAllAsync(CancellationToken ct = default)
     {
-        return await _db.Tasks.ToListAsync(ct);
+        return await _db.Tasks.Include(t => t.Tests).ToListAsync(ct);
     }
 
     public async Task<TaskDefinition?> GetByIdAsync(Guid id, CancellationToken ct = default)
     {
-        return await _db.Tasks.FirstOrDefaultAsync(t => t.Id == id, ct);
+        return await _db.Tasks.Include(t => t.Tests).FirstOrDefaultAsync(t => t.Id == id, ct);
     }
 
     public async Task AddAsync(TaskDefinition task, CancellationToken ct = default)
@@ -48,5 +48,21 @@ public class EfTaskRepository : ITaskRepository
             _db.Tasks.Remove(task);
             await _db.SaveChangesAsync(ct);
         }
+    }
+
+    public async Task ReplaceTestsAsync(Guid taskId, IEnumerable<TaskTest> tests, CancellationToken ct = default)
+    {
+        // Phase 22.3: Disconnected update to avoid DbUpdateConcurrencyException
+        await _db.TaskTests
+            .Where(t => t.TaskDefinitionId == taskId)
+            .ExecuteDeleteAsync(ct);
+
+        foreach (var test in tests)
+        {
+            test.TaskDefinitionId = taskId;
+        }
+
+        _db.TaskTests.AddRange(tests);
+        await _db.SaveChangesAsync(ct);
     }
 }

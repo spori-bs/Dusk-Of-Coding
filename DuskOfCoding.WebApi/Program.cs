@@ -88,8 +88,12 @@ builder.Services.AddAuthorization();
 // SignalR for real-time tutor feedback
 builder.Services.AddSignalR();
 
-// RabbitMQ → SignalR bridge
+// Map Keycloak sub-claim → SignalR user ID (enables Clients.User() targeting)
+builder.Services.AddSingleton<Microsoft.AspNetCore.SignalR.IUserIdProvider, DuskOfCoding.WebApi.Hubs.KeycloakUserIdProvider>();
+
+// RabbitMQ → SignalR bridges
 builder.Services.AddHostedService<TutorResponseBridge>();
+builder.Services.AddHostedService<DuskOfCoding.WebApi.Services.TestGenerationBridge>();
 
 var app = builder.Build();
 
@@ -138,6 +142,44 @@ tasksGroup.MapPost("/", [Microsoft.AspNetCore.Authorization.Authorize(Roles = Ap
     return Results.Created($"/tasks/{task.Id}", task);
 });
 
+tasksGroup.MapPost("/{id:guid}/generate-tests", [Microsoft.AspNetCore.Authorization.Authorize(Roles = AppRoles.Tutor + "," + AppRoles.Admin)] async (
+    Guid id,
+    Microsoft.AspNetCore.Http.HttpContext httpContext,
+    ITaskService taskService,
+    RabbitMQService rabbitMqService,
+    ILogger<Program> logger,
+    CancellationToken ct) =>
+{
+    var task = await taskService.GetTaskByIdAsync(id, ct);
+    if (task is null) return Results.NotFound();
+
+    var userId = httpContext.User.FindFirst("sub")?.Value 
+          ?? httpContext.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+    if (userId is null) return Results.Unauthorized();
+
+    var command = new GenerateTestSuiteCommand
+    {
+        TaskId = id,
+        Title = task.Title,
+        Description = task.Description,
+        UserId = userId
+    };
+
+    await rabbitMqService.PublishAsync(
+        RabbitMQTopology.TestGenerationExchange,
+        RabbitMQTopology.TestGenerationRoutingKey,
+        command,
+        Guid.NewGuid(),
+        ct);
+
+    logger.LogInformation(
+        "Published GenerateTestSuiteCommand for Task {TaskId} by User {UserId}",
+        id, userId);
+
+    return Results.Accepted();
+});
+
 tasksGroup.MapPut("/{id:guid}", [Microsoft.AspNetCore.Authorization.Authorize(Roles = AppRoles.Tutor + "," + AppRoles.Admin)] async (Guid id, [FromBody] DuskOfCoding.Application.DTOs.UpdateTaskDto dto, ITaskService taskService, CancellationToken ct) =>
 {
     var task = await taskService.UpdateTaskAsync(id, dto, ct);
@@ -148,6 +190,19 @@ tasksGroup.MapDelete("/{id:guid}", [Microsoft.AspNetCore.Authorization.Authorize
 {
     var success = await taskService.DeleteTaskAsync(id, ct);
     return success ? Results.NoContent() : Results.NotFound();
+});
+
+// Delete a single test case (Phase 23)
+tasksGroup.MapDelete("/{taskId:guid}/tests/{testId:guid}", [Microsoft.AspNetCore.Authorization.Authorize(Roles = AppRoles.Tutor + "," + AppRoles.Admin)] async (
+    Guid taskId,
+    Guid testId,
+    DuskOfCoding.Infrastructure.Persistence.AppDbContext db,
+    CancellationToken ct) =>
+{
+    var deleted = await db.TaskTests
+        .Where(t => t.TaskDefinitionId == taskId && t.Id == testId)
+        .ExecuteDeleteAsync(ct);
+    return deleted > 0 ? Results.NoContent() : Results.NotFound();
 });
 
 tasksGroup.MapGet("/{id:guid}/stats", async (Guid id, DuskOfCoding.Infrastructure.Persistence.AppDbContext db, CancellationToken ct) => 
@@ -203,7 +258,9 @@ submissionsGroup.MapPost("/", async (
     ILogger<Program> logger,
     CancellationToken ct) =>
 {
-    var userIdClaim = httpContext.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+    var userIdClaim = httpContext.User.FindFirst("sub")?.Value 
+               ?? httpContext.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
     Guid? userId = userIdClaim != null ? Guid.Parse(userIdClaim) : request.UserId;
     // Phase 5: Input validation — reject empty or oversized source code
     if (string.IsNullOrWhiteSpace(request.SourceCode))
@@ -270,7 +327,9 @@ feedbackGroup.MapPost("/", async (
     IFeedbackService feedbackService,
     CancellationToken ct) =>
 {
-    var userIdClaim = httpContext.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+    var userIdClaim = httpContext.User.FindFirst("sub")?.Value 
+               ?? httpContext.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
     if (userIdClaim == null || !Guid.TryParse(userIdClaim, out var userId))
         return Results.Unauthorized();
 
@@ -305,4 +364,5 @@ feedbackGroup.MapGet("/overview", [Microsoft.AspNetCore.Authorization.Authorize(
 app.MapHub<TutorHub>("/hubs/tutor");
 
 app.Run();
+
 

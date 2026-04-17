@@ -18,7 +18,15 @@ public class InMemoryTaskRepository : ITaskRepository
             Description = "Write a method that returns 'Hello World!'",
             DifficultyLevel = "Easy",
             Tags = new List<string> { "fundamentals" },
-            TestBundleReference = "tasks/helloworld/tests.csproj"
+            Tests = new List<TaskTest>
+            {
+                new TaskTest
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "BasicTests.cs",
+                    Code = "using Xunit; public class T { [Fact] public void C() { Assert.True(true); } }"
+                }
+            }
         };
         _tasks.TryAdd(defaultTask.Id, defaultTask);
     }
@@ -52,6 +60,19 @@ public class InMemoryTaskRepository : ITaskRepository
     public Task DeleteAsync(Guid id, CancellationToken ct = default)
     {
         _tasks.TryRemove(id, out _);
+        return Task.CompletedTask;
+    }
+
+    public Task ReplaceTestsAsync(Guid taskId, IEnumerable<TaskTest> tests, CancellationToken ct = default)
+    {
+        if (_tasks.TryGetValue(taskId, out var task))
+        {
+            task.Tests = tests.ToList();
+            foreach (var test in task.Tests)
+            {
+                test.TaskDefinitionId = taskId;
+            }
+        }
         return Task.CompletedTask;
     }
 }

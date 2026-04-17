@@ -10,6 +10,7 @@ public class AppDbContext : DbContext
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
     public DbSet<TaskDefinition> Tasks => Set<TaskDefinition>();
+    public DbSet<TaskTest> TaskTests => Set<TaskTest>();
     public DbSet<Submission> Submissions => Set<Submission>();
     public DbSet<FeedbackRecord> FeedbackRecords => Set<FeedbackRecord>();
     public DbSet<UserFeedback> UserFeedbacks => Set<UserFeedback>();
@@ -23,7 +24,12 @@ public class AppDbContext : DbContext
             entity.Property(e => e.Title).IsRequired().HasMaxLength(200);
             entity.Property(e => e.Description).IsRequired();
             entity.Property(e => e.DifficultyLevel).HasMaxLength(50);
-            entity.Property(e => e.TestBundleReference).HasMaxLength(500);
+            
+            // 1-N relationship with TaskTest
+            entity.HasMany(e => e.Tests)
+                  .WithOne(t => t.TaskDefinition)
+                  .HasForeignKey(t => t.TaskDefinitionId)
+                  .OnDelete(DeleteBehavior.Cascade);
 
             // Convert List<string> Tags to JSON string for SQLite storage
             var tagsConverter = new ValueConverter<List<string>, string>(
@@ -62,14 +68,22 @@ public class AppDbContext : DbContext
         });
 
         // Seed a default task
+        var seedTaskId = Guid.Parse("00000000-0000-0000-0000-000000000001");
         modelBuilder.Entity<TaskDefinition>().HasData(new TaskDefinition
         {
-            Id = Guid.Parse("00000000-0000-0000-0000-000000000001"),
+            Id = seedTaskId,
             Title = "Hello World",
             Description = "Write a method that returns the string 'Hello World!'",
             DifficultyLevel = "Easy",
-            Tags = new List<string> { "fundamentals" },
-            TestBundleReference = @"using System;
+            Tags = new List<string> { "fundamentals" }
+        });
+
+        modelBuilder.Entity<TaskTest>().HasData(new TaskTest
+        {
+            Id = Guid.Parse("00000000-0000-0000-0000-000000000002"),
+            TaskDefinitionId = seedTaskId,
+            Name = "SolutionTests.cs",
+            Code = @"using System;
 using Xunit;
 
 public class SolutionTests 

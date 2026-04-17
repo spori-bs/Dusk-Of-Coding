@@ -5,7 +5,7 @@ public record CreateTaskDto(
     string Description,
     string DifficultyLevel,
     List<string> Tags,
-    string TestBundleReference
+    List<TaskTestDto> Tests
 );
 
 public record UpdateTaskDto(
@@ -13,7 +13,13 @@ public record UpdateTaskDto(
     string Description,
     string DifficultyLevel,
     List<string> Tags,
-    string TestBundleReference
+    List<TaskTestDto> Tests
+);
+
+public record TaskTestDto(
+    Guid? Id,
+    string Name,
+    string Code
 );
 
 public record SubmitCodeDto(
