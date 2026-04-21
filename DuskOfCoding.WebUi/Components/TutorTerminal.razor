@@ -32,12 +32,21 @@
                 </div>
             }
 
-            @foreach (var msg in messages)
+            @if (isWaiting)
+            {
+                <div class="tutor-message thinking">
+                    <div class="tutor-thinking-dots">
+                        <span></span><span></span><span></span>
+                    </div>
+                </div>
+            }
+
+            @foreach (var msg in messages.AsEnumerable().Reverse())
             {
                 <div class="tutor-message @msg.TypeClass">
                     <div class="tutor-message-header">
                         <span class="tutor-message-type">@GetTypeLabel(msg.ResponseType)</span>
-                        <span class="tutor-message-time">@msg.Timestamp.ToString("HH:mm:ss")</span>
+                        <span class="tutor-message-time">@msg.Timestamp.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss")</span>
                     </div>
                     <div class="tutor-message-content">
                         @((MarkupString)msg.HtmlContent)
@@ -49,15 +58,6 @@
                             <pre>@msg.RawDiagnostics</pre>
                         </details>
                     }
-                </div>
-            }
-
-            @if (isWaiting)
-            {
-                <div class="tutor-message thinking">
-                    <div class="tutor-thinking-dots">
-                        <span></span><span></span><span></span>
-                    </div>
                 </div>
             }
         </div>

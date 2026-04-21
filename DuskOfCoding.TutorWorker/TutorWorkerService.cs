@@ -162,7 +162,7 @@ public sealed class TutorWorkerService : BackgroundService
             await NotifyEvaluationComplete(message.SubmissionId, correlationId, feedback, ct);
 
             // 7. Follow up with the Socratic Tutor logic
-            await HandleSocraticTutoring(message, correlationId, ct);
+            await HandleSocraticTutoring(message, feedback, correlationId, ct);
         }
         catch (Exception ex)
         {
@@ -201,7 +201,7 @@ public sealed class TutorWorkerService : BackgroundService
             ct);
     }
 
-    private async Task HandleSocraticTutoring(SubmissionMessage message, Guid correlationId, CancellationToken ct)
+    private async Task HandleSocraticTutoring(SubmissionMessage message, Feedback feedback, Guid correlationId, CancellationToken ct)
     {
         var pipeline = _resilienceProvider.GetPipeline(LlmResilienceRegistration.PipelineName);
 
@@ -209,7 +209,7 @@ public sealed class TutorWorkerService : BackgroundService
         {
             var tutorResponse = await pipeline.ExecuteAsync(async token =>
             {
-                return await InvokeSocraticTutorAsync(message, token);
+                return await InvokeSocraticTutorAsync(message, feedback, token);
             }, ct);
 
             var response = new TutorResponseMessage
@@ -236,10 +236,22 @@ public sealed class TutorWorkerService : BackgroundService
 
     private const int MaxSourceCodeLength = 50_000;
 
-    private async Task<string> InvokeSocraticTutorAsync(SubmissionMessage message, CancellationToken ct)
+    private async Task<string> InvokeSocraticTutorAsync(SubmissionMessage message, Feedback feedback, CancellationToken ct)
     {
         if (string.IsNullOrWhiteSpace(message.SourceCode))
             return "⚠️ No source code was provided.";
+
+        var testOutput = string.Empty;
+        if (feedback != null && feedback.TestMessages != null && feedback.TestMessages.Any())
+        {
+            testOutput = $"\n\nUnit Test Output:\n{string.Join("\n", feedback.TestMessages)}";
+        }
+
+        var compilationsOutput = string.Empty;
+        if (feedback != null && feedback.CompilationMessages != null && feedback.CompilationMessages.Any())
+        {
+            compilationsOutput = $"\n\nCompilation Errors:\n{string.Join("\n", feedback.CompilationMessages)}";
+        }
 
         var chatMessages = new List<ChatMessage>
         {
@@ -250,6 +262,8 @@ public sealed class TutorWorkerService : BackgroundService
                 {message.SourceCode}
                 ```
                 Language: {message.Language}
+                {compilationsOutput}
+                {testOutput}
                 """)
         };
 

@@ -78,7 +78,7 @@ else
                     <tbody>
                         @foreach (var log in _recentLogs)
                         {
-                            <tr>
+                            <tr style="cursor: pointer" @onclick="() => ToggleDetails(log.Id)">
                                 <td class="text-secondary text-nowrap">
                                     @log.Timestamp.ToLocalTime().ToString("MM/dd HH:mm:ss")
                                 </td>
@@ -102,6 +102,23 @@ else
                                     }
                                 </td>
                             </tr>
+                            @if (_selectedLogId == log.Id)
+                            {
+                                <tr>
+                                    <td colspan="5" class="bg-dark p-4 border-top border-secondary">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h6 class="text-light">Prompt</h6>
+                                                <pre class="bg-black p-3 text-white-50 rounded" style="white-space: pre-wrap; font-size: 0.8rem; max-height: 300px; overflow-y: auto;">@GetFormattedPrompt(log.Payload)</pre>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <h6 class="text-light">Response</h6>
+                                                <pre class="bg-black p-3 text-success rounded" style="white-space: pre-wrap; font-size: 0.8rem; max-height: 300px; overflow-y: auto;">@GetFormattedResponse(log.Payload)</pre>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
                         }
                     </tbody>
                 </table>
@@ -115,6 +132,53 @@ else
     private string? _errorMessage;
     private List<LlmTelemetryDto>? _recentLogs;
     private List<DailyTokenUsageDto>? _dailyUsage;
+    private Guid? _selectedLogId;
+
+    private void ToggleDetails(Guid logId)
+    {
+        if (_selectedLogId == logId)
+            _selectedLogId = null;
+        else
+            _selectedLogId = logId;
+    }
+
+    private string GetFormattedPrompt(string payload)
+    {
+        if (string.IsNullOrWhiteSpace(payload)) return "No prompt available.";
+        try
+        {
+            using var doc = System.Text.Json.JsonDocument.Parse(payload);
+            var root = doc.RootElement;
+            var sys = root.TryGetProperty("SystemPrompt", out var s) ? s.GetString() : string.Empty;
+            var user = root.TryGetProperty("UserPrompt", out var u) ? u.GetString() : string.Empty;
+            var hasChat = root.TryGetProperty("ChatMessages", out var c);
+
+            if (hasChat)
+            {
+                return c.GetRawText();
+            }
+
+            return $"System:\n{sys}\n\nUser:\n{user}";
+        }
+        catch
+        {
+            return "Unable to parse payload.";
+        }
+    }
+
+    private string GetFormattedResponse(string payload)
+    {
+        if (string.IsNullOrWhiteSpace(payload)) return "No response available.";
+        try
+        {
+            using var doc = System.Text.Json.JsonDocument.Parse(payload);
+            return doc.RootElement.TryGetProperty("RawResponse", out var r) ? r.GetString() ?? "" : "No RawResponse property.";
+        }
+        catch
+        {
+            return "Unable to parse payload.";
+        }
+    }
 
     protected override async Task OnInitializedAsync()
     {

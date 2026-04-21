@@ -29,7 +29,8 @@ public class TelemetryService : ITelemetryService
                 TaskTitle = t.Task != null ? t.Task.Title : null,
                 ModelName = t.ModelName,
                 TokenCount = t.TokenCount,
-                IsSuccess = t.IsSuccess
+                IsSuccess = t.IsSuccess,
+                Payload = t.Payload
             })
             .ToListAsync(ct);
     }

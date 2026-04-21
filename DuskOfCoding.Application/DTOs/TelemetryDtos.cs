@@ -10,6 +10,7 @@ public class LlmTelemetryDto
     public string ModelName { get; set; } = string.Empty;
     public int TokenCount { get; set; }
     public bool IsSuccess { get; set; }
+    public string Payload { get; set; } = string.Empty;
 }
 
 public class DailyTokenUsageDto
