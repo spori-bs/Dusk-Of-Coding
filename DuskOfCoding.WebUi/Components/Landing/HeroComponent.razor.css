@@ -36,6 +36,39 @@
     to   { stroke-opacity: 0.08; opacity: 0.12; }
 }
 
+/* Hieroglyph Backdrop Overlay */
+.hero-hieroglyph-backdrop {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+    pointer-events: none;
+    opacity: 0.15;
+    transition: opacity 0.5s ease;
+    overflow: hidden;
+}
+
+.hero-hieroglyph-backdrop pre {
+    font-family: var(--ck-font);
+    font-size: 1.2rem;
+    line-height: 1.5;
+    text-align: left;
+    color: var(--ck-muted);
+}
+
+.hero-section:hover .hero-hieroglyph-backdrop {
+    opacity: 0.4;
+}
+
+.hero-section:hover .hero-hieroglyph-backdrop .code-hieroglyphs {
+    animation: none;
+    font-family: var(--ck-font);
+    color: var(--ck-amber);
+    text-shadow: 0 0 8px rgba(234, 88, 12, 0.4);
+}
+
 /* Hero content */
 .hero-content {
     position: relative;

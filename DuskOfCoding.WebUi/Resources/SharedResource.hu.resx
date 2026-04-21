@@ -114,14 +114,14 @@
   <data name="Landing_PageTitle" xml:space="preserve"><value>Dusk of Coding — A platform mérnököknek, akik nem rendelik alá magukat az MI-nek</value></data>
   <data name="Landing_Practice" xml:space="preserve"><value>Gyakorlás</value></data>
   <data name="Landing_ManageTasks" xml:space="preserve"><value>Feladatok</value></data>
-  <data name="Landing_GetStarted" xml:space="preserve"><value>Belépés</value></data>
+  <data name="Landing_GetStarted" xml:space="preserve"><value>Regisztráció</value></data>
 
   <!-- Hero -->
   <data name="Hero_Headline_L1" xml:space="preserve"><value>Az utolsó generáció,</value></data>
   <data name="Hero_Headline_L2" xml:space="preserve"><value>amely még önállóan</value></data>
   <data name="Hero_Headline_L3" xml:space="preserve"><value>írja a kódot.</value></data>
-  <data name="Hero_Sub" xml:space="preserve"><value>Az MI a történelem legerősebb eszköze. A legtöbb fejlesztő mankóként használja. Ez a platform azoknak szól, akik nem hajlandóak erre.</value></data>
-  <data name="Hero_CTA_Primary" xml:space="preserve"><value>[ BELÉPÉS A PLATFORMRA ]</value></data>
+  <data name="Hero_Sub" xml:space="preserve"><value>Készülj fel a kézi kódolás alkonyára. Urald az MI-t, dekódold a struktúrát, és válj Architektussá.</value></data>
+  <data name="Hero_CTA_Primary" xml:space="preserve"><value>[ UPLINK INICIALIZÁLÁSA ]</value></data>
   <data name="Hero_CTA_Secondary" xml:space="preserve"><value>[ ÍGY KÉSZÜLT ]</value></data>
   <data name="Hero_HowItWasMade" xml:space="preserve"><value>Így Készült</value></data>
 
