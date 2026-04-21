@@ -361,6 +361,14 @@ feedbackGroup.MapGet("/overview", [Microsoft.AspNetCore.Authorization.Authorize(
     return Results.Ok(overview);
 });
 
+feedbackGroup.MapGet("/recent-comments", [Microsoft.AspNetCore.Authorization.Authorize(Roles = AppRoles.Tutor + "," + AppRoles.Admin)] async (
+    IFeedbackService feedbackService,
+    CancellationToken ct) =>
+{
+    var comments = await feedbackService.GetRecentFeedbackAsync(limit: 20, ct);
+    return Results.Ok(comments);
+});
+
 // SignalR hub for real-time tutor responses
 app.MapHub<TutorHub>("/hubs/tutor");
 

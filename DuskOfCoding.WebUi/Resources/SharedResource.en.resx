@@ -173,6 +173,29 @@
   <data name="Auth_StudentBadge" xml:space="preserve"><value>Student</value></data>
   <data name="Nav_Dashboard" xml:space="preserve"><value>Dashboard</value></data>
 
+  <!-- Tutor Dashboard -->
+  <data name="TutorDashboard_PageTitle" xml:space="preserve"><value>Tutor Dashboard — DuskOfCoding</value></data>
+  <data name="TutorDashboard_Title" xml:space="preserve"><value>Platform Overview</value></data>
+  <data name="TutorDashboard_ActiveStudents" xml:space="preserve"><value>Active Students</value></data>
+  <data name="TutorDashboard_AvailableTasks" xml:space="preserve"><value>Available Tasks</value></data>
+  <data name="TutorDashboard_TotalSubmissions" xml:space="preserve"><value>Total Submissions</value></data>
+  <data name="TutorDashboard_GlobalSuccessRate" xml:space="preserve"><value>Global Success Rate</value></data>
+  <data name="TutorDashboard_FeedbackAnalytics" xml:space="preserve"><value>Task Feedback Analytics</value></data>
+  <data name="TutorDashboard_ColTask" xml:space="preserve"><value>Task</value></data>
+  <data name="TutorDashboard_ColAvgRating" xml:space="preserve"><value>Avg Rating</value></data>
+  <data name="TutorDashboard_ColTotalFeedback" xml:space="preserve"><value>Total Feedback</value></data>
+  <data name="TutorDashboard_ColLatestActivity" xml:space="preserve"><value>Latest Activity</value></data>
+  <data name="TutorDashboard_Responses" xml:space="preserve"><value>responses</value></data>
+  <data name="TutorDashboard_AnalyticsComingSoon" xml:space="preserve"><value>Detailed Analytics Coming Soon</value></data>
+  <data name="TutorDashboard_AnalyticsComingSoonDesc" xml:space="preserve"><value>Future phases will introduce interactive graphs and task-level breakdowns.</value></data>
+  <data name="TutorDashboard_RecentFeedback" xml:space="preserve"><value>Recent Feedback Comments</value></data>
+  <data name="TutorDashboard_ColComment" xml:space="preserve"><value>Comment</value></data>
+  <data name="TutorDashboard_ColType" xml:space="preserve"><value>Type</value></data>
+  <data name="TutorDashboard_ColDate" xml:space="preserve"><value>Date</value></data>
+  <data name="TutorDashboard_ColRating" xml:space="preserve"><value>Rating</value></data>
+  <data name="TutorDashboard_NoComments" xml:space="preserve"><value>No feedback comments yet.</value></data>
+  <data name="TutorDashboard_LoadError" xml:space="preserve"><value>Failed to load dashboard data</value></data>
+
   <!-- Access Denied -->
   <data name="AccessDenied_Title" xml:space="preserve"><value>Access Denied</value></data>
   <data name="AccessDenied_Heading" xml:space="preserve"><value>Access Denied</value></data>

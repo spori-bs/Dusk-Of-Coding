@@ -350,5 +350,26 @@ public class ApiClient
             return Result<List<TaskFeedbackOverviewDto>>.Failure(_localizer["Error_Network", ex.Message]);
         }
     }
+
+    public async Task<Result<List<RecentFeedbackItemDto>>> GetRecentFeedbackCommentsAsync(CancellationToken ct = default)
+    {
+        try
+        {
+            await EnsureAuthHeaderAsync();
+            var response = await _http.GetAsync("/feedback/recent-comments", ct);
+            if (HandleAuthErrors(response)) return Result<List<RecentFeedbackItemDto>>.Failure(string.Empty);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var data = await response.Content.ReadFromJsonAsync<List<RecentFeedbackItemDto>>(cancellationToken: ct) ?? new();
+                return Result<List<RecentFeedbackItemDto>>.Success(data);
+            }
+            return Result<List<RecentFeedbackItemDto>>.Failure($"Failed to load recent feedback: {response.StatusCode}");
+        }
+        catch (HttpRequestException ex)
+        {
+            return Result<List<RecentFeedbackItemDto>>.Failure(_localizer["Error_Network", ex.Message]);
+        }
+    }
 }
 

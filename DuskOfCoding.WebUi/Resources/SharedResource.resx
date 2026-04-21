@@ -187,6 +187,29 @@
   <data name="Auth_StudentBadge" xml:space="preserve"><value>Hallgató</value></data>
   <data name="Nav_Dashboard" xml:space="preserve"><value>Irányítópult</value></data>
 
+  <!-- Tutor Dashboard -->
+  <data name="TutorDashboard_PageTitle" xml:space="preserve"><value>Tutor Irányítópult — DuskOfCoding</value></data>
+  <data name="TutorDashboard_Title" xml:space="preserve"><value>Platform Áttekintés</value></data>
+  <data name="TutorDashboard_ActiveStudents" xml:space="preserve"><value>Aktív Diákok</value></data>
+  <data name="TutorDashboard_AvailableTasks" xml:space="preserve"><value>Elérhető Feladatok</value></data>
+  <data name="TutorDashboard_TotalSubmissions" xml:space="preserve"><value>Összes Beküldés</value></data>
+  <data name="TutorDashboard_GlobalSuccessRate" xml:space="preserve"><value>Globális Sikerességi Arány</value></data>
+  <data name="TutorDashboard_FeedbackAnalytics" xml:space="preserve"><value>Feladat Visszajelzés Analitika</value></data>
+  <data name="TutorDashboard_ColTask" xml:space="preserve"><value>Feladat</value></data>
+  <data name="TutorDashboard_ColAvgRating" xml:space="preserve"><value>Átl. Értékelés</value></data>
+  <data name="TutorDashboard_ColTotalFeedback" xml:space="preserve"><value>Összes Visszajelzés</value></data>
+  <data name="TutorDashboard_ColLatestActivity" xml:space="preserve"><value>Legújabb Aktivitás</value></data>
+  <data name="TutorDashboard_Responses" xml:space="preserve"><value>válasz</value></data>
+  <data name="TutorDashboard_AnalyticsComingSoon" xml:space="preserve"><value>Részletes Analitika Hamarosan</value></data>
+  <data name="TutorDashboard_AnalyticsComingSoonDesc" xml:space="preserve"><value>A jövőbeni fázisokban interaktív grafikonok és feladat szintű elemzések kerülnek bevezetésre.</value></data>
+  <data name="TutorDashboard_RecentFeedback" xml:space="preserve"><value>Legutóbbi Visszajelzések</value></data>
+  <data name="TutorDashboard_ColComment" xml:space="preserve"><value>Megjegyzés</value></data>
+  <data name="TutorDashboard_ColType" xml:space="preserve"><value>Típus</value></data>
+  <data name="TutorDashboard_ColDate" xml:space="preserve"><value>Dátum</value></data>
+  <data name="TutorDashboard_ColRating" xml:space="preserve"><value>Értékelés</value></data>
+  <data name="TutorDashboard_NoComments" xml:space="preserve"><value>Még nincs visszajelzési megjegyzés.</value></data>
+  <data name="TutorDashboard_LoadError" xml:space="preserve"><value>Nem sikerült betölteni az irányítópult adatait</value></data>
+
   <!-- Access Denied -->
   <data name="AccessDenied_Title" xml:space="preserve"><value>Hozzáférés megtagadva</value></data>
   <data name="AccessDenied_Heading" xml:space="preserve"><value>Hozzáférés megtagadva</value></data>

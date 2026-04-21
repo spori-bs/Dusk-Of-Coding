@@ -102,4 +102,26 @@ public class FeedbackService : IFeedbackService
 
         return overview;
     }
+
+    public async Task<List<RecentFeedbackItemDto>> GetRecentFeedbackAsync(int limit = 20, CancellationToken ct = default)
+    {
+        var allFeedback = await _feedbackRepository.GetAllAsync(ct);
+        var allTasks = await _taskRepository.GetAllAsync(ct);
+        var taskDict = allTasks.ToDictionary(t => t.Id, t => t.Title);
+
+        return allFeedback
+            .Where(f => !string.IsNullOrWhiteSpace(f.Comment))
+            .OrderByDescending(f => f.CreatedAt)
+            .Take(limit)
+            .Select(f => new RecentFeedbackItemDto
+            {
+                TaskId = f.TaskId,
+                TaskTitle = taskDict.TryGetValue(f.TaskId, out var title) ? title : f.TaskId.ToString(),
+                Rating = f.Rating,
+                Comment = f.Comment,
+                FeedbackType = f.FeedbackType,
+                CreatedAt = f.CreatedAt
+            })
+            .ToList();
+    }
 }
