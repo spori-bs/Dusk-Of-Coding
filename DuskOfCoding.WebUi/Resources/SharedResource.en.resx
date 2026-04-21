@@ -80,7 +80,9 @@
   <data name="TaskEditor_FieldDescription" xml:space="preserve"><value>Description</value></data>
   <data name="TaskEditor_FieldDifficulty" xml:space="preserve"><value>Difficulty Level</value></data>
   <data name="TaskEditor_FieldTags" xml:space="preserve"><value>Tags (comma-separated)</value></data>
-  <data name="TaskEditor_FieldTestBundle" xml:space="preserve"><value>Test Bundle Reference</value></data>
+  <data name="TaskEditor_FieldNamespace" xml:space="preserve"><value>Namespace Declaration</value></data>
+  <data name="TaskEditor_FieldNamespacePlaceholder" xml:space="preserve"><value>e.g. DuskOfCoding.Solutions</value></data>
+  <data name="Practice_NamespaceWarning" xml:space="preserve"><value>⚠️ Your code is missing a namespace declaration. Add <code>namespace {0};</code> at the top of your file.</value></data>
   <data name="TaskEditor_SaveBeforeGeneratePrompt" xml:space="preserve"><value>The task must be saved before generating tests. Continue?</value></data>
   <data name="TaskEditor_GenerationStarted" xml:space="preserve"><value>AI test generation started...</value></data>
   <data name="TaskEditor_GenerationPollComplete" xml:space="preserve"><value>Generation may have completed — data refreshed.</value></data>
@@ -118,8 +120,8 @@
   <data name="Hero_Headline_L1" xml:space="preserve"><value>The last generation</value></data>
   <data name="Hero_Headline_L2" xml:space="preserve"><value>of developers who</value></data>
   <data name="Hero_Headline_L3" xml:space="preserve"><value>code alone.</value></data>
-  <data name="Hero_Sub" xml:space="preserve"><value>AI is the most powerful tool in history. Most developers will use it as a crutch. This platform is for the ones who won't.</value></data>
-  <data name="Hero_CTA_Primary" xml:space="preserve"><value>[ ENTER THE PLATFORM ]</value></data>
+  <data name="Hero_Sub" xml:space="preserve"><value>Prepare for the twilight of manual coding. Master the AI, decode the structure, and become the Architect.</value></data>
+  <data name="Hero_CTA_Primary" xml:space="preserve"><value>[ INITIATE UPLINK ]</value></data>
   <data name="Hero_CTA_Secondary" xml:space="preserve"><value>[ SEE HOW IT WAS BUILT ]</value></data>
   <data name="Hero_HowItWasMade" xml:space="preserve"><value>How It Was Made</value></data>
 
@@ -172,6 +174,48 @@
   <data name="Auth_TutorBadge" xml:space="preserve"><value>Tutor</value></data>
   <data name="Auth_StudentBadge" xml:space="preserve"><value>Student</value></data>
   <data name="Nav_Dashboard" xml:space="preserve"><value>Dashboard</value></data>
+
+  <!-- Tutor Dashboard -->
+  <data name="TutorDashboard_PageTitle" xml:space="preserve"><value>Tutor Dashboard — DuskOfCoding</value></data>
+  <data name="TutorDashboard_Title" xml:space="preserve"><value>Platform Overview</value></data>
+  <data name="TutorDashboard_ActiveStudents" xml:space="preserve"><value>Active Students</value></data>
+  <data name="TutorDashboard_AvailableTasks" xml:space="preserve"><value>Available Tasks</value></data>
+  <data name="TutorDashboard_TotalSubmissions" xml:space="preserve"><value>Total Submissions</value></data>
+  <data name="TutorDashboard_GlobalSuccessRate" xml:space="preserve"><value>Global Success Rate</value></data>
+  <data name="TutorDashboard_FeedbackAnalytics" xml:space="preserve"><value>Task Feedback Analytics</value></data>
+  <data name="TutorDashboard_ColTask" xml:space="preserve"><value>Task</value></data>
+  <data name="TutorDashboard_ColAvgRating" xml:space="preserve"><value>Avg Rating</value></data>
+  <data name="TutorDashboard_ColTotalFeedback" xml:space="preserve"><value>Total Feedback</value></data>
+  <data name="TutorDashboard_ColLatestActivity" xml:space="preserve"><value>Latest Activity</value></data>
+  <data name="TutorDashboard_Responses" xml:space="preserve"><value>responses</value></data>
+  <data name="TutorDashboard_AnalyticsComingSoon" xml:space="preserve"><value>Detailed Analytics Coming Soon</value></data>
+  <data name="TutorDashboard_AnalyticsComingSoonDesc" xml:space="preserve"><value>Future phases will introduce interactive graphs and task-level breakdowns.</value></data>
+  <data name="TutorDashboard_RecentFeedback" xml:space="preserve"><value>Recent Feedback Comments</value></data>
+  <data name="TutorDashboard_ColComment" xml:space="preserve"><value>Comment</value></data>
+  <data name="TutorDashboard_ColType" xml:space="preserve"><value>Type</value></data>
+  <data name="TutorDashboard_ColDate" xml:space="preserve"><value>Date</value></data>
+  <data name="TutorDashboard_ColRating" xml:space="preserve"><value>Rating</value></data>
+  <data name="TutorDashboard_NoComments" xml:space="preserve"><value>No feedback comments yet.</value></data>
+  <data name="TutorDashboard_LoadError" xml:space="preserve"><value>Failed to load dashboard data</value></data>
+  <data name="TutorDashboard_SystemMap" xml:space="preserve"><value>System Map</value></data>
+  <data name="TutorDashboard_AiProvider" xml:space="preserve"><value>AI Provider</value></data>
+  <data name="TutorDashboard_AiModel" xml:space="preserve"><value>Model</value></data>
+  <data name="TutorDashboard_SystemOnline" xml:space="preserve"><value>ONLINE</value></data>
+
+  <!-- Admin Telemetry -->
+  <data name="AdminTelemetry_PageTitle" xml:space="preserve"><value>Admin Telemetry — DuskOfCoding</value></data>
+  <data name="AdminTelemetry_Title" xml:space="preserve"><value>LLM Telemetry</value></data>
+  <data name="AdminTelemetry_TokenChart" xml:space="preserve"><value>Token Usage — Last 7 Days</value></data>
+  <data name="AdminTelemetry_RecentLogs" xml:space="preserve"><value>Recent LLM Logs</value></data>
+  <data name="AdminTelemetry_ColTimestamp" xml:space="preserve"><value>Timestamp</value></data>
+  <data name="AdminTelemetry_ColTask" xml:space="preserve"><value>Task</value></data>
+  <data name="AdminTelemetry_ColModel" xml:space="preserve"><value>Model</value></data>
+  <data name="AdminTelemetry_ColTokens" xml:space="preserve"><value>Tokens</value></data>
+  <data name="AdminTelemetry_ColStatus" xml:space="preserve"><value>Status</value></data>
+  <data name="AdminTelemetry_StatusOk" xml:space="preserve"><value>OK</value></data>
+  <data name="AdminTelemetry_StatusFail" xml:space="preserve"><value>FAIL</value></data>
+  <data name="AdminTelemetry_NoData" xml:space="preserve"><value>No telemetry data yet.</value></data>
+  <data name="AdminTelemetry_NavLink" xml:space="preserve"><value>Telemetry</value></data>
 
   <!-- Access Denied -->
   <data name="AccessDenied_Title" xml:space="preserve"><value>Access Denied</value></data>

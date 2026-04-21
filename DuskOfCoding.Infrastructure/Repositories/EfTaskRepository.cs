@@ -32,6 +32,15 @@ public class EfTaskRepository : ITaskRepository
 
     public async Task UpdateAsync(TaskDefinition task, CancellationToken ct = default)
     {
+        // Detach associated tests from the tracker before saving task scalars.
+        // Tests are managed exclusively via ReplaceTestsAsync — letting them stay
+        // tracked here causes phantom state after the subsequent bulk delete.
+        foreach (var e in _db.ChangeTracker.Entries<TaskTest>()
+            .Where(e => e.Entity.TaskDefinitionId == task.Id).ToList())
+        {
+            e.State = EntityState.Detached;
+        }
+
         var entry = _db.Entry(task);
         if (entry.State == EntityState.Detached)
         {
@@ -52,17 +61,24 @@ public class EfTaskRepository : ITaskRepository
 
     public async Task ReplaceTestsAsync(Guid taskId, IEnumerable<TaskTest> tests, CancellationToken ct = default)
     {
-        // Phase 22.3: Disconnected update to avoid DbUpdateConcurrencyException
+        // Detach any stale tracked tests before bulk delete to prevent phantom tracking
+        foreach (var e in _db.ChangeTracker.Entries<TaskTest>()
+            .Where(e => e.Entity.TaskDefinitionId == taskId).ToList())
+        {
+            e.State = EntityState.Detached;
+        }
+
         await _db.TaskTests
             .Where(t => t.TaskDefinitionId == taskId)
             .ExecuteDeleteAsync(ct);
 
-        foreach (var test in tests)
+        var testList = tests.ToList();
+        foreach (var test in testList)
         {
             test.TaskDefinitionId = taskId;
         }
 
-        _db.TaskTests.AddRange(tests);
+        _db.TaskTests.AddRange(testList);
         await _db.SaveChangesAsync(ct);
     }
 }

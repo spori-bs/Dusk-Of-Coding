@@ -1,0 +1,250 @@
+@page "/admin/telemetry"
+@using DuskOfCoding.WebUi.Resources
+@using DuskOfCoding.WebUi.DTOs
+@attribute [Microsoft.AspNetCore.Authorization.Authorize(Roles = AppRoles.Admin)]
+@inject DuskOfCoding.WebUi.Services.ApiClient Api
+@inject IStringLocalizer<SharedResource> L
+@rendermode InteractiveServer
+
+<PageTitle>@L["AdminTelemetry_PageTitle"]</PageTitle>
+
+<div class="ck-section-header mb-5">
+    <span class="ck-section-prefix">// 01</span>
+    <h2 class="ck-section-title">@L["AdminTelemetry_Title"]</h2>
+    <div class="ck-section-line"></div>
+    <span class="ck-status-dot"></span>
+</div>
+
+@if (_isLoading)
+{
+    <div class="d-flex justify-content-center py-5">
+        <div class="spinner-border text-primary" role="status"></div>
+    </div>
+}
+else
+{
+    @if (!string.IsNullOrEmpty(_errorMessage))
+    {
+        <div class="alert alert-danger ck-panel border-danger mb-4">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i> @_errorMessage
+        </div>
+    }
+
+    <!-- // 01 Token Usage SVG Bar Chart -->
+    <div class="ck-panel p-4 mb-5">
+        <div class="ck-section-header mb-4">
+            <span class="ck-section-prefix">// 01</span>
+            <span class="ck-section-title">@L["AdminTelemetry_TokenChart"]</span>
+            <div class="ck-section-line"></div>
+        </div>
+
+        @if (_dailyUsage == null || !_dailyUsage.Any())
+        {
+            <p class="text-white-50"><i class="bi bi-bar-chart me-2"></i>@L["AdminTelemetry_NoData"]</p>
+        }
+        else
+        {
+            <div class="w-100" style="overflow-x:auto;">
+                @((MarkupString)BuildTokenChart(_dailyUsage))
+            </div>
+        }
+    </div>
+
+    <!-- // 02 Recent LLM Logs table -->
+    <div class="ck-panel p-4">
+        <div class="ck-section-header mb-4">
+            <span class="ck-section-prefix">// 02</span>
+            <span class="ck-section-title">@L["AdminTelemetry_RecentLogs"]</span>
+            <div class="ck-section-line"></div>
+        </div>
+
+        @if (_recentLogs == null || !_recentLogs.Any())
+        {
+            <p class="text-white-50"><i class="bi bi-journal-x me-2"></i>@L["AdminTelemetry_NoData"]</p>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-dark table-hover align-middle mb-0 ck-table" style="font-size:.8rem;">
+                    <thead class="text-uppercase text-white-50" style="font-size:.7rem;letter-spacing:.05em;">
+                        <tr>
+                            <th>@L["AdminTelemetry_ColTimestamp"]</th>
+                            <th>@L["AdminTelemetry_ColTask"]</th>
+                            <th>@L["AdminTelemetry_ColModel"]</th>
+                            <th class="text-end">@L["AdminTelemetry_ColTokens"]</th>
+                            <th class="text-center">@L["AdminTelemetry_ColStatus"]</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var log in _recentLogs)
+                        {
+                            <tr style="cursor: pointer" @onclick="() => ToggleDetails(log.Id)">
+                                <td class="text-secondary text-nowrap">
+                                    @log.Timestamp.ToLocalTime().ToString("MM/dd HH:mm:ss")
+                                </td>
+                                <td class="text-white-75">
+                                    @(log.TaskTitle ?? (log.TaskId.HasValue ? log.TaskId.Value.ToString()[..8] + "…" : "—"))
+                                </td>
+                                <td class="text-secondary text-nowrap">@log.ModelName</td>
+                                <td class="text-end fw-bold text-white">@log.TokenCount</td>
+                                <td class="text-center">
+                                    @if (log.IsSuccess)
+                                    {
+                                        <span class="badge" style="background:rgba(34,197,94,.15);color:#22c55e;border:1px solid #22c55e33;">
+                                            @L["AdminTelemetry_StatusOk"]
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge" style="background:rgba(239,68,68,.15);color:#ef4444;border:1px solid #ef444433;">
+                                            @L["AdminTelemetry_StatusFail"]
+                                        </span>
+                                    }
+                                </td>
+                            </tr>
+                            @if (_selectedLogId == log.Id)
+                            {
+                                <tr>
+                                    <td colspan="5" class="bg-dark p-4 border-top border-secondary">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h6 class="text-light">Prompt</h6>
+                                                <pre class="bg-black p-3 text-white-50 rounded" style="white-space: pre-wrap; font-size: 0.8rem; max-height: 300px; overflow-y: auto;">@GetFormattedPrompt(log.Payload)</pre>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <h6 class="text-light">Response</h6>
+                                                <pre class="bg-black p-3 text-success rounded" style="white-space: pre-wrap; font-size: 0.8rem; max-height: 300px; overflow-y: auto;">@GetFormattedResponse(log.Payload)</pre>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    private bool _isLoading = true;
+    private string? _errorMessage;
+    private List<LlmTelemetryDto>? _recentLogs;
+    private List<DailyTokenUsageDto>? _dailyUsage;
+    private Guid? _selectedLogId;
+
+    private void ToggleDetails(Guid logId)
+    {
+        if (_selectedLogId == logId)
+            _selectedLogId = null;
+        else
+            _selectedLogId = logId;
+    }
+
+    private string GetFormattedPrompt(string payload)
+    {
+        if (string.IsNullOrWhiteSpace(payload)) return "No prompt available.";
+        try
+        {
+            using var doc = System.Text.Json.JsonDocument.Parse(payload);
+            var root = doc.RootElement;
+            var sys = root.TryGetProperty("SystemPrompt", out var s) ? s.GetString() : string.Empty;
+            var user = root.TryGetProperty("UserPrompt", out var u) ? u.GetString() : string.Empty;
+            var hasChat = root.TryGetProperty("ChatMessages", out var c);
+
+            if (hasChat)
+            {
+                return c.GetRawText();
+            }
+
+            return $"System:\n{sys}\n\nUser:\n{user}";
+        }
+        catch
+        {
+            return "Unable to parse payload.";
+        }
+    }
+
+    private string GetFormattedResponse(string payload)
+    {
+        if (string.IsNullOrWhiteSpace(payload)) return "No response available.";
+        try
+        {
+            using var doc = System.Text.Json.JsonDocument.Parse(payload);
+            return doc.RootElement.TryGetProperty("RawResponse", out var r) ? r.GetString() ?? "" : "No RawResponse property.";
+        }
+        catch
+        {
+            return "Unable to parse payload.";
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _isLoading = true;
+        try
+        {
+            var logsResult = await Api.GetRecentTelemetryAsync();
+            if (logsResult.IsSuccess)
+                _recentLogs = logsResult.Value;
+            else
+                _errorMessage = logsResult.ErrorMessage;
+
+            var usageResult = await Api.GetDailyTokenUsageAsync();
+            if (usageResult.IsSuccess)
+                _dailyUsage = usageResult.Value;
+        }
+        catch (Exception ex)
+        {
+            _errorMessage = $"{L["AdminTelemetry_Title"]}: {ex.Message}";
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+
+    private static string BuildTokenChart(List<DailyTokenUsageDto> data)
+    {
+        const int chartW = 700;
+        const int chartH = 200;
+        const int paddingLeft = 10;
+        const int paddingRight = 10;
+        const int paddingBottom = 36;
+        const int paddingTop = 16;
+        int maxBarH = chartH - paddingTop - paddingBottom;
+        int barCount = data.Count;
+        int totalBarArea = chartW - paddingLeft - paddingRight;
+        int barW = Math.Max(6, totalBarArea / Math.Max(1, barCount) - 8);
+        int gap = (totalBarArea - barW * barCount) / Math.Max(1, barCount + 1);
+        int maxTokens = Math.Max(1, data.Max(d => d.TotalTokens));
+
+        var sb = new System.Text.StringBuilder();
+        sb.Append($"<svg viewBox=\"0 0 {chartW} {chartH}\" style=\"width:100%;max-width:{chartW}px;display:block;\" aria-label=\"Token usage bar chart\">");
+        sb.Append($"<line x1=\"{paddingLeft}\" y1=\"{chartH - paddingBottom}\" x2=\"{chartW - paddingRight}\" y2=\"{chartH - paddingBottom}\" stroke=\"#444\" stroke-width=\"1\"/>");
+
+        for (int i = 0; i < data.Count; i++)
+        {
+            var day = data[i];
+            int barH = Math.Max(2, (int)((double)day.TotalTokens / maxTokens * maxBarH));
+            int x = paddingLeft + gap + i * (barW + gap);
+            int y = chartH - paddingBottom - barH;
+            string dateLabel = day.Date.ToString("MM/dd");
+            string tokenLabel = day.TotalTokens >= 1000
+                ? $"{day.TotalTokens / 1000.0:0.#}k"
+                : day.TotalTokens.ToString();
+
+            sb.Append($"<g>");
+            sb.Append($"<title>{dateLabel} — {day.TotalTokens} tokens</title>");
+            sb.Append($"<rect x=\"{x}\" y=\"{y}\" width=\"{barW}\" height=\"{barH}\" fill=\"var(--ck-amber,#f59e0b)\" opacity=\"0.85\" rx=\"2\"/>");
+            if (barH > 14)
+                sb.Append($"<text x=\"{x + barW / 2}\" y=\"{y - 4}\" text-anchor=\"middle\" fill=\"#f59e0b\" font-size=\"9\" font-family=\"monospace\">{tokenLabel}</text>");
+            sb.Append($"<text x=\"{x + barW / 2}\" y=\"{chartH - paddingBottom + 14}\" text-anchor=\"middle\" fill=\"#888\" font-size=\"9\" font-family=\"monospace\">{dateLabel}</text>");
+            sb.Append("</g>");
+        }
+
+        sb.Append("</svg>");
+        return sb.ToString();
+    }
+}

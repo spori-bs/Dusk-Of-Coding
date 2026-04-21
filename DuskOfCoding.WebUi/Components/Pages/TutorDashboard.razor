@@ -1,14 +1,16 @@
 @page "/tutor"
 @using DuskOfCoding.Domain.Constants
+@using DuskOfCoding.WebUi.Resources
 @attribute [Microsoft.AspNetCore.Authorization.Authorize(Roles = AppRoles.Tutor + "," + AppRoles.Admin)]
 @inject DuskOfCoding.WebUi.Services.ApiClient Api
+@inject IStringLocalizer<SharedResource> L
 @using DuskOfCoding.WebUi.DTOs
 
-<PageTitle>Tutor Dashboard — DuskOfCoding</PageTitle>
+<PageTitle>@L["TutorDashboard_PageTitle"]</PageTitle>
 
 <div class="ck-section-header mb-5">
     <span class="ck-section-prefix">// 01</span>
-    <h2 class="ck-section-title">Platform Overview</h2>
+    <h2 class="ck-section-title">@L["TutorDashboard_Title"]</h2>
     <div class="ck-section-line"></div>
     <span class="ck-status-dot"></span>
 </div>
@@ -21,7 +23,7 @@
 }
 else if (!string.IsNullOrEmpty(_errorMessage))
 {
-    <div class="alert alert-danger dusk-glass-panel border-danger shadow-sm mb-4">
+    <div class="alert alert-danger ck-panel border-danger shadow-sm mb-4">
         <i class="bi bi-exclamation-triangle-fill me-2"></i> @_errorMessage
     </div>
 }
@@ -33,48 +35,48 @@ else if (_stats != null)
             <div class="ck-panel ck-card-top p-4 h-100 text-center">
                 <i class="bi bi-people display-4 text-info mb-3"></i>
                 <h3 class="fw-bold text-white mb-1">@_stats.TotalStudents</h3>
-                <span class="text-white-50 small text-uppercase fw-semibold">Active Students</span>
+                <span class="text-white-50 small text-uppercase fw-semibold">@L["TutorDashboard_ActiveStudents"]</span>
             </div>
         </div>
         <div class="col-md-3">
             <div class="ck-panel p-4 h-100 text-center">
                 <i class="bi bi-list-task display-4 text-warning mb-3"></i>
                 <h3 class="fw-bold text-white mb-1">@_stats.TotalTasks</h3>
-                <span class="text-white-50 small text-uppercase fw-semibold">Available Tasks</span>
+                <span class="text-white-50 small text-uppercase fw-semibold">@L["TutorDashboard_AvailableTasks"]</span>
             </div>
         </div>
         <div class="col-md-3">
             <div class="ck-panel p-4 h-100 text-center">
                 <i class="bi bi-hdd-network display-4 text-primary mb-3"></i>
                 <h3 class="fw-bold text-white mb-1">@_stats.TotalSubmissions</h3>
-                <span class="text-white-50 small text-uppercase fw-semibold">Total Submissions</span>
+                <span class="text-white-50 small text-uppercase fw-semibold">@L["TutorDashboard_TotalSubmissions"]</span>
             </div>
         </div>
         <div class="col-md-3">
             <div class="ck-panel p-4 h-100 text-center">
                 <i class="bi bi-bullseye display-4 text-success mb-3"></i>
                 <h3 class="fw-bold text-white mb-1">@_stats.SuccessRate%</h3>
-                <span class="text-white-50 small text-uppercase fw-semibold">Global Success Rate</span>
+                <span class="text-white-50 small text-uppercase fw-semibold">@L["TutorDashboard_GlobalSuccessRate"]</span>
             </div>
         </div>
     </div>
-    
+
     @if (_feedbackOverview != null && _feedbackOverview.Any())
     {
         <div class="mt-5 ck-panel p-4">
             <div class="ck-section-header mb-4">
                 <span class="ck-section-prefix">// 02</span>
-                <span class="ck-section-title">Task Feedback Analytics</span>
+                <span class="ck-section-title">@L["TutorDashboard_FeedbackAnalytics"]</span>
                 <div class="ck-section-line"></div>
             </div>
             <div class="table-responsive">
                 <table class="table table-dark table-hover align-middle mb-0 ck-table">
                     <thead class="text-uppercase small text-white-50">
                         <tr>
-                            <th>Task</th>
-                            <th class="text-center">Avg Rating</th>
-                            <th class="text-center">Total Feedback</th>
-                            <th class="text-end">Latest Activity</th>
+                            <th>@L["TutorDashboard_ColTask"]</th>
+                            <th class="text-center">@L["TutorDashboard_ColAvgRating"]</th>
+                            <th class="text-center">@L["TutorDashboard_ColTotalFeedback"]</th>
+                            <th class="text-end">@L["TutorDashboard_ColLatestActivity"]</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -88,7 +90,7 @@ else if (_stats != null)
                                         <span class="fs-5 fw-bold">@fb.AverageRating.ToString("0.0")</span>
                                     </div>
                                 </td>
-                                <td class="text-center text-secondary">@fb.FeedbackCount responses</td>
+                                <td class="text-center text-secondary">@fb.FeedbackCount @L["TutorDashboard_Responses"]</td>
                                 <td class="text-end text-secondary small">@fb.LatestFeedbackDate.ToLocalTime().ToString("MMM dd, HH:mm")</td>
                             </tr>
                         }
@@ -101,10 +103,122 @@ else if (_stats != null)
     {
         <div class="mt-5 ck-panel p-5 text-center">
             <i class="bi bi-bar-chart-line display-1 text-secondary opacity-25 mb-4 d-block"></i>
-            <h4 class="text-white">Detailed Analytics Coming Soon</h4>
-            <p class="text-white-50 mb-0">Future phases will introduce interactive graphs and task-level breakdowns.</p>
+            <h4 class="text-white">@L["TutorDashboard_AnalyticsComingSoon"]</h4>
+            <p class="text-white-50 mb-0">@L["TutorDashboard_AnalyticsComingSoonDesc"]</p>
         </div>
     }
+
+    <!-- // 03 Recent Feedback Comments -->
+    <div class="mt-5 ck-panel p-4">
+        <div class="ck-section-header mb-4">
+            <span class="ck-section-prefix">// 03</span>
+            <span class="ck-section-title">@L["TutorDashboard_RecentFeedback"]</span>
+            <div class="ck-section-line"></div>
+        </div>
+
+        @if (_recentComments == null || !_recentComments.Any())
+        {
+            <p class="text-white-50 mb-0"><i class="bi bi-chat-square-text me-2"></i>@L["TutorDashboard_NoComments"]</p>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-dark table-hover align-middle mb-0 ck-table">
+                    <thead class="text-uppercase small text-white-50">
+                        <tr>
+                            <th>@L["TutorDashboard_ColTask"]</th>
+                            <th>@L["TutorDashboard_ColComment"]</th>
+                            <th class="text-center">@L["TutorDashboard_ColRating"]</th>
+                            <th class="text-center">@L["TutorDashboard_ColType"]</th>
+                            <th class="text-end">@L["TutorDashboard_ColDate"]</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in _recentComments)
+                        {
+                            <tr>
+                                <td class="fw-semibold text-nowrap">@item.TaskTitle</td>
+                                <td class="text-white-75 small" style="max-width:320px; word-break:break-word;">@item.Comment</td>
+                                <td class="text-center">
+                                    @if (item.Rating > 0)
+                                    {
+                                        <span class="text-warning"><i class="bi bi-star-fill me-1"></i>@item.Rating</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-secondary">—</span>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge ck-badge-secondary text-uppercase small">@item.FeedbackType</span>
+                                </td>
+                                <td class="text-end text-secondary small text-nowrap">@item.CreatedAt.ToLocalTime().ToString("MMM dd, HH:mm")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+
+    <!-- // 04 System Map -->
+    <div class="mt-5 ck-panel p-4">
+        <div class="ck-section-header mb-4">
+            <span class="ck-section-prefix">// 04</span>
+            <span class="ck-section-title">@L["TutorDashboard_SystemMap"]</span>
+            <div class="ck-section-line"></div>
+            <span class="ck-status-dot"></span>
+        </div>
+        <div class="row g-3">
+            <div class="col-auto">
+                <div class="ck-panel p-3 d-flex align-items-center gap-3">
+                    <i class="bi bi-cpu-fill fs-4 text-warning"></i>
+                    <div>
+                        <div class="text-white-50 small text-uppercase fw-semibold">@L["TutorDashboard_AiProvider"]</div>
+                        <div class="fw-bold text-white">
+                            @if (_llmProvider is not null)
+                            {
+                                @_llmProvider.Provider
+                            }
+                            else
+                            {
+                                <span class="text-secondary">—</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-auto">
+                <div class="ck-panel p-3 d-flex align-items-center gap-3">
+                    <i class="bi bi-diagram-3-fill fs-4 text-info"></i>
+                    <div>
+                        <div class="text-white-50 small text-uppercase fw-semibold">@L["TutorDashboard_AiModel"]</div>
+                        <div class="fw-bold text-white">
+                            @if (_llmProvider is not null)
+                            {
+                                @_llmProvider.ModelId
+                            }
+                            else
+                            {
+                                <span class="text-secondary">—</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-auto">
+                <div class="ck-panel p-3 d-flex align-items-center gap-3">
+                    <i class="bi bi-activity fs-4 text-success"></i>
+                    <div>
+                        <div class="text-white-50 small text-uppercase fw-semibold">Status</div>
+                        <div class="fw-bold" style="color: var(--ck-amber, #f59e0b);">
+                            @L["TutorDashboard_SystemOnline"]
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 }
 
 @code {
@@ -112,31 +226,35 @@ else if (_stats != null)
     private string? _errorMessage;
     private TutorStatsDto? _stats;
     private List<TaskFeedbackOverviewDto>? _feedbackOverview;
+    private List<RecentFeedbackItemDto>? _recentComments;
+    private LlmProviderStatusDto? _llmProvider;
 
     protected override async Task OnInitializedAsync()
     {
         _isLoading = true;
         try
         {
-            var result = await Api.GetTutorStatsAsync();
-            if (result.IsSuccess)
-            {
-                _stats = result.Value;
-            }
+            var statsResult = await Api.GetTutorStatsAsync();
+            if (statsResult.IsSuccess)
+                _stats = statsResult.Value;
             else
-            {
-                _errorMessage = result.ErrorMessage;
-            }
+                _errorMessage = statsResult.ErrorMessage;
 
             var feedbackResult = await Api.GetTutorFeedbackOverviewAsync();
             if (feedbackResult.IsSuccess)
-            {
                 _feedbackOverview = feedbackResult.Value;
-            }
+
+            var commentsResult = await Api.GetRecentFeedbackCommentsAsync();
+            if (commentsResult.IsSuccess)
+                _recentComments = commentsResult.Value;
+
+            var providerResult = await Api.GetLlmProviderAsync();
+            if (providerResult.IsSuccess)
+                _llmProvider = providerResult.Value;
         }
         catch (Exception ex)
         {
-            _errorMessage = $"Failed to load dashboard data: {ex.Message}";
+            _errorMessage = $"{L["TutorDashboard_LoadError"]}: {ex.Message}";
         }
         finally
         {
@@ -144,3 +262,4 @@ else if (_stats != null)
         }
     }
 }
+

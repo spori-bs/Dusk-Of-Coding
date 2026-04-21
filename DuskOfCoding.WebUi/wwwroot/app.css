@@ -115,6 +115,32 @@ a:hover, .btn-link:hover {
     font-size: 0.85rem;
     transition: border-color 0.2s;
 }
+
+/* ── Phase 30: Code Archeologist Glitch Effect ───────────────── */
+@keyframes hieroglyphGlitch {
+    0%, 100% { font-family: var(--ck-font); letter-spacing: normal; opacity: 1; }
+    10% { font-family: 'Wingdings', 'Webdings', var(--ck-font); letter-spacing: 0.1em; opacity: 0.8; }
+    20% { font-family: var(--ck-font); opacity: 0.4; }
+    30% { font-family: 'Wingdings', 'Webdings', var(--ck-font); opacity: 0.9; }
+    40% { font-family: var(--ck-font); opacity: 1; }
+    50% { font-family: 'Wingdings', 'Webdings', var(--ck-font); letter-spacing: 0.2em; opacity: 0.5; }
+    60% { font-family: var(--ck-font); opacity: 0.3; }
+    80% { font-family: 'Wingdings', 'Webdings', var(--ck-font); opacity: 0.7; }
+    90% { font-family: var(--ck-font); opacity: 0.8; }
+}
+
+.code-hieroglyphs {
+    font-family: var(--ck-font);
+    color: var(--ck-muted);
+    animation: hieroglyphGlitch 4s infinite linear;
+}
+
+.code-hieroglyphs:hover {
+    animation: none;
+    font-family: var(--ck-font);
+    color: var(--ck-amber);
+    opacity: 1;
+}
 .ck-input:focus {
     background-color: #111113;
     border-color: var(--ck-amber);

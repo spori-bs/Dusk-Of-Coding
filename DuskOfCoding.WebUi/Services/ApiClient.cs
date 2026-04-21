@@ -350,5 +350,89 @@ public class ApiClient
             return Result<List<TaskFeedbackOverviewDto>>.Failure(_localizer["Error_Network", ex.Message]);
         }
     }
+
+    public async Task<Result<List<RecentFeedbackItemDto>>> GetRecentFeedbackCommentsAsync(CancellationToken ct = default)
+    {
+        try
+        {
+            await EnsureAuthHeaderAsync();
+            var response = await _http.GetAsync("/feedback/recent-comments", ct);
+            if (HandleAuthErrors(response)) return Result<List<RecentFeedbackItemDto>>.Failure(string.Empty);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var data = await response.Content.ReadFromJsonAsync<List<RecentFeedbackItemDto>>(cancellationToken: ct) ?? new();
+                return Result<List<RecentFeedbackItemDto>>.Success(data);
+            }
+            return Result<List<RecentFeedbackItemDto>>.Failure($"Failed to load recent feedback: {response.StatusCode}");
+        }
+        catch (HttpRequestException ex)
+        {
+            return Result<List<RecentFeedbackItemDto>>.Failure(_localizer["Error_Network", ex.Message]);
+        }
+    }
+
+    public async Task<Result<LlmProviderStatusDto>> GetLlmProviderAsync(CancellationToken ct = default)
+    {
+        try
+        {
+            await EnsureAuthHeaderAsync();
+            var response = await _http.GetAsync("/system/llm-provider", ct);
+            if (HandleAuthErrors(response)) return Result<LlmProviderStatusDto>.Failure(string.Empty);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var data = await response.Content.ReadFromJsonAsync<LlmProviderStatusDto>(cancellationToken: ct);
+                return Result<LlmProviderStatusDto>.Success(data!);
+            }
+            return Result<LlmProviderStatusDto>.Failure($"Failed to fetch provider status: {response.StatusCode}");
+        }
+        catch (HttpRequestException ex)
+        {
+            return Result<LlmProviderStatusDto>.Failure(_localizer["Error_Network", ex.Message]);
+        }
+    }
+
+    public async Task<Result<List<LlmTelemetryDto>>> GetRecentTelemetryAsync(CancellationToken ct = default)
+    {
+        try
+        {
+            await EnsureAuthHeaderAsync();
+            var response = await _http.GetAsync("/admin/telemetry/recent", ct);
+            if (HandleAuthErrors(response)) return Result<List<LlmTelemetryDto>>.Failure(string.Empty);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var data = await response.Content.ReadFromJsonAsync<List<LlmTelemetryDto>>(cancellationToken: ct) ?? new();
+                return Result<List<LlmTelemetryDto>>.Success(data);
+            }
+            return Result<List<LlmTelemetryDto>>.Failure($"Failed to fetch telemetry: {response.StatusCode}");
+        }
+        catch (HttpRequestException ex)
+        {
+            return Result<List<LlmTelemetryDto>>.Failure(_localizer["Error_Network", ex.Message]);
+        }
+    }
+
+    public async Task<Result<List<DailyTokenUsageDto>>> GetDailyTokenUsageAsync(CancellationToken ct = default)
+    {
+        try
+        {
+            await EnsureAuthHeaderAsync();
+            var response = await _http.GetAsync("/admin/telemetry/daily-tokens", ct);
+            if (HandleAuthErrors(response)) return Result<List<DailyTokenUsageDto>>.Failure(string.Empty);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var data = await response.Content.ReadFromJsonAsync<List<DailyTokenUsageDto>>(cancellationToken: ct) ?? new();
+                return Result<List<DailyTokenUsageDto>>.Success(data);
+            }
+            return Result<List<DailyTokenUsageDto>>.Failure($"Failed to fetch daily token usage: {response.StatusCode}");
+        }
+        catch (HttpRequestException ex)
+        {
+            return Result<List<DailyTokenUsageDto>>.Failure(_localizer["Error_Network", ex.Message]);
+        }
+    }
 }
 

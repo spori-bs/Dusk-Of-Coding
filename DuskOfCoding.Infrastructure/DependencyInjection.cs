@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using DuskOfCoding.Application.Services;
 using DuskOfCoding.Domain.Interfaces;
 using DuskOfCoding.Infrastructure.Messaging;
 using DuskOfCoding.Infrastructure.Persistence;
@@ -32,6 +33,7 @@ public static class DependencyInjection
         services.AddScoped<ITaskRepository, EfTaskRepository>();
         services.AddScoped<ISubmissionRepository, EfSubmissionRepository>();
         services.AddScoped<IFeedbackRepository, EfFeedbackRepository>();
+        services.AddScoped<ITelemetryService, TelemetryService>();
         services.AddConfigurableChatClient();
         services.AddScoped<IAIReviewService, AiReviewService>();
 

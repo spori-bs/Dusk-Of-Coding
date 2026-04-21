@@ -39,6 +39,7 @@ public sealed record GenerateTestSuiteCommand
     public required string Title { get; init; }
     public required string Description { get; init; }
     public required string ExpectedClassName { get; init; } = "Solution";
+    public string Namespace { get; init; } = string.Empty;
     /// <summary>Keycloak sub-claim (user ID) for targeted SignalR notification.</summary>
     public required string UserId { get; init; }
 }

@@ -73,6 +73,15 @@ else
                         <InputText id="expectedClassName" class="form-control ck-input font-monospace" @bind-Value="_model.ExpectedClassName" placeholder="e.g. Calculator, default: Solution" />
                     </div>
 
+                    <div class="mb-4">
+                        <label for="namespace" class="form-label text-secondary small fw-semibold text-uppercase tracking-wider">@L["TaskEditor_FieldNamespace"]</label>
+                        <InputText id="namespace" class="form-control ck-input font-monospace" @bind-Value="_model.Namespace" placeholder="@L["TaskEditor_FieldNamespacePlaceholder"]" />
+                        <div class="form-text text-secondary small mt-1">
+                            <i class="bi bi-info-circle me-1"></i>
+                            Used in generated starter code and AI-generated unit tests. Leave empty to use the global namespace.
+                        </div>
+                    </div>
+
                     <!-- TEST ENGINEERING SECTION -->
                     <div class="mt-5 mb-5 border-top border-secondary border-opacity-25 pt-5">
                         <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
@@ -269,6 +278,7 @@ else
             _tagsInput = string.Join(", ", task.Tags);
             _model.Tests = task.Tests ?? new List<TaskTestDto>();
             _model.ExpectedClassName = task.ExpectedClassName ?? "Solution";
+            _model.Namespace = task.Namespace ?? string.Empty;
 
             // Reset editor state and select first test
             _isEditorReady = false;
@@ -478,7 +488,8 @@ else
                 DifficultyLevel = _model.DifficultyLevel,
                 Tags = _model.Tags,
                 Tests = _model.Tests,
-                ExpectedClassName = _model.ExpectedClassName
+                ExpectedClassName = _model.ExpectedClassName,
+                Namespace = _model.Namespace
             };
             var result = await Api.UpdateTaskAsync(Id!.Value, updateDto);
             if (!result.IsSuccess)

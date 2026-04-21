@@ -130,7 +130,7 @@ public sealed class TestGenerationWorkerService : BackgroundService
 
     private async Task<List<(string Name, string Code)>> InvokeLlmAsync(GenerateTestSuiteCommand command, CancellationToken ct)
     {
-        var instruction = GenerateTestsPrompt.GetInstruction(command.ExpectedClassName);
+        var instruction = GenerateTestsPrompt.GetInstruction(command.ExpectedClassName, command.Namespace);
         var userContent = $"{instruction}\n\nTask Title: {command.Title}\nDescription: {command.Description}";
 
         var messages = new List<ChatMessage>

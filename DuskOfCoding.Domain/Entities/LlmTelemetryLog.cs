@@ -11,7 +11,10 @@ public class LlmTelemetryLog
     public string ModelName { get; init; } = string.Empty;
     public int TokenCount { get; init; }
     public bool IsSuccess { get; init; }
-    
+
     // Unindexed "Dump" column for raw request/response data
-    public string Payload { get; init; } = string.Empty; 
+    public string Payload { get; init; } = string.Empty;
+
+    // Navigation property (optional — TaskId is nullable)
+    public TaskDefinition? Task { get; init; }
 }

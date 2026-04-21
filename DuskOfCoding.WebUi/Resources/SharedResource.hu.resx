@@ -80,7 +80,9 @@
   <data name="TaskEditor_FieldDescription" xml:space="preserve"><value>Leírás</value></data>
   <data name="TaskEditor_FieldDifficulty" xml:space="preserve"><value>Nehézségi szint</value></data>
   <data name="TaskEditor_FieldTags" xml:space="preserve"><value>Címkék (vesszővel elválasztva)</value></data>
-  <data name="TaskEditor_FieldTestBundle" xml:space="preserve"><value>Teszt csomag referencia</value></data>
+  <data name="TaskEditor_FieldNamespace" xml:space="preserve"><value>Névtér deklaráció</value></data>
+  <data name="TaskEditor_FieldNamespacePlaceholder" xml:space="preserve"><value>pl. DuskOfCoding.Megoldasok</value></data>
+  <data name="Practice_NamespaceWarning" xml:space="preserve"><value>⚠️ A kódodból hiányzik a névtér deklaráció. Add hozzá: <code>namespace {0};</code> a fájl elejéhez.</value></data>
   <data name="TaskEditor_SaveBeforeGeneratePrompt" xml:space="preserve"><value>A teszt generáláshoz először menteni kell. Folytatod?</value></data>
   <data name="TaskEditor_GenerationStarted" xml:space="preserve"><value>Az AI teszt generálás megkezdődött...</value></data>
   <data name="TaskEditor_GenerationPollComplete" xml:space="preserve"><value>A generálás befejeződhetett — adatok frissítve.</value></data>
@@ -112,14 +114,14 @@
   <data name="Landing_PageTitle" xml:space="preserve"><value>Dusk of Coding — A platform mérnököknek, akik nem rendelik alá magukat az MI-nek</value></data>
   <data name="Landing_Practice" xml:space="preserve"><value>Gyakorlás</value></data>
   <data name="Landing_ManageTasks" xml:space="preserve"><value>Feladatok</value></data>
-  <data name="Landing_GetStarted" xml:space="preserve"><value>Belépés</value></data>
+  <data name="Landing_GetStarted" xml:space="preserve"><value>Regisztráció</value></data>
 
   <!-- Hero -->
   <data name="Hero_Headline_L1" xml:space="preserve"><value>Az utolsó generáció,</value></data>
   <data name="Hero_Headline_L2" xml:space="preserve"><value>amely még önállóan</value></data>
   <data name="Hero_Headline_L3" xml:space="preserve"><value>írja a kódot.</value></data>
-  <data name="Hero_Sub" xml:space="preserve"><value>Az MI a történelem legerősebb eszköze. A legtöbb fejlesztő mankóként használja. Ez a platform azoknak szól, akik nem hajlandóak erre.</value></data>
-  <data name="Hero_CTA_Primary" xml:space="preserve"><value>[ BELÉPÉS A PLATFORMRA ]</value></data>
+  <data name="Hero_Sub" xml:space="preserve"><value>Készülj fel a kézi kódolás alkonyára. Urald az MI-t, dekódold a struktúrát, és válj Architektussá.</value></data>
+  <data name="Hero_CTA_Primary" xml:space="preserve"><value>[ UPLINK INICIALIZÁLÁSA ]</value></data>
   <data name="Hero_CTA_Secondary" xml:space="preserve"><value>[ ÍGY KÉSZÜLT ]</value></data>
   <data name="Hero_HowItWasMade" xml:space="preserve"><value>Így Készült</value></data>
 
@@ -181,6 +183,48 @@
   <data name="Auth_TutorBadge" xml:space="preserve"><value>Oktató</value></data>
   <data name="Auth_StudentBadge" xml:space="preserve"><value>Hallgató</value></data>
   <data name="Nav_Dashboard" xml:space="preserve"><value>Irányítópult</value></data>
+
+  <!-- Tutor Dashboard -->
+  <data name="TutorDashboard_PageTitle" xml:space="preserve"><value>Tutor Irányítópult — DuskOfCoding</value></data>
+  <data name="TutorDashboard_Title" xml:space="preserve"><value>Platform Áttekintés</value></data>
+  <data name="TutorDashboard_ActiveStudents" xml:space="preserve"><value>Aktív Diákok</value></data>
+  <data name="TutorDashboard_AvailableTasks" xml:space="preserve"><value>Elérhető Feladatok</value></data>
+  <data name="TutorDashboard_TotalSubmissions" xml:space="preserve"><value>Összes Beküldés</value></data>
+  <data name="TutorDashboard_GlobalSuccessRate" xml:space="preserve"><value>Globális Sikerességi Arány</value></data>
+  <data name="TutorDashboard_FeedbackAnalytics" xml:space="preserve"><value>Feladat Visszajelzés Analitika</value></data>
+  <data name="TutorDashboard_ColTask" xml:space="preserve"><value>Feladat</value></data>
+  <data name="TutorDashboard_ColAvgRating" xml:space="preserve"><value>Átl. Értékelés</value></data>
+  <data name="TutorDashboard_ColTotalFeedback" xml:space="preserve"><value>Összes Visszajelzés</value></data>
+  <data name="TutorDashboard_ColLatestActivity" xml:space="preserve"><value>Legújabb Aktivitás</value></data>
+  <data name="TutorDashboard_Responses" xml:space="preserve"><value>válasz</value></data>
+  <data name="TutorDashboard_AnalyticsComingSoon" xml:space="preserve"><value>Részletes Analitika Hamarosan</value></data>
+  <data name="TutorDashboard_AnalyticsComingSoonDesc" xml:space="preserve"><value>A jövőbeni fázisokban interaktív grafikonok és feladat szintű elemzések kerülnek bevezetésre.</value></data>
+  <data name="TutorDashboard_RecentFeedback" xml:space="preserve"><value>Legutóbbi Visszajelzések</value></data>
+  <data name="TutorDashboard_ColComment" xml:space="preserve"><value>Megjegyzés</value></data>
+  <data name="TutorDashboard_ColType" xml:space="preserve"><value>Típus</value></data>
+  <data name="TutorDashboard_ColDate" xml:space="preserve"><value>Dátum</value></data>
+  <data name="TutorDashboard_ColRating" xml:space="preserve"><value>Értékelés</value></data>
+  <data name="TutorDashboard_NoComments" xml:space="preserve"><value>Még nincs visszajelzési megjegyzés.</value></data>
+  <data name="TutorDashboard_LoadError" xml:space="preserve"><value>Nem sikerült betölteni az irányítópult adatait</value></data>
+  <data name="TutorDashboard_SystemMap" xml:space="preserve"><value>Rendszer Térkép</value></data>
+  <data name="TutorDashboard_AiProvider" xml:space="preserve"><value>AI Szolgáltató</value></data>
+  <data name="TutorDashboard_AiModel" xml:space="preserve"><value>Modell</value></data>
+  <data name="TutorDashboard_SystemOnline" xml:space="preserve"><value>ONLINE</value></data>
+
+  <!-- Admin Telemetry -->
+  <data name="AdminTelemetry_PageTitle" xml:space="preserve"><value>Admin Telemetria — DuskOfCoding</value></data>
+  <data name="AdminTelemetry_Title" xml:space="preserve"><value>LLM Telemetria</value></data>
+  <data name="AdminTelemetry_TokenChart" xml:space="preserve"><value>Token Felhasználás — Utolsó 7 Nap</value></data>
+  <data name="AdminTelemetry_RecentLogs" xml:space="preserve"><value>Legutóbbi LLM Naplók</value></data>
+  <data name="AdminTelemetry_ColTimestamp" xml:space="preserve"><value>Időbélyeg</value></data>
+  <data name="AdminTelemetry_ColTask" xml:space="preserve"><value>Feladat</value></data>
+  <data name="AdminTelemetry_ColModel" xml:space="preserve"><value>Modell</value></data>
+  <data name="AdminTelemetry_ColTokens" xml:space="preserve"><value>Tokenek</value></data>
+  <data name="AdminTelemetry_ColStatus" xml:space="preserve"><value>Állapot</value></data>
+  <data name="AdminTelemetry_StatusOk" xml:space="preserve"><value>OK</value></data>
+  <data name="AdminTelemetry_StatusFail" xml:space="preserve"><value>HIBA</value></data>
+  <data name="AdminTelemetry_NoData" xml:space="preserve"><value>Még nincs telemetria adat.</value></data>
+  <data name="AdminTelemetry_NavLink" xml:space="preserve"><value>Telemetria</value></data>
 
   <!-- Access Denied -->
   <data name="AccessDenied_Title" xml:space="preserve"><value>Hozzáférés megtagadva</value></data>

@@ -27,6 +27,21 @@
         <circle cx="75%" cy="20%" r="3" />
     </svg>
 
+    <div class="hero-hieroglyph-backdrop" aria-hidden="true">
+        <pre class="code-hieroglyphs">
+public class ArchitectureEngine : ICodeArcheologist
+{
+    private readonly ISymbiosisDrive _ai;
+    public ArchitectureEngine(ISymbiosisDrive ai) { _ai = ai; }
+
+    public async Task&lt;Structure&gt; DecodeAsync(ReadOnlySpan&lt;byte&gt; hieroglyphs)
+    {
+        return await _ai.Reconstruct(hieroglyphs);
+    }
+}
+        </pre>
+    </div>
+
     <div class="hero-content">
         <!-- Classification label -->
         <div class="hero-label">

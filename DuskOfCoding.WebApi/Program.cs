@@ -38,8 +38,8 @@ if (builder.Environment.IsDevelopment())
 
 // Add services to the container.
 builder.Services.AddOpenApi();
-builder.Services.AddHealthChecks()
-    .AddDbContextCheck<AppDbContext>();
+builder.Services.AddHealthChecks();
+   // .AddDbContextCheck<AppDbContext>();
 
 // Register Clean Architecture layers
 builder.Services.AddApplicationServices();
@@ -164,6 +164,7 @@ tasksGroup.MapPost("/{id:guid}/generate-tests", [Microsoft.AspNetCore.Authorizat
         Title = task.Title,
         Description = task.Description,
         ExpectedClassName = task.ExpectedClassName ?? "Solution",
+        Namespace = task.Namespace ?? string.Empty,
         UserId = userId
     };
 
@@ -361,8 +362,50 @@ feedbackGroup.MapGet("/overview", [Microsoft.AspNetCore.Authorization.Authorize(
     return Results.Ok(overview);
 });
 
+feedbackGroup.MapGet("/recent-comments", [Microsoft.AspNetCore.Authorization.Authorize(Roles = AppRoles.Tutor + "," + AppRoles.Admin)] async (
+    IFeedbackService feedbackService,
+    CancellationToken ct) =>
+{
+    var comments = await feedbackService.GetRecentFeedbackAsync(limit: 20, ct);
+    return Results.Ok(comments);
+});
+
 // SignalR hub for real-time tutor responses
 app.MapHub<TutorHub>("/hubs/tutor");
+
+// ---- System Status ----
+
+app.MapGet("/system/llm-provider",
+    [Microsoft.AspNetCore.Authorization.Authorize(Roles = AppRoles.Tutor + "," + AppRoles.Admin)]
+    (Microsoft.Extensions.Options.IOptions<LlmProviderOptions> opts) =>
+    {
+        var o = opts.Value;
+        return Results.Ok(new { provider = o.Provider, modelId = o.ModelId });
+    })
+    .WithTags("System")
+    .RequireAuthorization();
+
+// ---- Admin Telemetry ----
+
+var adminTelemetryGroup = app.MapGroup("/admin/telemetry")
+    .WithTags("AdminTelemetry")
+    .RequireAuthorization(new Microsoft.AspNetCore.Authorization.AuthorizeAttribute { Roles = AppRoles.Admin });
+
+adminTelemetryGroup.MapGet("/recent", async (
+    DuskOfCoding.Application.Services.ITelemetryService telemetry,
+    CancellationToken ct) =>
+{
+    var logs = await telemetry.GetRecentTelemetryAsync(limit: 50, ct);
+    return Results.Ok(logs);
+});
+
+adminTelemetryGroup.MapGet("/daily-tokens", async (
+    DuskOfCoding.Application.Services.ITelemetryService telemetry,
+    CancellationToken ct) =>
+{
+    var usage = await telemetry.GetTokenUsageLast7DaysAsync(ct);
+    return Results.Ok(usage);
+});
 
 app.Run();
 
