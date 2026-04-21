@@ -160,6 +160,65 @@ else if (_stats != null)
             </div>
         }
     </div>
+
+    <!-- // 04 System Map -->
+    <div class="mt-5 ck-panel p-4">
+        <div class="ck-section-header mb-4">
+            <span class="ck-section-prefix">// 04</span>
+            <span class="ck-section-title">@L["TutorDashboard_SystemMap"]</span>
+            <div class="ck-section-line"></div>
+            <span class="ck-status-dot"></span>
+        </div>
+        <div class="row g-3">
+            <div class="col-auto">
+                <div class="ck-panel p-3 d-flex align-items-center gap-3">
+                    <i class="bi bi-cpu-fill fs-4 text-warning"></i>
+                    <div>
+                        <div class="text-white-50 small text-uppercase fw-semibold">@L["TutorDashboard_AiProvider"]</div>
+                        <div class="fw-bold text-white">
+                            @if (_llmProvider is not null)
+                            {
+                                @_llmProvider.Provider
+                            }
+                            else
+                            {
+                                <span class="text-secondary">—</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-auto">
+                <div class="ck-panel p-3 d-flex align-items-center gap-3">
+                    <i class="bi bi-diagram-3-fill fs-4 text-info"></i>
+                    <div>
+                        <div class="text-white-50 small text-uppercase fw-semibold">@L["TutorDashboard_AiModel"]</div>
+                        <div class="fw-bold text-white">
+                            @if (_llmProvider is not null)
+                            {
+                                @_llmProvider.ModelId
+                            }
+                            else
+                            {
+                                <span class="text-secondary">—</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-auto">
+                <div class="ck-panel p-3 d-flex align-items-center gap-3">
+                    <i class="bi bi-activity fs-4 text-success"></i>
+                    <div>
+                        <div class="text-white-50 small text-uppercase fw-semibold">Status</div>
+                        <div class="fw-bold" style="color: var(--ck-amber, #f59e0b);">
+                            @L["TutorDashboard_SystemOnline"]
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 }
 
 @code {
@@ -168,6 +227,7 @@ else if (_stats != null)
     private TutorStatsDto? _stats;
     private List<TaskFeedbackOverviewDto>? _feedbackOverview;
     private List<RecentFeedbackItemDto>? _recentComments;
+    private LlmProviderStatusDto? _llmProvider;
 
     protected override async Task OnInitializedAsync()
     {
@@ -187,6 +247,10 @@ else if (_stats != null)
             var commentsResult = await Api.GetRecentFeedbackCommentsAsync();
             if (commentsResult.IsSuccess)
                 _recentComments = commentsResult.Value;
+
+            var providerResult = await Api.GetLlmProviderAsync();
+            if (providerResult.IsSuccess)
+                _llmProvider = providerResult.Value;
         }
         catch (Exception ex)
         {

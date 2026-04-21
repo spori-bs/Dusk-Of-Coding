@@ -209,6 +209,10 @@
   <data name="TutorDashboard_ColRating" xml:space="preserve"><value>Értékelés</value></data>
   <data name="TutorDashboard_NoComments" xml:space="preserve"><value>Még nincs visszajelzési megjegyzés.</value></data>
   <data name="TutorDashboard_LoadError" xml:space="preserve"><value>Nem sikerült betölteni az irányítópult adatait</value></data>
+  <data name="TutorDashboard_SystemMap" xml:space="preserve"><value>Rendszer Térkép</value></data>
+  <data name="TutorDashboard_AiProvider" xml:space="preserve"><value>AI Szolgáltató</value></data>
+  <data name="TutorDashboard_AiModel" xml:space="preserve"><value>Modell</value></data>
+  <data name="TutorDashboard_SystemOnline" xml:space="preserve"><value>ONLINE</value></data>
 
   <!-- Access Denied -->
   <data name="AccessDenied_Title" xml:space="preserve"><value>Hozzáférés megtagadva</value></data>

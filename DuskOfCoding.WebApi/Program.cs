@@ -372,6 +372,18 @@ feedbackGroup.MapGet("/recent-comments", [Microsoft.AspNetCore.Authorization.Aut
 // SignalR hub for real-time tutor responses
 app.MapHub<TutorHub>("/hubs/tutor");
 
+// ---- System Status ----
+
+app.MapGet("/system/llm-provider",
+    [Microsoft.AspNetCore.Authorization.Authorize(Roles = AppRoles.Tutor + "," + AppRoles.Admin)]
+    (Microsoft.Extensions.Options.IOptions<LlmProviderOptions> opts) =>
+    {
+        var o = opts.Value;
+        return Results.Ok(new { provider = o.Provider, modelId = o.ModelId });
+    })
+    .WithTags("System")
+    .RequireAuthorization();
+
 app.Run();
 
 

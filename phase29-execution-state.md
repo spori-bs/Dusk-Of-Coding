@@ -1,6 +1,6 @@
 # Phase 29 — Execution State
 
-## Status: 🔄 IN PROGRESS — Phase 2
+## Status: 🔄 IN PROGRESS — Phase 3
 
 ---
 
@@ -8,7 +8,7 @@
 
 ### Phase 1: Tutor Dashboard Enhancement - Feedback Content
 **Status:** ✅ COMPLETE  
-**Summary:** Added recent feedback comment content display to the TutorDashboard. Introduced `RecentFeedbackItemDto` DTO, a new `GetRecentFeedbackAsync` service method, and a `GET /feedback/recent-comments` API endpoint. Refactored all hardcoded English strings in `TutorDashboard.razor` to use `IStringLocalizer<SharedResource>`. Added a new `ck-panel` accordion-style feedback section displaying comment text, rating, type, task name, and date.
+**Summary:** Added recent feedback comment content display to the TutorDashboard. Introduced `RecentFeedbackItemDto` DTO, a new `GetRecentFeedbackAsync` service method, and a `GET /feedback/recent-comments` API endpoint. Refactored all hardcoded English strings in `TutorDashboard.razor` to use `IStringLocalizer<SharedResource>`. Added a new `ck-panel` tabular section (`// 03`) displaying comment text, rating, type, task name, and date.
 
 **Files Modified:**
 - `DuskOfCoding.Application/DTOs/FeedbackDtos.cs` — Added `RecentFeedbackItemDto`
@@ -18,6 +18,22 @@
 - `DuskOfCoding.WebUi/DTOs/RecentFeedbackItemDto.cs` — New file
 - `DuskOfCoding.WebUi/Services/ApiClient.cs` — Added `GetRecentFeedbackCommentsAsync`
 - `DuskOfCoding.WebUi/Resources/SharedResource.resx` — Added TutorDashboard keys (HU default)
+- `DuskOfCoding.WebUi/Resources/SharedResource.hu.resx` — Added TutorDashboard keys (HU)
+- `DuskOfCoding.WebUi/Resources/SharedResource.en.resx` — Added TutorDashboard keys (EN)
+- `DuskOfCoding.WebUi/Components/Pages/TutorDashboard.razor` — Full localization + new feedback section
+
+### Phase 2: Dynamic AI Provider Status API & UI
+**Status:** ✅ COMPLETE  
+**Summary:** Created `GET /system/llm-provider` endpoint in WebApi that reads `IOptions<LlmProviderOptions>` (already registered) and returns `{ provider, modelId }`. Added `LlmProviderStatusDto` DTO and `GetLlmProviderAsync()` in ApiClient. Added `// 04 System Map` section to TutorDashboard showing provider name and model ID fetched dynamically. No hardcoded provider names remain in the UI. Localization keys added to all three resx files.
+
+**Files Modified:**
+- `DuskOfCoding.WebApi/Program.cs` — Added `GET /system/llm-provider` endpoint
+- `DuskOfCoding.WebUi/DTOs/LlmProviderStatusDto.cs` — New file
+- `DuskOfCoding.WebUi/Services/ApiClient.cs` — Added `GetLlmProviderAsync`
+- `DuskOfCoding.WebUi/Resources/SharedResource.resx` — Added SystemMap keys (HU default)
+- `DuskOfCoding.WebUi/Resources/SharedResource.hu.resx` — Added SystemMap keys (HU)
+- `DuskOfCoding.WebUi/Resources/SharedResource.en.resx` — Added SystemMap keys (EN)
+- `DuskOfCoding.WebUi/Components/Pages/TutorDashboard.razor` — Added `// 04` System Map section + `_llmProvider` field + fetch
 - `DuskOfCoding.WebUi/Resources/SharedResource.hu.resx` — Added TutorDashboard keys (HU)
 - `DuskOfCoding.WebUi/Resources/SharedResource.en.resx` — Added TutorDashboard keys (EN)
 - `DuskOfCoding.WebUi/Components/Pages/TutorDashboard.razor` — Full localization + new feedback section
