@@ -392,5 +392,47 @@ public class ApiClient
             return Result<LlmProviderStatusDto>.Failure(_localizer["Error_Network", ex.Message]);
         }
     }
+
+    public async Task<Result<List<LlmTelemetryDto>>> GetRecentTelemetryAsync(CancellationToken ct = default)
+    {
+        try
+        {
+            await EnsureAuthHeaderAsync();
+            var response = await _http.GetAsync("/admin/telemetry/recent", ct);
+            if (HandleAuthErrors(response)) return Result<List<LlmTelemetryDto>>.Failure(string.Empty);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var data = await response.Content.ReadFromJsonAsync<List<LlmTelemetryDto>>(cancellationToken: ct) ?? new();
+                return Result<List<LlmTelemetryDto>>.Success(data);
+            }
+            return Result<List<LlmTelemetryDto>>.Failure($"Failed to fetch telemetry: {response.StatusCode}");
+        }
+        catch (HttpRequestException ex)
+        {
+            return Result<List<LlmTelemetryDto>>.Failure(_localizer["Error_Network", ex.Message]);
+        }
+    }
+
+    public async Task<Result<List<DailyTokenUsageDto>>> GetDailyTokenUsageAsync(CancellationToken ct = default)
+    {
+        try
+        {
+            await EnsureAuthHeaderAsync();
+            var response = await _http.GetAsync("/admin/telemetry/daily-tokens", ct);
+            if (HandleAuthErrors(response)) return Result<List<DailyTokenUsageDto>>.Failure(string.Empty);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var data = await response.Content.ReadFromJsonAsync<List<DailyTokenUsageDto>>(cancellationToken: ct) ?? new();
+                return Result<List<DailyTokenUsageDto>>.Success(data);
+            }
+            return Result<List<DailyTokenUsageDto>>.Failure($"Failed to fetch daily token usage: {response.StatusCode}");
+        }
+        catch (HttpRequestException ex)
+        {
+            return Result<List<DailyTokenUsageDto>>.Failure(_localizer["Error_Network", ex.Message]);
+        }
+    }
 }
 

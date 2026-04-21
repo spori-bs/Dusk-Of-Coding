@@ -209,6 +209,21 @@
   <data name="TutorDashboard_AiModel" xml:space="preserve"><value>Modell</value></data>
   <data name="TutorDashboard_SystemOnline" xml:space="preserve"><value>ONLINE</value></data>
 
+  <!-- Admin Telemetry -->
+  <data name="AdminTelemetry_PageTitle" xml:space="preserve"><value>Admin Telemetria — DuskOfCoding</value></data>
+  <data name="AdminTelemetry_Title" xml:space="preserve"><value>LLM Telemetria</value></data>
+  <data name="AdminTelemetry_TokenChart" xml:space="preserve"><value>Token Felhasználás — Utolsó 7 Nap</value></data>
+  <data name="AdminTelemetry_RecentLogs" xml:space="preserve"><value>Legutóbbi LLM Naplók</value></data>
+  <data name="AdminTelemetry_ColTimestamp" xml:space="preserve"><value>Időbélyeg</value></data>
+  <data name="AdminTelemetry_ColTask" xml:space="preserve"><value>Feladat</value></data>
+  <data name="AdminTelemetry_ColModel" xml:space="preserve"><value>Modell</value></data>
+  <data name="AdminTelemetry_ColTokens" xml:space="preserve"><value>Tokenek</value></data>
+  <data name="AdminTelemetry_ColStatus" xml:space="preserve"><value>Állapot</value></data>
+  <data name="AdminTelemetry_StatusOk" xml:space="preserve"><value>OK</value></data>
+  <data name="AdminTelemetry_StatusFail" xml:space="preserve"><value>HIBA</value></data>
+  <data name="AdminTelemetry_NoData" xml:space="preserve"><value>Még nincs telemetria adat.</value></data>
+  <data name="AdminTelemetry_NavLink" xml:space="preserve"><value>Telemetria</value></data>
+
   <!-- Access Denied -->
   <data name="AccessDenied_Title" xml:space="preserve"><value>Hozzáférés megtagadva</value></data>
   <data name="AccessDenied_Heading" xml:space="preserve"><value>Hozzáférés megtagadva</value></data>

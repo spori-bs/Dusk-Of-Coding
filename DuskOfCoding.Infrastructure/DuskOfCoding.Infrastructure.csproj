@@ -1,12 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <ProjectReference Include="..\DuskOfCoding.Application\DuskOfCoding.Application.csproj" />
     <ProjectReference Include="..\DuskOfCoding.Domain\DuskOfCoding.Domain.csproj" />
     <ProjectReference Include="..\DuskOfCoding.Execution.Contracts\DuskOfCoding.Execution.Contracts.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Aspire.RabbitMQ.Client" Version="13.2.2" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="5.3.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>

@@ -63,9 +63,21 @@ public class AppDbContext : DbContext
             entity.HasKey(e => e.Id);
             entity.Property(e => e.FeedbackType).IsRequired().HasMaxLength(50);
             entity.Property(e => e.Comment).HasMaxLength(2000);
-            
+
             // Index for efficient per-task, per-user queries and aggregation
             entity.HasIndex(e => new { e.TaskId, e.UserId });
+        });
+
+        // LlmTelemetryLog configuration
+        modelBuilder.Entity<LlmTelemetryLog>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.HasIndex(e => e.Timestamp);
+            entity.HasOne(e => e.Task)
+                  .WithMany()
+                  .HasForeignKey(e => e.TaskId)
+                  .IsRequired(false)
+                  .OnDelete(DeleteBehavior.SetNull);
         });
 
         // Seed a default task
