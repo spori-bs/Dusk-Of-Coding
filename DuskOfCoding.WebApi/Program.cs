@@ -164,6 +164,7 @@ tasksGroup.MapPost("/{id:guid}/generate-tests", [Microsoft.AspNetCore.Authorizat
         Title = task.Title,
         Description = task.Description,
         ExpectedClassName = task.ExpectedClassName ?? "Solution",
+        Namespace = task.Namespace ?? string.Empty,
         UserId = userId
     };
 

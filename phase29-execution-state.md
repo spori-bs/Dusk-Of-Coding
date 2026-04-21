@@ -1,6 +1,6 @@
 # Phase 29 — Execution State
 
-## Status: 🔄 IN PROGRESS — Phase 4
+## Status: 🔄 IN PROGRESS — Phase 5
 
 ---
 
@@ -37,19 +37,32 @@
 - SVG `<text>` collides with Razor's `<text>` tag; resolved by building SVG as `MarkupString` in C#.
 - Infrastructure.csproj had no Application reference before; added now with CodeAnalysis conflict pin.
 
+### Phase 4: Practice & TaskEditor Pages — Namespace Field
+**Status:** ✅ COMPLETE  
+**Summary:** Added `Namespace` property end-to-end: `TaskDefinition` entity → EF migration → Application DTOs → TaskService → `GenerateTestSuiteCommand` message → `GenerateTestsPrompt` (wraps generated tests in the configured namespace) → `AiReviewService` (detects missing namespace in student submission and injects a bilingual warning into the AI prompt) → WebUi DTOs → `TaskEditor.razor` (new Namespace field) → `Practice.razor` (namespace-aware starter code template + inline amber warning banner on submit if namespace is missing).
+
+**Files Modified/Created:**
+- `DuskOfCoding.Domain/Entities/TaskDefinition.cs` — Added `Namespace` property
+- `DuskOfCoding.Infrastructure/Migrations/[timestamp]_AddNamespaceToTaskDefinition.cs` — New migration
+- `DuskOfCoding.Application/DTOs/TaskDtos.cs` — Added `Namespace` to `CreateTaskDto`, `UpdateTaskDto`
+- `DuskOfCoding.Application/Services/TaskService.cs` — Wired `Namespace` in Create/Update
+- `DuskOfCoding.Infrastructure/Messaging/Messages.cs` — Added `Namespace` to `GenerateTestSuiteCommand`
+- `DuskOfCoding.WebApi/Program.cs` — Passes `Namespace` when publishing command
+- `DuskOfCoding.TutorWorker/Prompts/GenerateTestsPrompt.cs` — Accepts namespace; generates tests wrapped in it
+- `DuskOfCoding.TutorWorker/TestGenerationWorkerService.cs` — Passes `command.Namespace` to prompt
+- `DuskOfCoding.Infrastructure/Services/AiReviewService.cs` — Namespace missing detection + bilingual warning injected into AI user message
+- `DuskOfCoding.WebUi/DTOs/TaskDto.cs`, `CreateTaskDto.cs`, `UpdateTaskDto.cs` — Added `Namespace`
+- `DuskOfCoding.WebUi/Resources/SharedResource.*.resx` — `TaskEditor_FieldNamespace`, `Practice_NamespaceWarning` keys (all 3)
+- `DuskOfCoding.WebUi/Components/Pages/TaskEditor.razor` — Namespace text field + wired to model/save/reload
+- `DuskOfCoding.WebUi/Components/Pages/Practice.razor` — `BuildStarterCode()` helper, `_namespaceWarning` field, amber warning banner
+
 ---
 
 ## ⏳ Pending Phases
 
-### Phase 4: Practice & TaskEditor Pages — Namespace Field
-- Target: `Practice.razor`, `TaskEditor.razor`, AI generation prompts
-- Add Namespace Declaration text field on both pages
-- Wire namespace into generated starter code and unit tests
-- AI must warn if namespace is missing
-
 ### Phase 5: TaskEditor — Unit Test CRUD Fixes
 - Fix save crash when tests are modified
-- Add per-test delete button
+- Add per-test delete button (already exists in UI — need to verify backend)
 
 ### Phase 6: AI Compilation Troubleshooting
 - Target: `AiReviewService.cs`, `IAIReviewService.cs`, `Prompts/`

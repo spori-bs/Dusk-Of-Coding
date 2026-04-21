@@ -80,7 +80,9 @@
   <data name="TaskEditor_FieldDescription" xml:space="preserve"><value>Leírás</value></data>
   <data name="TaskEditor_FieldDifficulty" xml:space="preserve"><value>Nehézségi szint</value></data>
   <data name="TaskEditor_FieldTags" xml:space="preserve"><value>Címkék (vesszővel elválasztva)</value></data>
-  <data name="TaskEditor_FieldTestBundle" xml:space="preserve"><value>Teszt csomag referencia</value></data>
+  <data name="TaskEditor_FieldNamespace" xml:space="preserve"><value>Névtér deklaráció</value></data>
+  <data name="TaskEditor_FieldNamespacePlaceholder" xml:space="preserve"><value>pl. DuskOfCoding.Megoldasok</value></data>
+  <data name="Practice_NamespaceWarning" xml:space="preserve"><value>⚠️ A kódodból hiányzik a névtér deklaráció. Add hozzá: <code>namespace {0};</code> a fájl elejéhez.</value></data>
   <data name="TaskEditor_SaveBeforeGeneratePrompt" xml:space="preserve"><value>A teszt generáláshoz először menteni kell. Folytatod?</value></data>
   <data name="TaskEditor_GenerationStarted" xml:space="preserve"><value>Az AI teszt generálás megkezdődött...</value></data>
   <data name="TaskEditor_GenerationPollComplete" xml:space="preserve"><value>A generálás befejeződhetett — adatok frissítve.</value></data>

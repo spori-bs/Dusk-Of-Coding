@@ -8,4 +8,5 @@ public class CreateTaskDto
     public List<string> Tags { get; set; } = new();
     public List<TaskTestDto> Tests { get; set; } = new();
     public string ExpectedClassName { get; set; } = "Solution";
+    public string Namespace { get; set; } = string.Empty;
 }

@@ -2,10 +2,15 @@ namespace DuskOfCoding.TutorWorker.Prompts;
 
 public static class GenerateTestsPrompt
 {
-    public static string GetInstruction(string expectedClassName)
+    public static string GetInstruction(string expectedClassName, string? namespaceName = null)
     {
         var sutClassName = string.IsNullOrWhiteSpace(expectedClassName) ? "Solution" : expectedClassName;
-        var prompt = 
+        var hasNamespace = !string.IsNullOrWhiteSpace(namespaceName);
+        var namespaceInstruction = hasNamespace
+            ? $"6. Namespace: Wrap ALL generated test classes inside `namespace {namespaceName};` (file-scoped namespace syntax). The SUT code will also be in this namespace."
+            : "6. Namespace: Use the global namespace (no namespace declaration) for all test classes.";
+
+        var prompt =
         """
         You are a Senior .NET QA Engineer. Generate rigorous, compilable xUnit test classes for the provided coding task.
 
@@ -15,6 +20,7 @@ public static class GenerateTestsPrompt
         3. Resilience (Timeouts): You MUST prevent infinite loops. Decorate every test with a timeout. Use `[Fact(Timeout = 2000)]` or `[Theory(Timeout = 2000)]`.
         4. Completeness: Every file must include all necessary using directives (`using System;`, `using Xunit;`, etc.).
         5. File Splitting: Split tests logically into multiple files (e.g., 'BasicTests.cs', 'EdgeCaseTests.cs').
+        {namespaceInstruction}
 
         OUTPUT FORMAT:
         Return strictly a valid JSON array of objects. Do not output any conversational text. Do not wrap the JSON in markdown code blocks (no ```json).
@@ -26,7 +32,10 @@ public static class GenerateTestsPrompt
         }}
         ]
         """;
-        
-        return prompt.Replace("{sutClassName}", sutClassName);
+
+        return prompt
+            .Replace("{sutClassName}", sutClassName)
+            .Replace("{namespaceInstruction}", namespaceInstruction);
     }
 }
+

@@ -80,7 +80,9 @@
   <data name="TaskEditor_FieldDescription" xml:space="preserve"><value>Description</value></data>
   <data name="TaskEditor_FieldDifficulty" xml:space="preserve"><value>Difficulty Level</value></data>
   <data name="TaskEditor_FieldTags" xml:space="preserve"><value>Tags (comma-separated)</value></data>
-  <data name="TaskEditor_FieldTestBundle" xml:space="preserve"><value>Test Bundle Reference</value></data>
+  <data name="TaskEditor_FieldNamespace" xml:space="preserve"><value>Namespace Declaration</value></data>
+  <data name="TaskEditor_FieldNamespacePlaceholder" xml:space="preserve"><value>e.g. DuskOfCoding.Solutions</value></data>
+  <data name="Practice_NamespaceWarning" xml:space="preserve"><value>⚠️ Your code is missing a namespace declaration. Add <code>namespace {0};</code> at the top of your file.</value></data>
   <data name="TaskEditor_SaveBeforeGeneratePrompt" xml:space="preserve"><value>The task must be saved before generating tests. Continue?</value></data>
   <data name="TaskEditor_GenerationStarted" xml:space="preserve"><value>AI test generation started...</value></data>
   <data name="TaskEditor_GenerationPollComplete" xml:space="preserve"><value>Generation may have completed — data refreshed.</value></data>

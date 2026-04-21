@@ -46,20 +46,27 @@ public class AiReviewService : IAIReviewService
                 - Be supportive and encouraging.
               """;
 
+        var hasNamespace = submission.SourceCode.Contains("namespace ", StringComparison.OrdinalIgnoreCase);
+        var namespaceWarning = !hasNamespace && !string.IsNullOrWhiteSpace(task.Namespace)
+            ? (isHungarian
+                ? $"\n\n⚠️ FIGYELEM: A beküldött kód nem tartalmaz névtér deklarációt (`namespace`). A feladat elvárt névtere: `{task.Namespace}`. Mindenképpen hívd fel a hallgató figyelmét erre a hiányosságra!"
+                : $"\n\n⚠️ IMPORTANT: The submitted code is missing a namespace declaration. The expected namespace for this task is `{task.Namespace}`. You MUST include constructive advice about adding `namespace {task.Namespace};` at the top of their file.")
+            : string.Empty;
+
         var userMessage = $"""
             Task: {task.Title}
             Description: {task.Description}
-            
+
             Code Submission:
             ```csharp
             {submission.SourceCode}
             ```
-            
+
             Execution Result:
             - Compilation Succeeded: {executionResult.CompilationSucceeded}
             - Errors: {string.Join(", ", executionResult.CompilationErrors)}
             - Tests: {string.Join(", ", executionResult.Tests.Select(t => $"{t.Name}: {(t.Passed ? "Passed" : "Failed")} {t.Message}"))}
-            
+            {namespaceWarning}
             Please provide Socratic feedback based on these results.
             """;
 
