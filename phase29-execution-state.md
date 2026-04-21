@@ -1,6 +1,6 @@
 # Phase 29 — Execution State
 
-## Status: 🔄 IN PROGRESS — Phase 5
+## Status: 🔄 IN PROGRESS — Phase 6
 
 ---
 
@@ -55,6 +55,15 @@
 - `DuskOfCoding.WebUi/Resources/SharedResource.*.resx` — `TaskEditor_FieldNamespace`, `Practice_NamespaceWarning` keys (all 3)
 - `DuskOfCoding.WebUi/Components/Pages/TaskEditor.razor` — Namespace text field + wired to model/save/reload
 - `DuskOfCoding.WebUi/Components/Pages/Practice.razor` — `BuildStarterCode()` helper, `_namespaceWarning` field, amber warning banner
+
+### Phase 5: Fix Unit Test Save Crash
+**Status:** ✅ COMPLETE  
+**Summary:** Fixed a crash when saving a `TaskDefinition` with modified unit tests. Root cause: `GetByIdAsync` loads tests into the EF change tracker as `Unchanged`. `ReplaceTestsAsync` uses `ExecuteDeleteAsync` (raw SQL, bypasses tracker), leaving the old test entries as "phantoms" — deleted from DB but still tracked. EF relationship fixup during `AddRange(newTests)` then merged phantom entries with the new tests, causing `SaveChangesAsync` to fail with an inconsistency error.
+
+Fix: in both `UpdateAsync` and `ReplaceTestsAsync`, iterate `_db.ChangeTracker.Entries<TaskTest>()` for the target `taskId` and set their state to `Detached` **before** the bulk operation.
+
+**Files Modified:**
+- `DuskOfCoding.Infrastructure/Repositories/EfTaskRepository.cs` — Detach stale `TaskTest` entries in both `UpdateAsync` and `ReplaceTestsAsync`
 
 ---
 
