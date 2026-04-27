@@ -16,9 +16,9 @@ This platform exists at this crossroads, serving as a safe, sandboxed environmen
 
 ### ✨ Key Features
 
-- **Sandboxed Execution Environment**: Compile and safely execute C# code within an isolated Docker sandbox using the Roslyn compiler.
+- **Sandboxed Execution Environment**: Compile and safely execute C# code within an isolated in-process sandbox using the Roslyn compiler, collectible AssemblyLoadContexts, and strict timeout/memory limits.
 - **Automated Testing & Feedback**: Receive detailed, structured feedback via automated unit tests instead of simple pass/fail metrics.
-- **Socratic AI Mentor (TutorWorker)**: Connects to OpenAI, Azure OpenAI, or Google Gemini via a resilient Polly pipeline to provide real-time, streaming guidance. It teaches the "new literacy" by mentoring users using the Socratic method, ensuring they learn to direct AI rather than rely on it blindly.
+- **Socratic AI Mentor (TutorWorker)**: Connects to OpenAI, Azure OpenAI, or Google Gemini via a resilient Polly pipeline to provide asynchronous, message-driven guidance. It teaches the "new literacy" by mentoring users using the Socratic method, ensuring they learn to direct AI rather than rely on it blindly.
 - **Keycloak IAM**: Centralized authentication and user registration via OpenID Connect, with JWT-secured API access and self-service account creation.
 - **Bilingual Industrial UI**: Fully localized in English and Hungarian.
 - **Obsidian Foundry Aesthetic**: A complete visual unification leveraging the "Industrial Amber" design language—combining technical Geist Mono typography, high-contrast amber accents, and hard-edged tactical UI components for a premium engineering experience.
@@ -65,9 +65,9 @@ C4Context
         System(rabbitmq, "Message Broker", "RabbitMQ / AMQP for async task distribution")
         System(tutor_worker, "Tutor Worker", "Background service handling resilient Socratic AI evaluation streams")
         System(keycloak, "Keycloak IAM", "Centralized identity provider with OIDC and user self-registration")
+        System(execution_api, "Execution API (Sandbox)", "In-process Roslyn sandbox that safely compiles and runs xUnit tests")
     }
 
-    System_Ext(execution_api, "Execution API (Sandbox)", "Isolated Roslyn sandbox that safely compiles and runs xUnit tests")
     System_Ext(llm_provider, "OpenAI / Azure OpenAI / Gemini", "External LLM providers for the Socratic AI Mentor")
 
     Rel(candidate, webui, "Practices coding tasks", "HTTPS")
@@ -75,11 +75,12 @@ C4Context
     Rel(webui, webapi, "Submits C# code & retrieves tasks", "REST + Bearer JWT")
     Rel(webapi, keycloak, "Validates JWT tokens", "HTTPS")
     Rel(webapi, database, "Reads/Writes data", "EF Core")
-    Rel(webapi, execution_api, "Delegates unsafe execution", "HTTP/JSON")
+    Rel(webapi, execution_api, "Delegates code execution", "HTTP/JSON via Aspire service discovery")
     Rel(webapi, rabbitmq, "Queues AI review tasks", "AMQP")
     Rel(rabbitmq, tutor_worker, "Dispatches tasks", "AMQP")
     Rel(tutor_worker, llm_provider, "Fetches AI mentoring feedback (with Polly Resilience)", "HTTPS")
-    Rel(tutor_worker, webui, "Streams real-time feedback", "SignalR (Terminal HUD)")
+    Rel(tutor_worker, rabbitmq, "Publishes evaluation results", "AMQP")
+    Rel(webapi, webui, "Relays feedback via polling", "REST/JSON")
 ```
 
 ## 📜 Development History (Prompt Progression)
