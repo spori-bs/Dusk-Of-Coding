@@ -35,6 +35,7 @@ public static class DependencyInjection
         services.AddScoped<IFeedbackRepository, EfFeedbackRepository>();
         services.AddScoped<ITelemetryService, TelemetryService>();
         services.AddConfigurableChatClient();
+        services.AddConfigurableKernel();
         services.AddScoped<IAIReviewService, AiReviewService>();
 
         // Register the Execution Engine with a typed HttpClient

@@ -1,4 +1,7 @@
-using Microsoft.Extensions.AI;
+using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Agents;
+using Microsoft.SemanticKernel.ChatCompletion;
+using Microsoft.SemanticKernel.Connectors.OpenAI;
 using Microsoft.Extensions.Options;
 using Polly;
 using Polly.Registry;
@@ -6,6 +9,7 @@ using DuskOfCoding.Infrastructure.Messaging;
 using DuskOfCoding.Infrastructure.Configuration;
 using DuskOfCoding.TutorWorker.Prompts;
 using DuskOfCoding.TutorWorker.Resilience;
+using DuskOfCoding.TutorWorker.McpTools;
 using DuskOfCoding.Domain.Interfaces;
 using DuskOfCoding.Domain.Enums;
 using DuskOfCoding.Domain.Entities;
@@ -17,13 +21,12 @@ using Microsoft.Extensions.DependencyInjection;
 namespace DuskOfCoding.TutorWorker;
 
 /// <summary>
-/// Background service that consumes submissions from RabbitMQ,
-/// performs execution and AI evaluation, then provides Socratic tutoring.
+/// Background service that consumes submissions & interactive hint requests from RabbitMQ,
+/// performs Roslyn execution & Semantic Kernel Agent evaluation with tool calling.
 /// </summary>
 public sealed class TutorWorkerService : BackgroundService
 {
     private readonly RabbitMQService _rabbitMqService;
-    private readonly IChatClient _chatClient;
     private readonly ResiliencePipelineProvider<string> _resilienceProvider;
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly LlmProviderOptions _options;
@@ -31,14 +34,12 @@ public sealed class TutorWorkerService : BackgroundService
 
     public TutorWorkerService(
         RabbitMQService rabbitMqService,
-        IChatClient chatClient,
         ResiliencePipelineProvider<string> resilienceProvider,
         IServiceScopeFactory scopeFactory,
         IOptions<LlmProviderOptions> options,
         ILogger<TutorWorkerService> logger)
     {
         _rabbitMqService = rabbitMqService;
-        _chatClient = chatClient;
         _resilienceProvider = resilienceProvider;
         _scopeFactory = scopeFactory;
         _options = options.Value;
@@ -47,11 +48,16 @@ public sealed class TutorWorkerService : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _logger.LogInformation("TutorWorker starting, subscribing to {Queue}...", RabbitMQTopology.TutorInteractionsQueue);
+        _logger.LogInformation("TutorWorker starting, subscribing to queues...");
 
-        var channel = await _rabbitMqService.ConsumeAsync<SubmissionMessage>(
+        var subChannel = await _rabbitMqService.ConsumeAsync<SubmissionMessage>(
             RabbitMQTopology.TutorInteractionsQueue,
             HandleSubmissionAsync,
+            stoppingToken);
+
+        var hintChannel = await _rabbitMqService.ConsumeAsync<InteractiveHintRequestMessage>(
+            RabbitMQTopology.InteractiveTutorQueue,
+            HandleInteractiveHintAsync,
             stoppingToken);
 
         _logger.LogInformation("TutorWorker is now consuming messages (LLM provider: {Provider}, model: {Model})",
@@ -67,7 +73,8 @@ public sealed class TutorWorkerService : BackgroundService
         }
         finally
         {
-            await channel.DisposeAsync();
+            await subChannel.DisposeAsync();
+            await hintChannel.DisposeAsync();
         }
     }
 
@@ -103,7 +110,7 @@ public sealed class TutorWorkerService : BackgroundService
 
             Feedback feedback;
             
-            // 2. Roslyn Syntax Check (as previously in WebApi)
+            // 2. Roslyn Syntax Check
             var syntaxTree = CSharpSyntaxTree.ParseText(message.SourceCode);
             var syntaxDiagnostics = syntaxTree.GetDiagnostics()
                 .Where(d => d.Severity == DiagnosticSeverity.Error)
@@ -129,8 +136,6 @@ public sealed class TutorWorkerService : BackgroundService
                 
                 var executionResult = await executionEngine.ExecuteAsync(task, submission, ct);
 
-                // 4. Build structured feedback directly from execution result.
-                //    The Socratic Tutor (step 7) is the sole LLM call — no duplicate AI review here.
                 bool isSuccess = executionResult.CompilationSucceeded && executionResult.Tests.All(t => t.Passed);
                 bool isHu = message.PreferredLanguage?.StartsWith("hu", StringComparison.OrdinalIgnoreCase) == true;
                 feedback = new Feedback
@@ -147,7 +152,7 @@ public sealed class TutorWorkerService : BackgroundService
                 submission.Status = isSuccess ? SubmissionStatus.Success : SubmissionStatus.TestsFailed;
             }
 
-            // 5. Save Results to DB
+            // 4. Save Results to DB
             submission.CompletedAt = DateTime.UtcNow;
             submission.Feedback ??= new FeedbackRecord { SubmissionId = submission.Id };
             submission.Feedback.IsSuccess = feedback.IsSuccess;
@@ -158,10 +163,10 @@ public sealed class TutorWorkerService : BackgroundService
 
             await submissionRepo.UpdateAsync(submission, ct);
 
-            // 6. Notify UI via SignalR
+            // 5. Notify UI via SignalR
             await NotifyEvaluationComplete(message.SubmissionId, correlationId, feedback, ct);
 
-            // 7. Follow up with the Socratic Tutor logic
+            // 6. Follow up with Socratic Tutor Agent
             await HandleSocraticTutoring(message, feedback, correlationId, ct);
         }
         catch (Exception ex)
@@ -183,6 +188,39 @@ public sealed class TutorWorkerService : BackgroundService
         }
     }
 
+    private async Task HandleInteractiveHintAsync(InteractiveHintRequestMessage message, Guid correlationId, CancellationToken ct)
+    {
+        _logger.LogInformation("Processing Lightbulb interactive hint request for Task {TaskId}", message.TaskId);
+        var pipeline = _resilienceProvider.GetPipeline(LlmResilienceRegistration.PipelineName);
+
+        try
+        {
+            var tutorResponse = await pipeline.ExecuteAsync(async token =>
+            {
+                return await InvokeInteractiveHintAgentAsync(message, token);
+            }, ct);
+
+            var response = new TutorResponseMessage
+            {
+                CorrelationId = correlationId,
+                SubmissionId = message.SubmissionId,
+                ResponseType = "hint",
+                Content = tutorResponse
+            };
+
+            await _rabbitMqService.PublishAsync(
+                RabbitMQTopology.ResponseExchange,
+                RabbitMQTopology.ResponseRoutingKey,
+                response,
+                correlationId,
+                ct);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Interactive Lightbulb hint failed for Task {TaskId}", message.TaskId);
+        }
+    }
+
     private async Task NotifyEvaluationComplete(Guid submissionId, Guid correlationId, Feedback feedback, CancellationToken ct)
     {
         var response = new TutorResponseMessage
@@ -190,7 +228,7 @@ public sealed class TutorWorkerService : BackgroundService
             CorrelationId = correlationId,
             SubmissionId = submissionId,
             ResponseType = "evaluation",
-            Content = feedback.Summary // This will be used by UI to update state
+            Content = feedback.Summary
         };
 
         await _rabbitMqService.PublishAsync(
@@ -209,7 +247,7 @@ public sealed class TutorWorkerService : BackgroundService
         {
             var tutorResponse = await pipeline.ExecuteAsync(async token =>
             {
-                return await InvokeSocraticTutorAsync(message, feedback, token);
+                return await InvokeSocraticTutorAgentAsync(message, feedback, token);
             }, ct);
 
             var response = new TutorResponseMessage
@@ -229,51 +267,97 @@ public sealed class TutorWorkerService : BackgroundService
         }
         catch (Exception ex)
         {
-             _logger.LogError(ex, "Socratic Tutor failed for submission {SubmissionId}", message.SubmissionId);
-             // Fallback logic could go here
+            _logger.LogError(ex, "Socratic Tutor Agent failed for submission {SubmissionId}", message.SubmissionId);
         }
     }
 
-    private const int MaxSourceCodeLength = 50_000;
-
-    private async Task<string> InvokeSocraticTutorAsync(SubmissionMessage message, Feedback feedback, CancellationToken ct)
+    private async Task<string> InvokeSocraticTutorAgentAsync(SubmissionMessage message, Feedback feedback, CancellationToken ct)
     {
         if (string.IsNullOrWhiteSpace(message.SourceCode))
             return "⚠️ No source code was provided.";
 
-        var testOutput = string.Empty;
-        if (feedback != null && feedback.TestMessages != null && feedback.TestMessages.Any())
-        {
-            testOutput = $"\n\nUnit Test Output:\n{string.Join("\n", feedback.TestMessages)}";
-        }
+        using var scope = _scopeFactory.CreateScope();
+        var kernel = scope.ServiceProvider.GetRequiredService<Kernel>();
+        kernel.Plugins.AddFromType<AnalyzeCodeTool>();
+        kernel.Plugins.AddFromType<ExecuteCustomTestTool>();
 
-        var compilationsOutput = string.Empty;
-        if (feedback != null && feedback.CompilationMessages != null && feedback.CompilationMessages.Any())
-        {
-            compilationsOutput = $"\n\nCompilation Errors:\n{string.Join("\n", feedback.CompilationMessages)}";
-        }
+        var testOutput = feedback?.TestMessages?.Any() == true
+            ? $"\n\nUnit Test Output:\n{string.Join("\n", feedback.TestMessages)}"
+            : string.Empty;
 
-        var chatMessages = new List<ChatMessage>
+        var compilationsOutput = feedback?.CompilationMessages?.Any() == true
+            ? $"\n\nCompilation Errors:\n{string.Join("\n", feedback.CompilationMessages)}"
+            : string.Empty;
+
+        var agent = new ChatCompletionAgent
         {
-            new(ChatRole.System, SocraticTutorPrompt.GetSystemPrompt(message.PreferredLanguage)),
-            new(ChatRole.User, $"""
-                Please review my code submission:
-                ```csharp
-                {message.SourceCode}
-                ```
-                Language: {message.Language}
-                {compilationsOutput}
-                {testOutput}
-                """)
+            Name = "SocraticTutor",
+            Instructions = SocraticTutorPrompt.GetSystemPrompt(message.PreferredLanguage),
+            Kernel = kernel,
+            Arguments = new KernelArguments(new OpenAIPromptExecutionSettings
+            {
+                FunctionChoiceBehavior = FunctionChoiceBehavior.Auto()
+            })
         };
 
-        var chatOptions = new ChatOptions
+        var prompt = $"""
+            Please review my code submission:
+            ```csharp
+            {message.SourceCode}
+            ```
+            Language: {message.Language}
+            {compilationsOutput}
+            {testOutput}
+            """;
+
+        var chatHistory = new ChatHistory();
+        chatHistory.AddUserMessage(prompt);
+
+        var responseText = string.Empty;
+        await foreach (var item in agent.InvokeAsync(chatHistory, cancellationToken: ct))
         {
-            Tools = [.. _chatClient.GetService<IList<AITool>>() ?? []],
-            MaxOutputTokens = 2048
+            if (!string.IsNullOrWhiteSpace(item.Message.Content))
+            {
+                responseText += item.Message.Content;
+            }
+        }
+
+        return string.IsNullOrWhiteSpace(responseText) ? "I wasn't able to generate feedback." : responseText;
+    }
+
+    private async Task<string> InvokeInteractiveHintAgentAsync(InteractiveHintRequestMessage message, CancellationToken ct)
+    {
+        using var scope = _scopeFactory.CreateScope();
+        var kernel = scope.ServiceProvider.GetRequiredService<Kernel>();
+        kernel.Plugins.AddFromType<AnalyzeCodeTool>();
+
+        var agent = new ChatCompletionAgent
+        {
+            Name = "InteractiveSocraticAdvisor",
+            Instructions = SocraticTutorPrompt.GetInteractiveHintPrompt(message.PreferredLanguage),
+            Kernel = kernel,
+            Arguments = new KernelArguments(new OpenAIPromptExecutionSettings
+            {
+                FunctionChoiceBehavior = FunctionChoiceBehavior.Auto()
+            })
         };
 
-        var response = await _chatClient.GetResponseAsync(chatMessages, chatOptions, ct);
-        return response.Text ?? "I wasn't able to generate feedback.";
+        var userPrompt = string.IsNullOrWhiteSpace(message.UserQuestion)
+            ? $"Student clicked Lightbulb 💡 for assistance on draft code:\n```csharp\n{message.DraftSourceCode}\n```"
+            : $"Student asked: {message.UserQuestion}\nDraft code:\n```csharp\n{message.DraftSourceCode}\n```";
+
+        var chatHistory = new ChatHistory();
+        chatHistory.AddUserMessage(userPrompt);
+
+        var responseText = string.Empty;
+        await foreach (var item in agent.InvokeAsync(chatHistory, cancellationToken: ct))
+        {
+            if (!string.IsNullOrWhiteSpace(item.Message.Content))
+            {
+                responseText += item.Message.Content;
+            }
+        }
+
+        return string.IsNullOrWhiteSpace(responseText) ? "Keep thinking about your algorithm and code structure!" : responseText;
     }
 }

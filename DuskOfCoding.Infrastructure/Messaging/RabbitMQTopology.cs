@@ -28,9 +28,13 @@ public static class RabbitMQTopology
     /// <summary>Queue consumed by the SignalR bridge to push test generation results to the UI.</summary>
     public const string TestGenerationResponseQueue = "testgeneration.responses";
 
+    /// <summary>Queue consumed by the TutorWorker for real-time interactive hints and chat questions.</summary>
+    public const string InteractiveTutorQueue = "tutor.interactive.requests";
+
     // ── Routing Keys ───────────────────────────────────────────
     public const string SubmissionRoutingKey = "submission.new";
     public const string ResponseRoutingKey = "response.tutor";
     public const string TestGenerationRoutingKey = "testgeneration.new";
     public const string TestGenerationResponseRoutingKey = "response.testgeneration";
+    public const string InteractiveTutorRoutingKey = "interactive.request";
 }

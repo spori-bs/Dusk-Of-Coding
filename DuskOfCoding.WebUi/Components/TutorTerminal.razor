@@ -1,5 +1,6 @@
 @using Microsoft.AspNetCore.SignalR.Client
 @using DuskOfCoding.WebUi.Resources
+@using System.Globalization
 @implements IAsyncDisposable
 @inject NavigationManager Navigation
 @inject IStringLocalizer<SharedResource> L
@@ -18,6 +19,9 @@
         {
             <span class="tutor-status ready">@messages.Count @L["Tutor_Responses"]</span>
         }
+        <button class="btn btn-sm btn-outline-warning text-warning ms-2 me-2 py-0 px-2 fs-7" @onclick:stopPropagation="true" @onclick="TriggerLightbulbFromTerminal" title="Trigger explicit Lightbulb Socratic Hint">
+            <i class="bi bi-lightbulb-fill"></i> 💡 Hint
+        </button>
         <span class="tutor-toggle">@(IsExpanded ? "▼" : "▲")</span>
     </div>
 
@@ -28,7 +32,7 @@
             {
                 <div class="tutor-empty">
                     <p>@L["Tutor_EmptyMessage"]</p>
-                    <p class="text-muted small">@L["Tutor_EmptyHint"]</p>
+                    <p class="text-muted small">Click the <strong>Lightbulb 💡 Hint</strong> button or ask a question below to get Socratic assistance without spoiling the solution.</p>
                 </div>
             }
 
@@ -61,22 +65,34 @@
                 </div>
             }
         </div>
+
+        <div class="tutor-footer p-2 bg-dark border-top d-flex gap-2 align-items-center">
+            <input type="text" class="form-control form-control-sm border-secondary bg-black text-light" @bind="userQuestion" @bind:event="oninput" @onkeyup="HandleKeyUp" placeholder="Type a question to the Socratic Tutor..." />
+            <button class="btn btn-sm btn-amber px-3" @onclick="SendUserQuestion" disabled="@isWaiting" title="Send question">
+                <i class="bi bi-send-fill"></i>
+            </button>
+            <button class="btn btn-sm btn-warning text-dark px-3 fw-bold" @onclick="TriggerLightbulbFromTerminal" disabled="@isWaiting" title="Explicit Socratic Lightbulb Hint">
+                <i class="bi bi-lightbulb-fill"></i> 💡
+            </button>
+        </div>
     }
 </div>
 
 @code {
     [Parameter] public bool IsExpanded { get; set; } = true;
     [Parameter] public EventCallback<Guid> OnEvaluationReceived { get; set; }
+    [Parameter] public Func<Task<string>>? OnGetDraftCode { get; set; }
+    [Parameter] public string? TaskId { get; set; }
 
     private HubConnection? hubConnection;
     private readonly List<TutorMessage> messages = new();
     private bool isWaiting;
     private ElementReference tutorBody;
     private Guid? currentSubmissionId;
+    private string userQuestion = "";
 
     protected override async Task OnInitializedAsync()
     {
-        // Resolve webapi base URL from Aspire service discovery configuration
         var webApiBase = Configuration["services:webapi:http:0"]
             ?? Configuration["services:webapi:https:0"]
             ?? "http://webapi";
@@ -102,7 +118,6 @@
 
     public async Task SubscribeToSubmission(Guid submissionId)
     {
-        // Leave previous group if any
         if (currentSubmissionId.HasValue && hubConnection is not null)
         {
             await hubConnection.InvokeAsync("LeaveSubmission", currentSubmissionId.Value.ToString());
@@ -118,12 +133,62 @@
         }
     }
 
+    public async Task TriggerLightbulbHint(string taskId, string draftCode, string? question)
+    {
+        if (hubConnection is null) return;
+        isWaiting = true;
+        IsExpanded = true;
+        StateHasChanged();
+
+        try
+        {
+            var language = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+            await hubConnection.InvokeAsync("RequestLightbulbHint", taskId, currentSubmissionId?.ToString() ?? Guid.NewGuid().ToString(), draftCode, question, language);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogWarning(ex, "Failed to request Lightbulb hint");
+            isWaiting = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task TriggerLightbulbFromTerminal()
+    {
+        if (OnGetDraftCode != null && !string.IsNullOrEmpty(TaskId))
+        {
+            var code = await OnGetDraftCode.Invoke();
+            await TriggerLightbulbHint(TaskId, code, string.IsNullOrWhiteSpace(userQuestion) ? null : userQuestion);
+            userQuestion = "";
+        }
+    }
+
+    private async Task SendUserQuestion()
+    {
+        if (string.IsNullOrWhiteSpace(userQuestion)) return;
+        var q = userQuestion;
+        userQuestion = "";
+        if (OnGetDraftCode != null && !string.IsNullOrEmpty(TaskId))
+        {
+            var code = await OnGetDraftCode.Invoke();
+            await TriggerLightbulbHint(TaskId, code, q);
+        }
+    }
+
+    private async Task HandleKeyUp(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            await SendUserQuestion();
+        }
+    }
+
     private void OnTutorResponse(TutorResponseDto response)
     {
         if (response.ResponseType == "evaluation")
         {
             InvokeAsync(async () => await OnEvaluationReceived.InvokeAsync(response.SubmissionId));
-            return; // Don't show evaluation status as a chat message
+            return;
         }
 
         isWaiting = false;
@@ -142,7 +207,7 @@
 
     private string GetTypeLabel(string responseType) => responseType switch
     {
-        "hint" => L["Tutor_Hint"],
+        "hint" => "💡 Socratic Hint",
         "error" => L["Tutor_Error"],
         "safety" => L["Tutor_Fallback"],
         "feedback" => L["Tutor_Feedback"],
@@ -168,8 +233,6 @@
             await hubConnection.DisposeAsync();
         }
     }
-
-    // ── Inner types ──
 
     private class TutorMessage
     {

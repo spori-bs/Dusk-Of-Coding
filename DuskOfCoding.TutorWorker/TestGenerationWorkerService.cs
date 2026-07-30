@@ -1,5 +1,6 @@
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Options;
+using Microsoft.SemanticKernel;
 using DuskOfCoding.Domain.Interfaces;
 using DuskOfCoding.Domain.Entities;
 using DuskOfCoding.Infrastructure.Configuration;
@@ -133,13 +134,28 @@ public sealed class TestGenerationWorkerService : BackgroundService
         var instruction = GenerateTestsPrompt.GetInstruction(command.ExpectedClassName, command.Namespace);
         var userContent = $"{instruction}\n\nTask Title: {command.Title}\nDescription: {command.Description}";
 
-        var messages = new List<ChatMessage>
+        using var scope = _scopeFactory.CreateScope();
+        var kernel = scope.ServiceProvider.GetRequiredService<Microsoft.SemanticKernel.Kernel>();
+        kernel.Plugins.AddFromType<McpTools.ExecuteCustomTestTool>();
+
+        var agent = new Microsoft.SemanticKernel.Agents.ChatCompletionAgent
         {
-            new(ChatRole.User, userContent)
+            Name = "TestGeneratorAgent",
+            Instructions = instruction,
+            Kernel = kernel
         };
 
-        var response = await _chatClient.GetResponseAsync(messages, cancellationToken: ct);
-        var responseText = response.Text ?? "[]";
+        var chatHistory = new Microsoft.SemanticKernel.ChatCompletion.ChatHistory();
+        chatHistory.AddUserMessage(userContent);
+
+        var responseText = string.Empty;
+        await foreach (var item in agent.InvokeAsync(chatHistory, cancellationToken: ct))
+        {
+            if (!string.IsNullOrWhiteSpace(item.Message.Content))
+            {
+                responseText += item.Message.Content;
+            }
+        }
 
         // --- LLM Observability Telemetry (Fire-and-Forget) ---
         _ = Task.Run(async () =>
@@ -153,8 +169,8 @@ public sealed class TestGenerationWorkerService : BackgroundService
                 {
                     TaskId = command.TaskId,
                     UserId = Guid.TryParse(command.UserId, out var uid) ? uid : (Guid?)null,
-                    ModelName = response.ModelId ?? "unknown",
-                    TokenCount = (int)(response.Usage?.TotalTokenCount ?? 0L),
+                    ModelName = _options.ModelId ?? "unknown",
+                    TokenCount = 0,
                     IsSuccess = true,
                     Payload = System.Text.Json.JsonSerializer.Serialize(new
                     {

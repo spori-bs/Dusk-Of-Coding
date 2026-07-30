@@ -109,6 +109,13 @@ public sealed class RabbitMQService : IAsyncDisposable
             autoDelete: false,
             cancellationToken: ct);
 
+        await channel.QueueDeclareAsync(
+            queue: RabbitMQTopology.InteractiveTutorQueue,
+            durable: true,
+            exclusive: false,
+            autoDelete: false,
+            cancellationToken: ct);
+
         // Bind queues to exchanges
         await channel.QueueBindAsync(
             queue: RabbitMQTopology.TutorInteractionsQueue,
@@ -132,6 +139,12 @@ public sealed class RabbitMQService : IAsyncDisposable
             queue: RabbitMQTopology.TestGenerationResponseQueue,
             exchange: RabbitMQTopology.ResponseExchange,
             routingKey: RabbitMQTopology.TestGenerationResponseRoutingKey,
+            cancellationToken: ct);
+
+        await channel.QueueBindAsync(
+            queue: RabbitMQTopology.InteractiveTutorQueue,
+            exchange: RabbitMQTopology.SubmissionExchange,
+            routingKey: RabbitMQTopology.InteractiveTutorRoutingKey,
             cancellationToken: ct);
 
         _logger.LogInformation("RabbitMQ topology declared successfully");

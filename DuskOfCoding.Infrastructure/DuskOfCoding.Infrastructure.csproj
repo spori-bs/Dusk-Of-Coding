@@ -21,9 +21,8 @@
     <PackageReference Include="Microsoft.Extensions.Resilience" Version="10.8.0" />
     <PackageReference Include="Microsoft.Extensions.AI" Version="10.8.3" />
     <PackageReference Include="Microsoft.Extensions.AI.OpenAI" Version="10.8.3" />
-    <PackageReference Include="Azure.AI.OpenAI" Version="2.1.0" />
     <PackageReference Include="Azure.Identity" Version="1.21.0" />
-    <PackageReference Include="OpenAI" Version="2.12.0" />
+    <PackageReference Include="Microsoft.SemanticKernel" Version="1.78.0" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />
     <PackageReference Include="RabbitMQ.Client" Version="7.2.1" />
   </ItemGroup>

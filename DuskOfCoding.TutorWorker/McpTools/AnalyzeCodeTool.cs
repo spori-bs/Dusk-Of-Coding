@@ -1,20 +1,22 @@
 using System.ComponentModel;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.SemanticKernel;
 using ModelContextProtocol.Server;
 
 namespace DuskOfCoding.TutorWorker.McpTools;
 
 /// <summary>
-/// MCP tool that performs Roslyn-based syntax and semantic analysis on C# code.
+/// MCP & SK plugin tool that performs Roslyn-based syntax and semantic analysis on C# code.
 /// Exposed to the LLM so it can inspect student code without executing it.
 /// </summary>
 [McpServerToolType]
-public static class AnalyzeCodeTool
+public class AnalyzeCodeTool
 {
     private static readonly TimeSpan ToolTimeout = TimeSpan.FromSeconds(5);
 
-    [McpServerTool(Name = "analyze_code"), Description("Analyzes C# source code for syntax errors using Roslyn. Returns a list of diagnostics including line numbers and messages. Use this to check if code compiles before executing it.")]
+    [KernelFunction("analyze_code"), Description("Analyzes C# source code for syntax errors using Roslyn. Returns a list of diagnostics including line numbers and messages. Use this to check if code compiles before executing it.")]
+    [McpServerTool(Name = "analyze_code")]
     public static string AnalyzeCode(
         [Description("The C# source code to analyze for syntax errors")] string code,
         CancellationToken cancellationToken = default)

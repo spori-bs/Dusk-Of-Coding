@@ -117,12 +117,15 @@ else
         </div>
     }
 
-    <div class="d-flex gap-3 mb-5">
+    <div class="d-flex gap-3 mb-5 flex-wrap">
         <button class="btn dusk-btn-outline px-4 py-2" @onclick="CheckSyntax">
             <i class="bi bi-check2-circle me-2"></i> @L["Practice_CheckSyntax"]
         </button>
         <button class="btn dusk-btn-outline px-4 py-2" @onclick="AutoFormat" disabled="@(selectedLanguage != nameof(ProgrammingLanguage.CSharp))">
             <i class="bi bi-magic me-2"></i> @L["Practice_AutoFormat"]
+        </button>
+        <button class="btn btn-warning text-dark fw-bold px-4 py-2" @onclick="RequestLightbulbHint" disabled="@(selectedTask == null)">
+            <i class="bi bi-lightbulb-fill me-2"></i> Socratic Hint 💡
         </button>
         <button class="btn btn-amber px-5 py-2 fw-bold ms-auto" @onclick="SubmitCode" disabled="@(isSubmitting)">
             @if (isSubmitting)
@@ -168,11 +171,11 @@ else
             </ul>
         }
 
-        <DuskOfCoding.WebUi.Components.Shared.FeedbackWidget TaskId="@selectedTask.Id" />
+        <DuskOfCoding.WebUi.Components.Shared.FeedbackWidget TaskId="@selectedTask!.Id" />
     }
 }
 
-<TutorTerminal @ref="tutorTerminal" OnEvaluationReceived="RefreshSubmission" />
+<TutorTerminal @ref="tutorTerminal" TaskId="@selectedTask?.Id.ToString()" OnGetDraftCode="GetDraftCodeAsync" OnEvaluationReceived="RefreshSubmission" />
 
 @code {
     private List<TaskDto>? tasks;
@@ -327,6 +330,20 @@ else
         {
             isSubmitting = false;
         }
+    }
+
+    private async Task<string> GetDraftCodeAsync()
+    {
+        if (_editor == null) return string.Empty;
+        return await _editor.GetValue();
+    }
+
+    private async Task RequestLightbulbHint()
+    {
+        if (selectedTask == null || _editor == null || tutorTerminal == null) return;
+        var sourceCode = await _editor.GetValue();
+        if (string.IsNullOrWhiteSpace(sourceCode)) return;
+        await tutorTerminal.TriggerLightbulbHint(selectedTask.Id.ToString(), sourceCode, null);
     }
 
     private async Task RefreshSubmission(Guid submissionId)

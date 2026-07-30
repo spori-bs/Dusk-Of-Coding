@@ -1,21 +1,23 @@
 using System.ComponentModel;
 using System.Net.Http.Json;
+using Microsoft.SemanticKernel;
 using ModelContextProtocol.Server;
 using DuskOfCoding.Execution.Contracts.DTOs;
 
 namespace DuskOfCoding.TutorWorker.McpTools;
 
 /// <summary>
-/// MCP tool that executes student code with custom tests via the Execution API.
+/// MCP & SK plugin tool that executes student code with custom tests via the Execution API.
 /// Exposed to the LLM so it can run code and tests to validate student submissions.
 /// </summary>
 [McpServerToolType]
-public static class ExecuteCustomTestTool
+public class ExecuteCustomTestTool
 {
     private const string ExecutionApiClientName = "executionapi";
     private static readonly TimeSpan ToolTimeout = TimeSpan.FromSeconds(5);
 
-    [McpServerTool(Name = "execute_custom_test"), Description("Compiles and runs student C# code along with custom test code using the sandboxed Execution API. Returns compilation results, test outcomes, and runtime metrics. Use this to verify if the student's code produces the correct output.")]
+    [KernelFunction("execute_custom_test"), Description("Compiles and runs student C# code along with custom test code using the sandboxed Execution API. Returns compilation results, test outcomes, and runtime metrics. Use this to verify if the student's code produces the correct output.")]
+    [McpServerTool(Name = "execute_custom_test")]
     public static async Task<string> ExecuteCustomTest(
         [Description("The student's C# source code to compile and test")] string studentCode,
         [Description("Optional custom test code (e.g. xUnit tests) to run against the student code. Leave empty to run default compilation only.")] string? testCode,

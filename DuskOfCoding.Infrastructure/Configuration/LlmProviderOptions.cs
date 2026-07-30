@@ -17,6 +17,10 @@ public sealed class LlmProviderOptions
     // Gemini-specific
     public string? GeminiApiKey { get; set; }
 
+    // Local/Custom OpenAI-compatible Endpoint
+    public string? CustomEndpoint { get; set; }
+    public string? ApiKey { get; set; }
+
     // Azure OpenAI-specific
     public string? AzureEndpoint { get; set; }
     public string? AzureApiKey { get; set; }
