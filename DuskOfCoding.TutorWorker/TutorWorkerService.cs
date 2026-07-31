@@ -10,6 +10,7 @@ using DuskOfCoding.Domain.Interfaces;
 using DuskOfCoding.Domain.Enums;
 using DuskOfCoding.Domain.Entities;
 using DuskOfCoding.Domain.Models;
+using DuskOfCoding.Infrastructure.Persistence;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.Extensions.DependencyInjection;
@@ -162,7 +163,7 @@ public sealed class TutorWorkerService : BackgroundService
             await NotifyEvaluationComplete(message.SubmissionId, correlationId, feedback, ct);
 
             // 7. Follow up with the Socratic Tutor logic
-            await HandleSocraticTutoring(message, feedback, correlationId, ct);
+            await HandleSocraticTutoring(message, submission.UserId, feedback, correlationId, ct);
         }
         catch (Exception ex)
         {
@@ -201,7 +202,7 @@ public sealed class TutorWorkerService : BackgroundService
             ct);
     }
 
-    private async Task HandleSocraticTutoring(SubmissionMessage message, Feedback feedback, Guid correlationId, CancellationToken ct)
+    private async Task HandleSocraticTutoring(SubmissionMessage message, Guid? userId, Feedback feedback, Guid correlationId, CancellationToken ct)
     {
         var pipeline = _resilienceProvider.GetPipeline(LlmResilienceRegistration.PipelineName);
 
@@ -209,7 +210,7 @@ public sealed class TutorWorkerService : BackgroundService
         {
             var tutorResponse = await pipeline.ExecuteAsync(async token =>
             {
-                return await InvokeSocraticTutorAsync(message, feedback, token);
+                return await InvokeSocraticTutorAsync(message, userId, feedback, token);
             }, ct);
 
             var response = new TutorResponseMessage
@@ -236,7 +237,7 @@ public sealed class TutorWorkerService : BackgroundService
 
     private const int MaxSourceCodeLength = 50_000;
 
-    private async Task<string> InvokeSocraticTutorAsync(SubmissionMessage message, Feedback feedback, CancellationToken ct)
+    private async Task<string> InvokeSocraticTutorAsync(SubmissionMessage message, Guid? userId, Feedback feedback, CancellationToken ct)
     {
         if (string.IsNullOrWhiteSpace(message.SourceCode))
             return "⚠️ No source code was provided.";
@@ -253,10 +254,8 @@ public sealed class TutorWorkerService : BackgroundService
             compilationsOutput = $"\n\nCompilation Errors:\n{string.Join("\n", feedback.CompilationMessages)}";
         }
 
-        var chatMessages = new List<ChatMessage>
-        {
-            new(ChatRole.System, SocraticTutorPrompt.GetSystemPrompt(message.PreferredLanguage)),
-            new(ChatRole.User, $"""
+        var systemPrompt = SocraticTutorPrompt.GetSystemPrompt(message.PreferredLanguage);
+        var userPrompt = $"""
                 Please review my code submission:
                 ```csharp
                 {message.SourceCode}
@@ -264,7 +263,12 @@ public sealed class TutorWorkerService : BackgroundService
                 Language: {message.Language}
                 {compilationsOutput}
                 {testOutput}
-                """)
+                """;
+
+        var chatMessages = new List<ChatMessage>
+        {
+            new(ChatRole.System, systemPrompt),
+            new(ChatRole.User, userPrompt)
         };
 
         var chatOptions = new ChatOptions
@@ -273,7 +277,86 @@ public sealed class TutorWorkerService : BackgroundService
             MaxOutputTokens = 2048
         };
 
-        var response = await _chatClient.GetResponseAsync(chatMessages, chatOptions, ct);
-        return response.Text ?? "I wasn't able to generate feedback.";
+        try
+        {
+            var response = await _chatClient.GetResponseAsync(chatMessages, chatOptions, ct);
+            var responseText = response.Text ?? "I wasn't able to generate feedback.";
+
+            SaveLlmTelemetry(
+                taskId: message.TaskId,
+                submissionId: message.SubmissionId,
+                userId: userId,
+                modelName: response.ModelId ?? "unknown",
+                tokenCount: (int)(response.Usage?.TotalTokenCount ?? 0L),
+                isSuccess: true,
+                systemPrompt: systemPrompt,
+                userPrompt: userPrompt,
+                rawResponse: responseText,
+                error: null);
+
+            return responseText;
+        }
+        catch (Exception ex)
+        {
+            SaveLlmTelemetry(
+                taskId: message.TaskId,
+                submissionId: message.SubmissionId,
+                userId: userId,
+                modelName: _options.ModelId,
+                tokenCount: 0,
+                isSuccess: false,
+                systemPrompt: systemPrompt,
+                userPrompt: userPrompt,
+                rawResponse: string.Empty,
+                error: ex.Message);
+
+            throw;
+        }
+    }
+
+    private void SaveLlmTelemetry(
+        Guid taskId,
+        Guid submissionId,
+        Guid? userId,
+        string modelName,
+        int tokenCount,
+        bool isSuccess,
+        string systemPrompt,
+        string userPrompt,
+        string rawResponse,
+        string? error)
+    {
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                using var scope = _scopeFactory.CreateScope();
+                var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+                var log = new LlmTelemetryLog
+                {
+                    TaskId = taskId,
+                    UserId = userId,
+                    ModelName = modelName,
+                    TokenCount = tokenCount,
+                    IsSuccess = isSuccess,
+                    Payload = System.Text.Json.JsonSerializer.Serialize(new
+                    {
+                        SubmissionId = submissionId,
+                        SystemPrompt = systemPrompt,
+                        UserPrompt = userPrompt,
+                        RawResponse = rawResponse,
+                        Error = error
+                    })
+                };
+
+                db.LlmTelemetryLogs.Add(log);
+                await db.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to save LLM telemetry for submission {SubmissionId}", submissionId);
+            }
+        });
     }
 }

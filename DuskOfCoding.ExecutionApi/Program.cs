@@ -34,12 +34,12 @@ app.MapPost("/api/executions", async (
     SandboxExecutionService executor, 
     CancellationToken ct) =>
 {
-    if (request.TestBundle == null || string.IsNullOrWhiteSpace(request.TestBundle.TestCode))
+    if (request.TestBundle == null || request.TestBundle.TestCodes.Count() == 0)
     {
         return Results.BadRequest("TestCode is required in the TestBundle.");
     }
 
-    var (isValid, errors, compilation) = compiler.Compile(request.SourceCode, request.TestBundle.TestCode);
+    var (isValid, errors, compilation) = compiler.Compile(request.SourceCode, request.TestBundle.TestCodes);
 
     if (!isValid || compilation == null)
     {

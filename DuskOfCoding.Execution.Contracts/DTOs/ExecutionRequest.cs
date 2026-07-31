@@ -13,7 +13,7 @@ public record ExecutionRequest
 public record TestBundleDto
 {
     public string Framework { get; init; } = "xunit";
-    public string TestCode { get; init; } = string.Empty;
+    public string[] TestCodes { get; init; } = [];
 }
 
 public record LimitsDto

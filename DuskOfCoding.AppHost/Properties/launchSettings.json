@@ -13,8 +13,8 @@
         "ASPIRE_DASHBOARD_MCP_ENDPOINT_URL": "https://localhost:23220",
         "ASPIRE_RESOURCE_SERVICE_ENDPOINT_URL": "https://localhost:22269",
         "DOTNET_ASPIRE_CONTAINER_RUNTIME": "podman",
-        "LlmProvider__Provider": "",
-        "LlmProvider__ModelId": "",
+        "LlmProvider__Provider": "Gemini",
+        "LlmProvider__ModelId": "gemini-2.5-flash",
         "LlmProvider__GeminiApiKey": ""
       }
     },
@@ -30,8 +30,8 @@
         "ASPIRE_DASHBOARD_MCP_ENDPOINT_URL": "http://localhost:18220",
         "ASPIRE_RESOURCE_SERVICE_ENDPOINT_URL": "http://localhost:20089",
         "DOTNET_ASPIRE_CONTAINER_RUNTIME": "podman",
-        "LlmProvider__Provider": "",
-        "LlmProvider__ModelId": "",
+        "LlmProvider__Provider": "Gemini",
+        "LlmProvider__ModelId": "gemini-2.5-flash",
         "LlmProvider__GeminiApiKey": ""
       }
     }

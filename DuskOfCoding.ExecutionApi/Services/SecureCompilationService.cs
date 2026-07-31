@@ -29,7 +29,7 @@ public class SecureCompilationService
         _references = trustedAssemblies.Select(path => MetadataReference.CreateFromFile(path)).ToArray();
     }
 
-    public (bool IsValid, List<string> Errors, CSharpCompilation? Compilation) Compile(string studentCode, string testBundleCode)
+    public (bool IsValid, List<string> Errors, CSharpCompilation? Compilation) Compile(string studentCode, string[] testBundleCode)
     {
         var studentTree = CSharpSyntaxTree.ParseText(studentCode);
         
@@ -56,13 +56,16 @@ public static class __SandboxState
 }").GetRoot();
 
         var safeStudentTree = studentTree.WithRootAndOptions(rewrittenRoot, studentTree.Options);
-        var testTree = CSharpSyntaxTree.ParseText(testBundleCode);
+        var testTrees = testBundleCode.Select(testCode=> CSharpSyntaxTree.ParseText( testCode ));
         var injectedTree = CSharpSyntaxTree.ParseText(injection.ToFullString());
-
+        
+        var compilationTrees = new List<SyntaxTree> { safeStudentTree, injectedTree }
+        .Concat( testTrees );
+        
         // 3. Compile
         var compilation = CSharpCompilation.Create(
             $"Submission_{Guid.NewGuid()}",
-            new[] { safeStudentTree, testTree, injectedTree },
+            compilationTrees,
             _references,
             new CSharpCompilationOptions(
                 OutputKind.DynamicallyLinkedLibrary,
